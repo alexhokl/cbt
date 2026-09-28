@@ -1,0 +1,364 @@
+syntax = "proto3";
+
+package record;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/alexhokl/cbt/proto";
+
+// RecordService is the gRPC API served by `cbt serve`. RPCs are added here and
+// registered in cmd/serve.go.
+//
+// Both record types and the cognitive bias vocabulary live on a single service
+// rather than one service per entity: the client wrapper and the interceptor
+// wiring would otherwise be duplicated for no gain, and listing across both
+// record types needs a single endpoint anyway.
+service RecordService {
+  // ListThoughtRecords returns the user's thought records, most recent event
+  // first. Filtering by challenged = false yields the day's work queue.
+  rpc ListThoughtRecords(ListThoughtRecordsRequest) returns (ListThoughtRecordsResponse);
+  // CreateThoughtRecord creates a record. Only the event is required: a record
+  // is routinely opened in the moment and completed later.
+  rpc CreateThoughtRecord(CreateThoughtRecordRequest) returns (ThoughtRecord);
+  // GetThoughtRecord returns a single record by identifier.
+  rpc GetThoughtRecord(GetThoughtRecordRequest) returns (ThoughtRecord);
+  // UpdateThoughtRecord changes the free text columns of a record. Fields left
+  // unset keep their current value.
+  rpc UpdateThoughtRecord(UpdateThoughtRecordRequest) returns (ThoughtRecord);
+  // ChallengeThoughtRecord records the second sitting: the alternative view,
+  // the re-rating of each feeling, and the biases identified in each thought.
+  // It stamps challenged_at so the record leaves the unchallenged queue.
+  rpc ChallengeThoughtRecord(ChallengeThoughtRecordRequest) returns (ThoughtRecord);
+  // DeleteThoughtRecord removes a record along with its thoughts and feelings.
+  rpc DeleteThoughtRecord(DeleteThoughtRecordRequest) returns (google.protobuf.Empty);
+
+  // AddThought attaches a further negative thought to a record.
+  rpc AddThought(AddThoughtRequest) returns (ThoughtRecord);
+  // UpdateThought changes the wording of a thought and, optionally, the biases
+  // attached to it.
+  rpc UpdateThought(UpdateThoughtRequest) returns (ThoughtRecord);
+  // SetHotThought marks a thought as the strongest of its record, clearing the
+  // flag from its siblings.
+  rpc SetHotThought(SetHotThoughtRequest) returns (ThoughtRecord);
+  // SetThoughtFactual records whether a thought was judged an accurate reading
+  // of the situation. Marking one factual while it carries a bias is rejected.
+  rpc SetThoughtFactual(SetThoughtFactualRequest) returns (ThoughtRecord);
+  // DeleteThought removes a thought from its record.
+  rpc DeleteThought(DeleteThoughtRequest) returns (ThoughtRecord);
+
+  // AddFeeling attaches a rated feeling to a thought record.
+  rpc AddFeeling(AddFeelingRequest) returns (ThoughtRecord);
+  // AddMapFeeling attaches a rated feeling to a map of worry.
+  rpc AddMapFeeling(AddMapFeelingRequest) returns (MapOfWorry);
+  // DeleteFeeling removes a feeling from whichever record it belongs to.
+  rpc DeleteFeeling(DeleteFeelingRequest) returns (google.protobuf.Empty);
+
+  // ListMapsOfWorry returns the user's maps of worry, most recent event first.
+  rpc ListMapsOfWorry(ListMapsOfWorryRequest) returns (ListMapsOfWorryResponse);
+  // CreateMapOfWorry creates a map. Setting derived_from_id marks it as an
+  // alternative reworking of an existing map, to be read alongside it.
+  rpc CreateMapOfWorry(CreateMapOfWorryRequest) returns (MapOfWorry);
+  // GetMapOfWorry returns a single map together with the map it was derived
+  // from and any alternatives derived from it.
+  rpc GetMapOfWorry(GetMapOfWorryRequest) returns (GetMapOfWorryResponse);
+  // UpdateMapOfWorry changes the free text columns of a map.
+  rpc UpdateMapOfWorry(UpdateMapOfWorryRequest) returns (MapOfWorry);
+  // DeleteMapOfWorry removes a map along with its feelings. A map with
+  // alternatives derived from it is rejected.
+  rpc DeleteMapOfWorry(DeleteMapOfWorryRequest) returns (google.protobuf.Empty);
+
+  // ListBiases returns the user's cognitive bias vocabulary, ordered by name.
+  rpc ListBiases(ListBiasesRequest) returns (ListBiasesResponse);
+  // CreateBias adds a user defined bias alongside the seeded ones.
+  rpc CreateBias(CreateBiasRequest) returns (CognitiveBias);
+  // RenameBias renames a user defined bias. Builtin biases are rejected.
+  rpc RenameBias(RenameBiasRequest) returns (CognitiveBias);
+  // DeleteBias removes a user defined bias that is no longer in use.
+  rpc DeleteBias(DeleteBiasRequest) returns (google.protobuf.Empty);
+}
+
+// CognitiveBias is a named thinking error. The nine biases catalogued in the
+// source material are seeded per user and marked builtin; builtins cannot be
+// renamed or deleted.
+message CognitiveBias {
+  uint32 id = 1;
+  string name = 2;
+  bool is_builtin = 3;
+}
+
+// NegativeThought is a single negative automatic thought recorded against a
+// thought record.
+message NegativeThought {
+  uint32 id = 1;
+  string body = 2;
+  // is_hot marks the strongest thought of the record, the one worth
+  // challenging first. At most one thought per record carries it.
+  bool is_hot = 3;
+  // biases are the thinking errors identified in this thought. The bias
+  // belongs to the thought rather than the record because each thought carries
+  // its own distortion.
+  repeated CognitiveBias biases = 4;
+  // parent_id links this thought to the thought whose meaning it is, forming
+  // the chain produced by the downward arrow technique. No RPC populates it
+  // yet; the field is reserved so the chain can be recorded later.
+  optional uint32 parent_id = 5;
+  // is_factual records that the thought was examined and judged an accurate
+  // reading of the situation rather than a distorted one. It cannot be
+  // inferred from carrying no biases, because that is the state every thought
+  // starts in. A thought that is factual never carries a bias.
+  bool is_factual = 6;
+}
+
+// Feeling is a single emotion rated on a 0-100 scale.
+message Feeling {
+  uint32 id = 1;
+  string name = 2;
+  // intensity_before is the rating given when the feeling was recorded.
+  optional int32 intensity_before = 3;
+  // intensity_after is the re-rating given during the challenge. It is only
+  // ever set on feelings belonging to a thought record.
+  optional int32 intensity_after = 4;
+}
+
+// ThoughtRecord is the six column thought record: event, negative thought(s),
+// negative feeling(s), cognitive bias, "is there any other way I can look at
+// this?", and "how do I feel now?".
+message ThoughtRecord {
+  uint32 id = 1;
+  string event = 2;
+  // occurred_at is when the event happened, which is frequently not when the
+  // record was typed. It is absent when the user did not say.
+  optional google.protobuf.Timestamp occurred_at = 3;
+  string alternative_view = 4;
+  string feelings_now = 5;
+  // challenged_at is set once the second sitting has happened, and absent
+  // while the record is still in the work queue.
+  optional google.protobuf.Timestamp challenged_at = 6;
+  repeated NegativeThought thoughts = 7;
+  repeated Feeling feelings = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
+}
+
+// MapOfWorry traces a single event through to the behaviour it produced.
+message MapOfWorry {
+  uint32 id = 1;
+  string event = 2;
+  optional google.protobuf.Timestamp occurred_at = 3;
+  string thoughts = 4;
+  string what_these_thoughts_mean = 5;
+  string physical_sensations = 6;
+  string resultant_behaviour = 7;
+  // derived_from_id points at the map this one reworks. The contrast between
+  // the two is the therapeutic payload, so they are read side by side.
+  optional uint32 derived_from_id = 8;
+  repeated Feeling feelings = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// FeelingInput is a feeling as supplied by the client: a name and an optional
+// 0-100 rating.
+message FeelingInput {
+  string name = 1;
+  optional int32 intensity = 2;
+}
+
+// ThoughtInput is a negative automatic thought as supplied by the client.
+message ThoughtInput {
+  string body = 1;
+  bool is_hot = 2;
+  // biases must already exist. A bias is a vocabulary term rather than a free
+  // tag, so an unrecognised name is reported as a typo rather than coined.
+  repeated string biases = 3;
+}
+
+message ListThoughtRecordsRequest {
+  // challenged filters by whether the record has been challenged. Absent
+  // returns both; false is the day's work queue.
+  optional bool challenged = 1;
+  // since restricts the listing to records whose event occurred on or after
+  // this instant.
+  optional google.protobuf.Timestamp since = 2;
+  // search matches the event, the alternative view and the thought bodies.
+  string search = 3;
+}
+
+message ListThoughtRecordsResponse {
+  repeated ThoughtRecord records = 1;
+}
+
+message CreateThoughtRecordRequest {
+  string event = 1;
+  optional google.protobuf.Timestamp occurred_at = 2;
+  string alternative_view = 3;
+  string feelings_now = 4;
+  repeated ThoughtInput thoughts = 5;
+  repeated FeelingInput feelings = 6;
+}
+
+message GetThoughtRecordRequest {
+  uint32 id = 1;
+}
+
+message UpdateThoughtRecordRequest {
+  uint32 id = 1;
+  // Unset fields keep their current value, which is what allows a record to be
+  // completed one column at a time.
+  optional string event = 2;
+  optional google.protobuf.Timestamp occurred_at = 3;
+  // clear_occurred_at distinguishes "leave the event time alone" from "forget
+  // when it happened", which an absent occurred_at alone cannot express.
+  bool clear_occurred_at = 4;
+  optional string alternative_view = 5;
+  optional string feelings_now = 6;
+}
+
+// ThoughtJudgement is the outcome of examining one thought during the
+// challenge: which distortions it carries, or that it carries none because the
+// thought was an accurate reading of the situation.
+message ThoughtJudgement {
+  uint32 thought_id = 1;
+  // biases replaces whatever the thought carried, so re-running a challenge
+  // with a corrected list leaves the corrected list. Leaving it unset keeps
+  // the existing biases, so a judgement can record only that a thought is
+  // factual; setting it to an empty list detaches them all.
+  optional BiasNames biases = 2;
+  // is_factual records that the thought was judged an accurate reading.
+  // Marking a thought factual while it still carries a bias is rejected.
+  bool is_factual = 3;
+}
+
+// FeelingRerating is the post-challenge rating of one feeling.
+message FeelingRerating {
+  uint32 feeling_id = 1;
+  int32 intensity_after = 2;
+}
+
+message ChallengeThoughtRecordRequest {
+  uint32 id = 1;
+  string alternative_view = 2;
+  string feelings_now = 3;
+  repeated FeelingRerating feeling_reratings = 4;
+  repeated ThoughtJudgement thoughts = 5;
+}
+
+message DeleteThoughtRecordRequest {
+  uint32 id = 1;
+}
+
+message AddThoughtRequest {
+  uint32 record_id = 1;
+  ThoughtInput thought = 2;
+}
+
+message UpdateThoughtRequest {
+  uint32 id = 1;
+  string body = 2;
+  // biases replaces the biases on the thought when set. Leaving it unset keeps
+  // the existing biases, so the wording can be corrected without redoing the
+  // bias work; setting it to an empty list detaches them all.
+  optional BiasNames biases = 3;
+}
+
+// BiasNames wraps a repeated field so that "not given" can be told apart from
+// "given as empty". proto3 cannot mark a repeated field optional.
+message BiasNames {
+  repeated string names = 1;
+}
+
+message SetHotThoughtRequest {
+  uint32 id = 1;
+}
+
+message SetThoughtFactualRequest {
+  uint32 id = 1;
+  bool factual = 2;
+}
+
+message DeleteThoughtRequest {
+  uint32 id = 1;
+}
+
+message AddFeelingRequest {
+  uint32 record_id = 1;
+  FeelingInput feeling = 2;
+}
+
+message AddMapFeelingRequest {
+  uint32 map_id = 1;
+  FeelingInput feeling = 2;
+}
+
+message DeleteFeelingRequest {
+  uint32 id = 1;
+}
+
+message ListMapsOfWorryRequest {
+  optional google.protobuf.Timestamp since = 1;
+  string search = 2;
+}
+
+message ListMapsOfWorryResponse {
+  repeated MapOfWorry maps = 1;
+}
+
+message CreateMapOfWorryRequest {
+  string event = 1;
+  optional google.protobuf.Timestamp occurred_at = 2;
+  string thoughts = 3;
+  string what_these_thoughts_mean = 4;
+  string physical_sensations = 5;
+  string resultant_behaviour = 6;
+  optional uint32 derived_from_id = 7;
+  repeated FeelingInput feelings = 8;
+}
+
+message GetMapOfWorryRequest {
+  uint32 id = 1;
+}
+
+// GetMapOfWorryResponse carries the map together with the maps it should be
+// read against: the one it reworks, and the reworkings of it.
+message GetMapOfWorryResponse {
+  MapOfWorry map = 1;
+  // derived_from is the map this one reworks, when it is an alternative.
+  optional MapOfWorry derived_from = 2;
+  // alternatives are the maps derived from this one.
+  repeated MapOfWorry alternatives = 3;
+}
+
+message UpdateMapOfWorryRequest {
+  uint32 id = 1;
+  optional string event = 2;
+  optional google.protobuf.Timestamp occurred_at = 3;
+  bool clear_occurred_at = 4;
+  optional string thoughts = 5;
+  optional string what_these_thoughts_mean = 6;
+  optional string physical_sensations = 7;
+  optional string resultant_behaviour = 8;
+}
+
+message DeleteMapOfWorryRequest {
+  uint32 id = 1;
+}
+
+message ListBiasesRequest {}
+
+message ListBiasesResponse {
+  repeated CognitiveBias biases = 1;
+}
+
+message CreateBiasRequest {
+  string name = 1;
+}
+
+message RenameBiasRequest {
+  uint32 id = 1;
+  string name = 2;
+}
+
+message DeleteBiasRequest {
+  uint32 id = 1;
+}

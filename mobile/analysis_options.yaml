@@ -1,0 +1,19 @@
+include: package:flutter_lints/flutter.yaml
+
+analyzer:
+  exclude:
+    # Generated protobuf code is not hand maintained, so its lints are not
+    # actionable here. This mirrors the gosec exclusion on the Go side.
+    - lib/proto/**
+    - lib/l10n/app_localizations*.dart
+    - build/**
+    - android/**
+    - ios/**
+    - web/**
+    - windows/**
+    - macos/**
+    - linux/**
+
+linter:
+  rules:
+    - prefer_relative_imports

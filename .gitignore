@@ -1,0 +1,8 @@
+# Build artefacts
+/cbt
+coverage.out
+coverage.html
+
+# Local development database and Tailscale state
+*.db
+tailscale-state/

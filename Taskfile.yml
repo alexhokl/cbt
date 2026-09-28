@@ -1,0 +1,193 @@
+version: "3"
+
+env:
+  APP_NAME: cbt
+
+tasks:
+  build:
+    desc: Build
+    cmds:
+      - go build -o /dev/null ./...
+
+  install:
+    desc: Install
+    cmd: go install
+
+  test:
+    desc: Test
+    cmd: go test ./...
+
+  coverage:
+    desc: Test with coverage (Go and Flutter)
+    cmds:
+      - go test --cover ./...
+      - cd mobile && flutter test --no-pub --coverage
+
+  coverage-html:
+    desc: Test with coverage in HTML (Go and Flutter)
+    cmds:
+      - go test -coverprofile=coverage.out ./... && go tool cover -html=coverage.out -o coverage.html
+      - cd mobile && flutter test --no-pub --coverage
+      - cd mobile && genhtml coverage/lcov.info -o coverage/html
+
+  open-coverage-html:
+    desc: Test with coverage in HTML and open the HTML
+    cmds:
+      - task: coverage-html
+      - open coverage.html
+
+  bench:
+    desc: Run benchmarks on CPU and memory
+    cmd: go test -bench=. -benchmem ./...
+
+  lint:
+    desc: Lint
+    cmds:
+      - golangci-lint run
+      - cd mobile && flutter analyze
+      - cd mobile && dart fix --dry-run
+
+  sec:
+    desc: Security check
+    # Generated protobuf code is excluded: it is not hand maintained, so its
+    # findings are not actionable here.
+    cmd: gosec -exclude-generated ./...
+
+  completion-linux:
+    desc: Generate bash completion and save to configuration directory
+    cmd: cbt completion bash | sudo tee /etc/bash_completion.d/cbt
+
+  proto:
+    desc: Generate Go and Dart files from protobuf definitions
+    cmds:
+      - |
+        protoc \
+          -I . \
+          --go_out=. --go_opt=paths=source_relative \
+          --go-grpc_out=. --go-grpc_opt=paths=source_relative \
+          --dart_out=grpc:mobile/lib \
+          ./proto/*.proto
+
+  update-proto-dependencies:
+    desc: Update protobuf dependencies
+    cmds:
+      - curl -o google/protobuf/empty.proto --create-dirs -sSL https://raw.githubusercontent.com/protocolbuffers/protobuf/refs/heads/main/src/google/protobuf/empty.proto
+      - curl -o google/protobuf/timestamp.proto --create-dirs -sSL https://raw.githubusercontent.com/protocolbuffers/protobuf/refs/heads/main/src/google/protobuf/timestamp.proto
+
+  l10n:
+    desc: Regenerate the Flutter localisations from the ARB files
+    cmd: cd mobile && flutter gen-l10n
+
+  icons:
+    desc: Regenerate the application icons from mobile/assets/icon/ic_launcher.svg
+    # Requires rsvg-convert (librsvg) and magick (ImageMagick 7).
+    #
+    # The glyph is trimmed to its ink bounding box before being scaled, so the
+    # padding the source SVG carries internally does not end up baked into the
+    # output at a different scale for every target. Ratios and the background
+    # colour match todo-cli, so the two applications sit together consistently.
+    vars:
+      SVG: mobile/assets/icon/ic_launcher.svg
+      BACKGROUND: "#009688"
+      # Fraction of the canvas the glyph's larger dimension occupies.
+      FOREGROUND_RATIO: "0.567"
+      ICON_RATIO: "0.833"
+      RES: mobile/android/app/src/main/res
+      MACOS: mobile/macos/Runner/Assets.xcassets/AppIcon.appiconset
+    cmds:
+      - |
+        set -eu
+        work=$(mktemp -d)
+        trap 'rm -rf "$work"' EXIT
+
+        # Render once at high resolution and trim to the ink, so every target
+        # is scaled from the same source rather than re-rendered at each size.
+        rsvg-convert -w 2048 -h 2048 "{{.SVG}}" -o "$work/full.png"
+        magick "$work/full.png" -trim +repage "$work/glyph.png"
+
+        # compose <canvas> <ratio> <background> <output>
+        compose() {
+          size=$1; ratio=$2; background=$3; output=$4
+          glyph=$(awk -v s="$size" -v r="$ratio" 'BEGIN { printf "%d", (s * r) + 0.5 }')
+          magick "$work/glyph.png"             -resize "${glyph}x${glyph}"             -background "$background" -gravity center -extent "${size}x${size}"             -define png:color-type=6 "$output"
+        }
+
+        # Adaptive icon foreground: transparent, masked and inset by the
+        # adaptive-icon XML at display time.
+        for pair in mdpi:108 hdpi:162 xhdpi:216 xxhdpi:324 xxxhdpi:432; do
+          density=${pair%%:*}; size=${pair##*:}
+          compose "$size" "{{.FOREGROUND_RATIO}}" none "{{.RES}}/drawable-$density/ic_launcher_foreground.png"
+        done
+
+        # Legacy launcher icons, used below API 26 where there is no adaptive
+        # icon to composite.
+        for pair in mdpi:48 hdpi:72 xhdpi:96 xxhdpi:144 xxxhdpi:192; do
+          density=${pair%%:*}; size=${pair##*:}
+          compose "$size" "{{.ICON_RATIO}}" "{{.BACKGROUND}}" "{{.RES}}/mipmap-$density/ic_launcher.png"
+          cp "{{.RES}}/mipmap-$density/ic_launcher.png" "{{.RES}}/mipmap-$density/ic_launcher_round.png"
+        done
+
+        for size in 16 32 64 128 256 512 1024; do
+          compose "$size" "{{.ICON_RATIO}}" "{{.BACKGROUND}}" "{{.MACOS}}/app_icon_$size.png"
+        done
+
+  serve:
+    desc: Run a local server against a scratch database
+    cmd: OTEL_SDK_DISABLED=true go run . serve --port 18080 --database /tmp/cbt-dev.db
+
+  mac:
+    desc: Build macOS
+    cmds:
+      - cd mobile && flutter build macos --dart-define=GIT_COMMIT=$(git rev-parse --short HEAD)
+      - cp -r mobile/build/macos/Build/Products/Release/cbt.app /Applications/
+
+  apk:
+    desc: Build Android APK
+    cmds:
+      - cd mobile && flutter build apk --dart-define=GIT_COMMIT=$(git rev-parse --short HEAD)
+
+  generate-apk-signing-key:
+    desc: Generate a release keystore for APK signing
+    vars:
+      KEYSTORE_FILE: /tmp/cbt_release.jks
+      KEY_ALIAS: cbt
+    cmds:
+      - |
+        STORE_PASSWORD=$(gum input --password --prompt "Enter keystore password: ")
+        keytool -genkey -v \
+          -keystore {{.KEYSTORE_FILE}} \
+          -keyalg RSA -keysize 2048 -validity 10000 \
+          -alias {{.KEY_ALIAS}} \
+          -dname "CN=cbt, OU=Mobile, O=alexho, L=HK, S=HK, C=HK" \
+          -storepass "$STORE_PASSWORD" \
+          -keypass "$STORE_PASSWORD"
+        base64 -i {{.KEYSTORE_FILE}} -o {{.KEYSTORE_FILE}}.b64
+        printf 'storePassword=%s\nkeyPassword=%s\nkeyAlias=%s\nstoreFile=release.jks\n' \
+          "$STORE_PASSWORD" "$STORE_PASSWORD" {{.KEY_ALIAS}} \
+          > /tmp/cbt_key.properties
+        echo "Keystore generated at {{.KEYSTORE_FILE}}"
+        echo "key.properties generated at /tmp/cbt_key.properties"
+        echo "Run 'task upload-apk-signing-secrets' to upload to Secret Manager"
+
+  upload-apk-signing-secrets:
+    desc: Upload APK signing keystore and key.properties to GCP Secret Manager
+    vars:
+      KEYSTORE_FILE: /tmp/cbt_release.jks
+      GCP_PROJECT: craffy
+    cmds:
+      - gcloud secrets versions add cbt-keystore --data-file={{.KEYSTORE_FILE}}.b64 --project={{.GCP_PROJECT}}
+      - gcloud secrets versions add cbt-key-properties --data-file=/tmp/cbt_key.properties --project={{.GCP_PROJECT}}
+      - rm {{.KEYSTORE_FILE}} {{.KEYSTORE_FILE}}.b64 /tmp/cbt_key.properties
+      - echo "Secrets uploaded and local files removed"
+
+  tag:
+    desc: Create a new git tag with incremented patch version (0.1.x)
+    silent: true
+    cmds:
+      - |
+        LATEST=$(git tag --sort=-version:refname | grep -E '^0\.1\.[0-9]+$' | head -1)
+        PATCH=$(echo "$LATEST" | cut -d. -f3)
+        if [ -z "$PATCH" ]; then PATCH=-1; fi
+        NEW_TAG="0.1.$((PATCH + 1))"
+        git tag "$NEW_TAG"
+        echo "Created tag $NEW_TAG"

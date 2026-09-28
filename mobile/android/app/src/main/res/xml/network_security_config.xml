@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  A cbt server reached over a tailnet is addressed by its MagicDNS name and
+  commonly serves plain gRPC: the tailnet already provides the encryption and
+  the identity, and the server authenticates by network identity rather than by
+  a certificate the client checks.
+
+  Android blocks cleartext by default from API 28, which would make exactly
+  that deployment fail with an opaque connection error. Cleartext is therefore
+  permitted, but only for the two cases that need it: the loopback address used
+  during development, and the .ts.net domain a tailnet host lives under.
+  Everything else still requires TLS.
+-->
+<network-security-config>
+    <domain-config cleartextTrafficPermitted="true">
+        <domain includeSubdomains="true">localhost</domain>
+        <domain includeSubdomains="true">127.0.0.1</domain>
+        <domain includeSubdomains="true">ts.net</domain>
+    </domain-config>
+    <base-config cleartextTrafficPermitted="false" />
+</network-security-config>
