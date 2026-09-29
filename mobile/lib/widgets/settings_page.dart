@@ -15,6 +15,13 @@ class BackendConfig {
   /// Parses a stored address. A value that does not parse falls back to the
   /// default rather than throwing, so a half typed address cannot leave the
   /// app unable to start.
+  ///
+  /// When no port is given explicitly, the fallback is scheme aware rather
+  /// than a single fixed number: the tsnet server terminates TLS on 443, so a
+  /// bare `https://` address (the normal case, pointing at a tailnet host)
+  /// has to resolve to 443, while a bare `http://` address (local
+  /// development) keeps resolving to 8080, matching the server's own
+  /// default port.
   factory BackendConfig.fromUrl(String url) {
     final uri = Uri.tryParse(url.contains('://') ? url : 'http://$url');
     if (uri == null || uri.host.isEmpty) {
@@ -22,7 +29,7 @@ class BackendConfig {
     }
     return BackendConfig(
       host: uri.host,
-      port: uri.hasPort ? uri.port : 8080,
+      port: uri.hasPort ? uri.port : (uri.scheme == 'https' ? 443 : 8080),
     );
   }
 
@@ -46,7 +53,7 @@ class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
   static const String backendUrlKey = 'backend_url';
-  static const String defaultBackendUrl = 'http://localhost:8080';
+  static const String defaultBackendUrl = 'https://cbt.some-name.ts.net';
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
