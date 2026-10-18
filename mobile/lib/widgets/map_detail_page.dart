@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_helper/ui.dart';
+import 'package:flutter_helper/format.dart';
 
 import '../l10n/app_localizations.dart';
 import '../proto/record.pb.dart';
@@ -62,25 +63,15 @@ class _MapDetailPageState extends State<MapDetailPage> {
 
   Future<void> _delete() async {
     final l10n = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.deleteRecordTitle),
-        content: Text(l10n.deleteRecordBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.delete),
-          ),
-        ],
-      ),
+    final confirmed = await confirmDialog(
+      context,
+      title: l10n.deleteRecordTitle,
+      message: l10n.deleteRecordBody,
+      confirmLabel: l10n.delete,
+      cancelLabel: l10n.cancel,
     );
 
-    if (confirmed != true || !mounted) {
+    if (!confirmed || !mounted) {
       return;
     }
 
@@ -195,7 +186,6 @@ class _MapDetailPageState extends State<MapDetailPage> {
       );
 
   Widget _mapBody(MapOfWorry mapOfWorry, AppLocalizations l10n) {
-    final format = DateFormat.yMMMd();
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -203,9 +193,9 @@ class _MapDetailPageState extends State<MapDetailPage> {
         RecordField(
           label: l10n.fieldWhen,
           value: mapOfWorry.hasOccurredAt()
-              ? format.format(mapOfWorry.occurredAt.toDateTime().toLocal())
+              ? formatDate(mapOfWorry.occurredAt.toDateTime().toLocal())
               : l10n.fieldWhenWritten(
-                  format.format(mapOfWorry.createdAt.toDateTime().toLocal()),
+                  formatDate(mapOfWorry.createdAt.toDateTime().toLocal()),
                 ),
         ),
         RecordField(label: l10n.fieldEvent, value: mapOfWorry.event),

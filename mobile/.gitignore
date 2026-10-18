@@ -50,3 +50,6 @@ app.*.map.json
 # Release signing material, written by Cloud Build from Secret Manager.
 android/key.properties
 android/app/release.jks
+
+# Local path override for developing against ../../flutter-helper
+pubspec_overrides.yaml

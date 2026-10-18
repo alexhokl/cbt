@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_helper/ui.dart';
+import 'package:flutter_helper/format.dart';
 
 import '../l10n/app_localizations.dart';
 import '../proto/record.pb.dart';
@@ -63,25 +64,15 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
 
   Future<void> _delete() async {
     final l10n = AppLocalizations.of(context)!;
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text(l10n.deleteRecordTitle),
-        content: Text(l10n.deleteRecordBody),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(context).pop(false),
-            child: Text(l10n.cancel),
-          ),
-          FilledButton(
-            onPressed: () => Navigator.of(context).pop(true),
-            child: Text(l10n.delete),
-          ),
-        ],
-      ),
+    final confirmed = await confirmDialog(
+      context,
+      title: l10n.deleteRecordTitle,
+      message: l10n.deleteRecordBody,
+      confirmLabel: l10n.delete,
+      cancelLabel: l10n.cancel,
     );
 
-    if (confirmed != true || !mounted) {
+    if (!confirmed || !mounted) {
       return;
     }
 
@@ -169,14 +160,13 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
     }
 
     final record = _record!;
-    final format = DateFormat.yMMMd();
 
     return ListView(
       padding: const EdgeInsets.all(16),
       children: [
         Text(
           record.hasChallengedAt()
-              ? l10n.challengedOn(format.format(record.challengedAt.toDateTime().toLocal()))
+              ? l10n.challengedOn(formatDate(record.challengedAt.toDateTime().toLocal()))
               : l10n.notYetChallenged,
           style: Theme.of(context).textTheme.labelLarge,
         ),
@@ -184,9 +174,9 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
         RecordField(
           label: l10n.fieldWhen,
           value: record.hasOccurredAt()
-              ? format.format(record.occurredAt.toDateTime().toLocal())
+              ? formatDate(record.occurredAt.toDateTime().toLocal())
               : l10n.fieldWhenWritten(
-                  format.format(record.createdAt.toDateTime().toLocal()),
+                  formatDate(record.createdAt.toDateTime().toLocal()),
                 ),
         ),
         RecordField(label: l10n.fieldEvent, value: record.event),

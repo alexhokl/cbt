@@ -142,6 +142,15 @@ Packages are flat, files are `snake_case.go`, and each package has a
 - English only. The scaffolding for another locale is in place (`l10n.yaml`,
   `flutter: generate: true`); the bias names are established technical terms
   and a half translated set would be worse than none.
+- Shared infrastructure comes from the `flutter_helper` package
+  (github.com/alexhokl/flutter-helper, pinned by tag in `mobile/pubspec.yaml`):
+  the gRPC channel and error mapping behind `RecordService`
+  (`GrpcChannelHolder`, `ServiceException`), the `backend_url` setting that
+  `BackendConfig` delegates to, `BuildInfo.gitCommit`, `formatDate`,
+  `confirmDialog`, the themes and the lint configuration. Fix or extend those
+  there rather than copying code into this app. The `mac`, `apk`, signing key
+  and `tag` tasks are included from `../flutter-helper/taskfiles/flutter.yml`,
+  which needs a sibling checkout of flutter-helper.
 
 ## Testing
 

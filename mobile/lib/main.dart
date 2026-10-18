@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_helper/ui.dart';
 
 import 'l10n/app_localizations.dart';
 import 'widgets/record_list.dart';
@@ -16,23 +17,16 @@ void main() {
 class CbtApp extends StatelessWidget {
   const CbtApp({super.key});
 
+  static final _themes = themesFromSeed(Colors.teal);
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       onGenerateTitle: (context) => AppLocalizations.of(context)!.appTitle,
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: Colors.teal,
-          brightness: Brightness.dark,
-        ),
-        useMaterial3: true,
-      ),
+      theme: _themes.light,
+      darkTheme: _themes.dark,
       home: const RecordList(),
     );
   }

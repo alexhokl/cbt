@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_helper/format.dart';
 import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart';
-import 'package:intl/intl.dart';
 
 import '../l10n/app_localizations.dart';
 import '../proto/record.pb.dart';
@@ -151,7 +151,6 @@ class _EditRecordPageState extends State<EditRecordPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final format = DateFormat.yMMMd();
 
     return Scaffold(
       appBar: AppBar(
@@ -177,7 +176,7 @@ class _EditRecordPageState extends State<EditRecordPage> {
             contentPadding: EdgeInsets.zero,
             title: Text(l10n.fieldWhen),
             subtitle: Text(
-              _occurredAt == null ? l10n.fieldWhenUnset : format.format(_occurredAt!),
+              _occurredAt == null ? l10n.fieldWhenUnset : formatDate(_occurredAt!),
             ),
             trailing: const Icon(Icons.calendar_today_outlined),
             onTap: _pickDate,

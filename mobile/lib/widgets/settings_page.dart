@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_helper/config.dart' as helper;
+import 'package:flutter_helper/config.dart' show BuildInfo;
 
-import '../app_config.dart';
 import '../l10n/app_localizations.dart';
 import '../services/record_service.dart';
 
-/// BackendConfig is the parsed form of the server address setting.
+/// BackendConfig is the parsed form of the server address setting. Parsing
+/// and storage are shared with the other apps through flutter_helper.
 class BackendConfig {
   const BackendConfig({required this.host, required this.port});
 
   final String host;
   final int port;
 
-  /// Parses a stored address. A value that does not parse falls back to the
-  /// default rather than throwing, so a half typed address cannot leave the
+  /// Parses a stored address. A value that does not parse falls back to
+  /// localhost rather than throwing, so a half typed address cannot leave the
   /// app unable to start.
   ///
   /// When no port is given explicitly, the fallback is scheme aware rather
@@ -23,20 +24,14 @@ class BackendConfig {
   /// development) keeps resolving to 8080, matching the server's own
   /// default port.
   factory BackendConfig.fromUrl(String url) {
-    final uri = Uri.tryParse(url.contains('://') ? url : 'http://$url');
-    if (uri == null || uri.host.isEmpty) {
-      return const BackendConfig(host: 'localhost', port: 8080);
-    }
-    return BackendConfig(
-      host: uri.host,
-      port: uri.hasPort ? uri.port : (uri.scheme == 'https' ? 443 : 8080),
-    );
+    final config = helper.BackendConfig.fromUrl(url, defaultHttpPort: 8080);
+    return BackendConfig(host: config.host, port: config.port);
   }
 
   static Future<BackendConfig> load() async {
-    final prefs = SharedPreferencesAsync();
-    final url = await prefs.getString(SettingsPage.backendUrlKey) ??
-        SettingsPage.defaultBackendUrl;
+    final url = await helper.BackendConfig.loadUrl(
+      defaultUrl: SettingsPage.defaultBackendUrl,
+    );
     return BackendConfig.fromUrl(url);
   }
 
@@ -52,7 +47,7 @@ class BackendConfig {
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
 
-  static const String backendUrlKey = 'backend_url';
+  static const String backendUrlKey = helper.BackendConfig.storageKey;
   static const String defaultBackendUrl = 'https://cbt.some-name.ts.net';
 
   @override
@@ -69,9 +64,9 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _load() async {
-    final prefs = SharedPreferencesAsync();
-    final url = await prefs.getString(SettingsPage.backendUrlKey) ??
-        SettingsPage.defaultBackendUrl;
+    final url = await helper.BackendConfig.loadUrl(
+      defaultUrl: SettingsPage.defaultBackendUrl,
+    );
     if (!mounted) {
       return;
     }
@@ -79,8 +74,7 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 
   Future<void> _save(String value) async {
-    final prefs = SharedPreferencesAsync();
-    await prefs.setString(SettingsPage.backendUrlKey, value);
+    await helper.BackendConfig.save(value);
   }
 
   @override
@@ -120,11 +114,13 @@ class _SettingsPageState extends State<SettingsPage> {
               ),
             ),
           ),
-          if (AppConfig.gitCommit.isNotEmpty) ...[
+          // A local build without --dart-define=GIT_COMMIT has no version to
+          // tie a bug report to, so the tile is left out.
+          if (!BuildInfo.isDevBuild) ...[
             const SizedBox(height: 16),
             ListTile(
               title: Text(l10n.settingsVersion),
-              subtitle: Text(AppConfig.gitCommit),
+              subtitle: const Text(BuildInfo.gitCommit),
             ),
           ],
         ],

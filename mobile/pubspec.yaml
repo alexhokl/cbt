@@ -39,8 +39,11 @@ dependencies:
   grpc: ^5.1.0
   protobuf: ^6.1.0
   fixnum: ^1.1.1
-  shared_preferences: ^2.5.5
   intl: ^0.20.2
+  flutter_helper:
+    git:
+      url: https://github.com/alexhokl/flutter-helper.git
+      ref: v0.1.0
 
 dev_dependencies:
   flutter_test:
@@ -53,7 +56,6 @@ dev_dependencies:
   # rules and activating additional ones.
   flutter_lints: ^6.0.0
   mocktail: ^1.0.5
-  shared_preferences_platform_interface: ^2.4.2
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

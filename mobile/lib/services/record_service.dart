@@ -1,16 +1,11 @@
-import 'package:grpc/grpc.dart';
+import 'package:flutter_helper/grpc.dart';
 
 import '../proto/record.pbgrpc.dart';
 
 /// Thrown when a call to the server fails, carrying a message fit to show the
 /// user rather than a raw gRPC status.
-class RecordException implements Exception {
-  RecordException(this.message);
-
-  final String message;
-
-  @override
-  String toString() => message;
+class RecordException extends ServiceException {
+  RecordException(super.message, {super.grpcError});
 }
 
 /// RecordService wraps the gRPC client for the cbt server.
@@ -28,7 +23,10 @@ class RecordService {
   final String host;
   final int port;
 
-  ClientChannel? _channel;
+  late final GrpcChannelHolder _channel = GrpcChannelHolder(
+    host: host,
+    port: port,
+  );
   RecordServiceClient? _client;
 
   /// Whether TLS should be used to reach the configured host.
@@ -36,48 +34,23 @@ class RecordService {
   /// The decision is made on the host alone, matching the CLI: a loopback
   /// address is a local development server and is dialled in the clear;
   /// anything else is expected to present a certificate.
-  bool requireSecureConnection() {
-    if (host.isEmpty ||
-        host == 'localhost' ||
-        host == '127.0.0.1' ||
-        host == '::1') {
-      return false;
-    }
-    return true;
-  }
-
-  ChannelCredentials _credentials() => requireSecureConnection()
-      ? const ChannelCredentials.secure()
-      : const ChannelCredentials.insecure();
-
-  void _ensureInitialised() {
-    if (_channel == null) {
-      _channel = ClientChannel(
-        host,
-        port: port,
-        options: ChannelOptions(credentials: _credentials()),
-      );
-      _client = RecordServiceClient(_channel!);
-    }
-  }
+  bool requireSecureConnection() => _channel.useTls;
 
   Future<void> shutdown() async {
-    await _channel?.shutdown();
-    _channel = null;
     _client = null;
+    await _channel.shutdown();
   }
 
   /// Runs a call, turning a gRPC failure into a [RecordException]. The server's
   /// status messages name the kind of problem and never quote the contents of
   /// a record, so they are safe to show as they are.
   Future<T> _call<T>(Future<T> Function(RecordServiceClient client) body) async {
-    _ensureInitialised();
+    final client = _client ??= RecordServiceClient(_channel.channel);
     try {
-      return await body(_client!);
-    } on GrpcError catch (error) {
-      throw RecordException(error.message ?? error.codeName);
+      return await body(client);
     } catch (error) {
-      throw RecordException(error.toString());
+      final exception = ServiceException.from(error);
+      throw RecordException(exception.message, grpcError: exception.grpcError);
     }
   }
 

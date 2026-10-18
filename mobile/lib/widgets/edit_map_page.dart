@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_helper/format.dart';
 import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart';
 
 import '../l10n/app_localizations.dart';
@@ -148,7 +148,6 @@ class _EditMapPageState extends State<EditMapPage> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
-    final format = DateFormat.yMMMd();
     final origin = widget.derivedFrom;
 
     return Scaffold(
@@ -186,7 +185,7 @@ class _EditMapPageState extends State<EditMapPage> {
             title: Text(l10n.fieldWhen),
             subtitle: Text(_occurredAt == null
                 ? l10n.fieldWhenUnset
-                : format.format(_occurredAt!)),
+                : formatDate(_occurredAt!)),
             trailing: const Icon(Icons.calendar_today_outlined),
             onTap: _pickDate,
           ),

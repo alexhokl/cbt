@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+import 'package:flutter_helper/format.dart';
 
 import '../l10n/app_localizations.dart';
 import '../proto/record.pb.dart';
@@ -291,11 +291,10 @@ class RecordListState extends State<RecordList> {
 /// fallback is marked so the two are never confused: a record typed days later
 /// would otherwise look like it happened that day.
 String formatEventDate(DateTime? occurredAt, DateTime createdAt) {
-  final format = DateFormat.yMMMd();
   if (occurredAt != null) {
-    return format.format(occurredAt.toLocal());
+    return formatDate(occurredAt.toLocal());
   }
-  return '~${format.format(createdAt.toLocal())}';
+  return '~${formatDate(createdAt.toLocal())}';
 }
 
 /// Renders the highest rated feeling, which is the one worth showing when only
