@@ -338,8 +338,10 @@ class Feeling extends $pb.GeneratedMessage {
   @$pb.TagNumber(3)
   void clearIntensityBefore() => $_clearField(3);
 
-  /// intensity_after is the re-rating given during the challenge. It is only
-  /// ever set on feelings belonging to a thought record.
+  /// intensity_after is the re-rating given during the challenge of a thought
+  /// record, or once a behavioural experiment has been carried out. It is
+  /// never set on a map of worry. On an experiment it may be set without
+  /// intensity_before, for a feeling that was felt but not predicted.
   @$pb.TagNumber(4)
   $core.int get intensityAfter => $_getIZ(3);
   @$pb.TagNumber(4)
@@ -700,6 +702,201 @@ class MapOfWorry extends $pb.GeneratedMessage {
   @$pb.TagNumber(8)
   void clearDerivedFromId() => $_clearField(8);
 
+  @$pb.TagNumber(9)
+  $pb.PbList<Feeling> get feelings => $_getList(8);
+
+  @$pb.TagNumber(10)
+  $2.Timestamp get createdAt => $_getN(9);
+  @$pb.TagNumber(10)
+  set createdAt($2.Timestamp value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasCreatedAt() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearCreatedAt() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $2.Timestamp ensureCreatedAt() => $_ensure(9);
+
+  @$pb.TagNumber(11)
+  $2.Timestamp get updatedAt => $_getN(10);
+  @$pb.TagNumber(11)
+  set updatedAt($2.Timestamp value) => $_setField(11, value);
+  @$pb.TagNumber(11)
+  $core.bool hasUpdatedAt() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearUpdatedAt() => $_clearField(11);
+  @$pb.TagNumber(11)
+  $2.Timestamp ensureUpdatedAt() => $_ensure(10);
+}
+
+/// BehaviouralExperiment is the thought record for behavioural experiments:
+/// "what are you going to try?", "what do you predict will happen and how will
+/// you feel?", "what actually happened?", "what have you learned from this?",
+/// and "how can you build on this?".
+class BehaviouralExperiment extends $pb.GeneratedMessage {
+  factory BehaviouralExperiment({
+    $core.int? id,
+    $core.String? plan,
+    $2.Timestamp? occurredAt,
+    $core.String? prediction,
+    $core.String? outcome,
+    $core.String? learned,
+    $core.String? buildOn,
+    $2.Timestamp? completedAt,
+    $core.Iterable<Feeling>? feelings,
+    $2.Timestamp? createdAt,
+    $2.Timestamp? updatedAt,
+  }) {
+    final result = BehaviouralExperiment._();
+    if (id != null) result.id = id;
+    if (plan != null) result.plan = plan;
+    if (occurredAt != null) result.occurredAt = occurredAt;
+    if (prediction != null) result.prediction = prediction;
+    if (outcome != null) result.outcome = outcome;
+    if (learned != null) result.learned = learned;
+    if (buildOn != null) result.buildOn = buildOn;
+    if (completedAt != null) result.completedAt = completedAt;
+    if (feelings != null) result.feelings.addAll(feelings);
+    if (createdAt != null) result.createdAt = createdAt;
+    if (updatedAt != null) result.updatedAt = updatedAt;
+    return result;
+  }
+
+  BehaviouralExperiment._();
+
+  factory BehaviouralExperiment.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      BehaviouralExperiment()..mergeFromBuffer(data, registry);
+  factory BehaviouralExperiment.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      BehaviouralExperiment()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BehaviouralExperiment',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: BehaviouralExperiment.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'plan')
+    ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'occurredAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..aOS(4, _omitFieldNames ? '' : 'prediction')
+    ..aOS(5, _omitFieldNames ? '' : 'outcome')
+    ..aOS(6, _omitFieldNames ? '' : 'learned')
+    ..aOS(7, _omitFieldNames ? '' : 'buildOn')
+    ..aOM<$2.Timestamp>(8, _omitFieldNames ? '' : 'completedAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..pPM<Feeling>(9, _omitFieldNames ? '' : 'feelings',
+        subBuilder: Feeling.$_createMessage)
+    ..aOM<$2.Timestamp>(10, _omitFieldNames ? '' : 'createdAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..aOM<$2.Timestamp>(11, _omitFieldNames ? '' : 'updatedAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BehaviouralExperiment clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BehaviouralExperiment copyWith(
+          void Function(BehaviouralExperiment) updates) =>
+      super.copyWith((message) => updates(message as BehaviouralExperiment))
+          as BehaviouralExperiment;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use BehaviouralExperiment() / BehaviouralExperiment.new instead')
+  static BehaviouralExperiment create() => BehaviouralExperiment._();
+  static $pb.GeneratedMessage $_createMessage() => BehaviouralExperiment._();
+  @$core.override
+  BehaviouralExperiment createEmptyInstance() => BehaviouralExperiment._();
+  @$core.pragma('dart2js:noInline')
+  static BehaviouralExperiment getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BehaviouralExperiment>(
+          BehaviouralExperiment.$_createMessage);
+  static BehaviouralExperiment? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get plan => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set plan($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPlan() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPlan() => $_clearField(2);
+
+  /// occurred_at is when the experiment is, or was, carried out. It is absent
+  /// when the user did not say.
+  @$pb.TagNumber(3)
+  $2.Timestamp get occurredAt => $_getN(2);
+  @$pb.TagNumber(3)
+  set occurredAt($2.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOccurredAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOccurredAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $2.Timestamp ensureOccurredAt() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $core.String get prediction => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set prediction($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasPrediction() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearPrediction() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get outcome => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set outcome($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasOutcome() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearOutcome() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get learned => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set learned($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasLearned() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearLearned() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get buildOn => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set buildOn($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasBuildOn() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearBuildOn() => $_clearField(7);
+
+  /// completed_at is set once the outcome has been recorded, and absent while
+  /// the experiment is still to be carried out.
+  @$pb.TagNumber(8)
+  $2.Timestamp get completedAt => $_getN(7);
+  @$pb.TagNumber(8)
+  set completedAt($2.Timestamp value) => $_setField(8, value);
+  @$pb.TagNumber(8)
+  $core.bool hasCompletedAt() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearCompletedAt() => $_clearField(8);
+  @$pb.TagNumber(8)
+  $2.Timestamp ensureCompletedAt() => $_ensure(7);
+
+  /// feelings are rated before (predicted) and after (actually felt).
   @$pb.TagNumber(9)
   $pb.PbList<Feeling> get feelings => $_getList(8);
 
@@ -3025,6 +3222,734 @@ class DeleteMapOfWorryRequest extends $pb.GeneratedMessage {
   $core.bool hasId() => $_has(0);
   @$pb.TagNumber(1)
   void clearId() => $_clearField(1);
+}
+
+class ListBehaviouralExperimentsRequest extends $pb.GeneratedMessage {
+  factory ListBehaviouralExperimentsRequest({
+    $core.bool? completed,
+    $2.Timestamp? since,
+    $core.String? search,
+  }) {
+    final result = ListBehaviouralExperimentsRequest._();
+    if (completed != null) result.completed = completed;
+    if (since != null) result.since = since;
+    if (search != null) result.search = search;
+    return result;
+  }
+
+  ListBehaviouralExperimentsRequest._();
+
+  factory ListBehaviouralExperimentsRequest.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListBehaviouralExperimentsRequest()..mergeFromBuffer(data, registry);
+  factory ListBehaviouralExperimentsRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListBehaviouralExperimentsRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListBehaviouralExperimentsRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: ListBehaviouralExperimentsRequest.$_createMessage)
+    ..aOB(1, _omitFieldNames ? '' : 'completed')
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'since',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..aOS(3, _omitFieldNames ? '' : 'search')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListBehaviouralExperimentsRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListBehaviouralExperimentsRequest copyWith(
+          void Function(ListBehaviouralExperimentsRequest) updates) =>
+      super.copyWith((message) =>
+              updates(message as ListBehaviouralExperimentsRequest))
+          as ListBehaviouralExperimentsRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ListBehaviouralExperimentsRequest() / ListBehaviouralExperimentsRequest.new instead')
+  static ListBehaviouralExperimentsRequest create() =>
+      ListBehaviouralExperimentsRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      ListBehaviouralExperimentsRequest._();
+  @$core.override
+  ListBehaviouralExperimentsRequest createEmptyInstance() =>
+      ListBehaviouralExperimentsRequest._();
+  @$core.pragma('dart2js:noInline')
+  static ListBehaviouralExperimentsRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListBehaviouralExperimentsRequest>(
+          ListBehaviouralExperimentsRequest.$_createMessage);
+  static ListBehaviouralExperimentsRequest? _defaultInstance;
+
+  /// completed filters by whether the outcome has been recorded. Absent
+  /// returns both; false is the queue of experiments still to be carried out.
+  @$pb.TagNumber(1)
+  $core.bool get completed => $_getBF(0);
+  @$pb.TagNumber(1)
+  set completed($core.bool value) => $_setBool(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasCompleted() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearCompleted() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.Timestamp get since => $_getN(1);
+  @$pb.TagNumber(2)
+  set since($2.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasSince() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearSince() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Timestamp ensureSince() => $_ensure(1);
+
+  /// search matches every column of the experiment.
+  @$pb.TagNumber(3)
+  $core.String get search => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set search($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasSearch() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearSearch() => $_clearField(3);
+}
+
+class ListBehaviouralExperimentsResponse extends $pb.GeneratedMessage {
+  factory ListBehaviouralExperimentsResponse({
+    $core.Iterable<BehaviouralExperiment>? experiments,
+  }) {
+    final result = ListBehaviouralExperimentsResponse._();
+    if (experiments != null) result.experiments.addAll(experiments);
+    return result;
+  }
+
+  ListBehaviouralExperimentsResponse._();
+
+  factory ListBehaviouralExperimentsResponse.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListBehaviouralExperimentsResponse()..mergeFromBuffer(data, registry);
+  factory ListBehaviouralExperimentsResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListBehaviouralExperimentsResponse()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListBehaviouralExperimentsResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: ListBehaviouralExperimentsResponse.$_createMessage)
+    ..pPM<BehaviouralExperiment>(1, _omitFieldNames ? '' : 'experiments',
+        subBuilder: BehaviouralExperiment.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListBehaviouralExperimentsResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListBehaviouralExperimentsResponse copyWith(
+          void Function(ListBehaviouralExperimentsResponse) updates) =>
+      super.copyWith((message) =>
+              updates(message as ListBehaviouralExperimentsResponse))
+          as ListBehaviouralExperimentsResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ListBehaviouralExperimentsResponse() / ListBehaviouralExperimentsResponse.new instead')
+  static ListBehaviouralExperimentsResponse create() =>
+      ListBehaviouralExperimentsResponse._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      ListBehaviouralExperimentsResponse._();
+  @$core.override
+  ListBehaviouralExperimentsResponse createEmptyInstance() =>
+      ListBehaviouralExperimentsResponse._();
+  @$core.pragma('dart2js:noInline')
+  static ListBehaviouralExperimentsResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListBehaviouralExperimentsResponse>(
+          ListBehaviouralExperimentsResponse.$_createMessage);
+  static ListBehaviouralExperimentsResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<BehaviouralExperiment> get experiments => $_getList(0);
+}
+
+class CreateBehaviouralExperimentRequest extends $pb.GeneratedMessage {
+  factory CreateBehaviouralExperimentRequest({
+    $core.String? plan,
+    $2.Timestamp? occurredAt,
+    $core.String? prediction,
+    $core.Iterable<FeelingInput>? feelings,
+  }) {
+    final result = CreateBehaviouralExperimentRequest._();
+    if (plan != null) result.plan = plan;
+    if (occurredAt != null) result.occurredAt = occurredAt;
+    if (prediction != null) result.prediction = prediction;
+    if (feelings != null) result.feelings.addAll(feelings);
+    return result;
+  }
+
+  CreateBehaviouralExperimentRequest._();
+
+  factory CreateBehaviouralExperimentRequest.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      CreateBehaviouralExperimentRequest()..mergeFromBuffer(data, registry);
+  factory CreateBehaviouralExperimentRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      CreateBehaviouralExperimentRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateBehaviouralExperimentRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: CreateBehaviouralExperimentRequest.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'plan')
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'occurredAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..aOS(3, _omitFieldNames ? '' : 'prediction')
+    ..pPM<FeelingInput>(4, _omitFieldNames ? '' : 'feelings',
+        subBuilder: FeelingInput.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateBehaviouralExperimentRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateBehaviouralExperimentRequest copyWith(
+          void Function(CreateBehaviouralExperimentRequest) updates) =>
+      super.copyWith((message) =>
+              updates(message as CreateBehaviouralExperimentRequest))
+          as CreateBehaviouralExperimentRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use CreateBehaviouralExperimentRequest() / CreateBehaviouralExperimentRequest.new instead')
+  static CreateBehaviouralExperimentRequest create() =>
+      CreateBehaviouralExperimentRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      CreateBehaviouralExperimentRequest._();
+  @$core.override
+  CreateBehaviouralExperimentRequest createEmptyInstance() =>
+      CreateBehaviouralExperimentRequest._();
+  @$core.pragma('dart2js:noInline')
+  static CreateBehaviouralExperimentRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateBehaviouralExperimentRequest>(
+          CreateBehaviouralExperimentRequest.$_createMessage);
+  static CreateBehaviouralExperimentRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get plan => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set plan($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasPlan() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearPlan() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.Timestamp get occurredAt => $_getN(1);
+  @$pb.TagNumber(2)
+  set occurredAt($2.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOccurredAt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOccurredAt() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Timestamp ensureOccurredAt() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.String get prediction => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set prediction($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasPrediction() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearPrediction() => $_clearField(3);
+
+  /// feelings are the ones predicted, rated before the experiment.
+  @$pb.TagNumber(4)
+  $pb.PbList<FeelingInput> get feelings => $_getList(3);
+}
+
+class GetBehaviouralExperimentRequest extends $pb.GeneratedMessage {
+  factory GetBehaviouralExperimentRequest({
+    $core.int? id,
+  }) {
+    final result = GetBehaviouralExperimentRequest._();
+    if (id != null) result.id = id;
+    return result;
+  }
+
+  GetBehaviouralExperimentRequest._();
+
+  factory GetBehaviouralExperimentRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GetBehaviouralExperimentRequest()..mergeFromBuffer(data, registry);
+  factory GetBehaviouralExperimentRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GetBehaviouralExperimentRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetBehaviouralExperimentRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: GetBehaviouralExperimentRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBehaviouralExperimentRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetBehaviouralExperimentRequest copyWith(
+          void Function(GetBehaviouralExperimentRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as GetBehaviouralExperimentRequest))
+          as GetBehaviouralExperimentRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use GetBehaviouralExperimentRequest() / GetBehaviouralExperimentRequest.new instead')
+  static GetBehaviouralExperimentRequest create() =>
+      GetBehaviouralExperimentRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      GetBehaviouralExperimentRequest._();
+  @$core.override
+  GetBehaviouralExperimentRequest createEmptyInstance() =>
+      GetBehaviouralExperimentRequest._();
+  @$core.pragma('dart2js:noInline')
+  static GetBehaviouralExperimentRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetBehaviouralExperimentRequest>(
+          GetBehaviouralExperimentRequest.$_createMessage);
+  static GetBehaviouralExperimentRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+}
+
+class UpdateBehaviouralExperimentRequest extends $pb.GeneratedMessage {
+  factory UpdateBehaviouralExperimentRequest({
+    $core.int? id,
+    $core.String? plan,
+    $2.Timestamp? occurredAt,
+    $core.bool? clearOccurredAt_4,
+    $core.String? prediction,
+    $core.String? outcome,
+    $core.String? learned,
+    $core.String? buildOn,
+  }) {
+    final result = UpdateBehaviouralExperimentRequest._();
+    if (id != null) result.id = id;
+    if (plan != null) result.plan = plan;
+    if (occurredAt != null) result.occurredAt = occurredAt;
+    if (clearOccurredAt_4 != null) result.clearOccurredAt_4 = clearOccurredAt_4;
+    if (prediction != null) result.prediction = prediction;
+    if (outcome != null) result.outcome = outcome;
+    if (learned != null) result.learned = learned;
+    if (buildOn != null) result.buildOn = buildOn;
+    return result;
+  }
+
+  UpdateBehaviouralExperimentRequest._();
+
+  factory UpdateBehaviouralExperimentRequest.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      UpdateBehaviouralExperimentRequest()..mergeFromBuffer(data, registry);
+  factory UpdateBehaviouralExperimentRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      UpdateBehaviouralExperimentRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateBehaviouralExperimentRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: UpdateBehaviouralExperimentRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'plan')
+    ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'occurredAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..aOB(4, _omitFieldNames ? '' : 'clearOccurredAt')
+    ..aOS(5, _omitFieldNames ? '' : 'prediction')
+    ..aOS(6, _omitFieldNames ? '' : 'outcome')
+    ..aOS(7, _omitFieldNames ? '' : 'learned')
+    ..aOS(8, _omitFieldNames ? '' : 'buildOn')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateBehaviouralExperimentRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateBehaviouralExperimentRequest copyWith(
+          void Function(UpdateBehaviouralExperimentRequest) updates) =>
+      super.copyWith((message) =>
+              updates(message as UpdateBehaviouralExperimentRequest))
+          as UpdateBehaviouralExperimentRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use UpdateBehaviouralExperimentRequest() / UpdateBehaviouralExperimentRequest.new instead')
+  static UpdateBehaviouralExperimentRequest create() =>
+      UpdateBehaviouralExperimentRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      UpdateBehaviouralExperimentRequest._();
+  @$core.override
+  UpdateBehaviouralExperimentRequest createEmptyInstance() =>
+      UpdateBehaviouralExperimentRequest._();
+  @$core.pragma('dart2js:noInline')
+  static UpdateBehaviouralExperimentRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateBehaviouralExperimentRequest>(
+          UpdateBehaviouralExperimentRequest.$_createMessage);
+  static UpdateBehaviouralExperimentRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get plan => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set plan($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasPlan() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearPlan() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $2.Timestamp get occurredAt => $_getN(2);
+  @$pb.TagNumber(3)
+  set occurredAt($2.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasOccurredAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearOccurredAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $2.Timestamp ensureOccurredAt() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $core.bool get clearOccurredAt_4 => $_getBF(3);
+  @$pb.TagNumber(4)
+  set clearOccurredAt_4($core.bool value) => $_setBool(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasClearOccurredAt_4() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearClearOccurredAt_4() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get prediction => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set prediction($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasPrediction() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearPrediction() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get outcome => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set outcome($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasOutcome() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearOutcome() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get learned => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set learned($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasLearned() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearLearned() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get buildOn => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set buildOn($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasBuildOn() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearBuildOn() => $_clearField(8);
+}
+
+class CompleteBehaviouralExperimentRequest extends $pb.GeneratedMessage {
+  factory CompleteBehaviouralExperimentRequest({
+    $core.int? id,
+    $core.String? outcome,
+    $core.String? learned,
+    $core.String? buildOn,
+    $core.Iterable<FeelingRerating>? feelingReratings,
+    $core.Iterable<FeelingInput>? newFeelings,
+  }) {
+    final result = CompleteBehaviouralExperimentRequest._();
+    if (id != null) result.id = id;
+    if (outcome != null) result.outcome = outcome;
+    if (learned != null) result.learned = learned;
+    if (buildOn != null) result.buildOn = buildOn;
+    if (feelingReratings != null)
+      result.feelingReratings.addAll(feelingReratings);
+    if (newFeelings != null) result.newFeelings.addAll(newFeelings);
+    return result;
+  }
+
+  CompleteBehaviouralExperimentRequest._();
+
+  factory CompleteBehaviouralExperimentRequest.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      CompleteBehaviouralExperimentRequest()..mergeFromBuffer(data, registry);
+  factory CompleteBehaviouralExperimentRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      CompleteBehaviouralExperimentRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CompleteBehaviouralExperimentRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: CompleteBehaviouralExperimentRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'outcome')
+    ..aOS(3, _omitFieldNames ? '' : 'learned')
+    ..aOS(4, _omitFieldNames ? '' : 'buildOn')
+    ..pPM<FeelingRerating>(5, _omitFieldNames ? '' : 'feelingReratings',
+        subBuilder: FeelingRerating.$_createMessage)
+    ..pPM<FeelingInput>(6, _omitFieldNames ? '' : 'newFeelings',
+        subBuilder: FeelingInput.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CompleteBehaviouralExperimentRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CompleteBehaviouralExperimentRequest copyWith(
+          void Function(CompleteBehaviouralExperimentRequest) updates) =>
+      super.copyWith((message) =>
+              updates(message as CompleteBehaviouralExperimentRequest))
+          as CompleteBehaviouralExperimentRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use CompleteBehaviouralExperimentRequest() / CompleteBehaviouralExperimentRequest.new instead')
+  static CompleteBehaviouralExperimentRequest create() =>
+      CompleteBehaviouralExperimentRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      CompleteBehaviouralExperimentRequest._();
+  @$core.override
+  CompleteBehaviouralExperimentRequest createEmptyInstance() =>
+      CompleteBehaviouralExperimentRequest._();
+  @$core.pragma('dart2js:noInline')
+  static CompleteBehaviouralExperimentRequest getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<
+              CompleteBehaviouralExperimentRequest>(
+          CompleteBehaviouralExperimentRequest.$_createMessage);
+  static CompleteBehaviouralExperimentRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get outcome => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set outcome($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasOutcome() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearOutcome() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get learned => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set learned($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasLearned() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearLearned() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get buildOn => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set buildOn($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBuildOn() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBuildOn() => $_clearField(4);
+
+  /// feeling_reratings rate the predicted feelings as they were actually felt.
+  @$pb.TagNumber(5)
+  $pb.PbList<FeelingRerating> get feelingReratings => $_getList(4);
+
+  /// new_feelings are feelings that were felt but not predicted. Their
+  /// intensity is stored as intensity_after.
+  @$pb.TagNumber(6)
+  $pb.PbList<FeelingInput> get newFeelings => $_getList(5);
+}
+
+class DeleteBehaviouralExperimentRequest extends $pb.GeneratedMessage {
+  factory DeleteBehaviouralExperimentRequest({
+    $core.int? id,
+  }) {
+    final result = DeleteBehaviouralExperimentRequest._();
+    if (id != null) result.id = id;
+    return result;
+  }
+
+  DeleteBehaviouralExperimentRequest._();
+
+  factory DeleteBehaviouralExperimentRequest.fromBuffer(
+          $core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DeleteBehaviouralExperimentRequest()..mergeFromBuffer(data, registry);
+  factory DeleteBehaviouralExperimentRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DeleteBehaviouralExperimentRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteBehaviouralExperimentRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: DeleteBehaviouralExperimentRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteBehaviouralExperimentRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteBehaviouralExperimentRequest copyWith(
+          void Function(DeleteBehaviouralExperimentRequest) updates) =>
+      super.copyWith((message) =>
+              updates(message as DeleteBehaviouralExperimentRequest))
+          as DeleteBehaviouralExperimentRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use DeleteBehaviouralExperimentRequest() / DeleteBehaviouralExperimentRequest.new instead')
+  static DeleteBehaviouralExperimentRequest create() =>
+      DeleteBehaviouralExperimentRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      DeleteBehaviouralExperimentRequest._();
+  @$core.override
+  DeleteBehaviouralExperimentRequest createEmptyInstance() =>
+      DeleteBehaviouralExperimentRequest._();
+  @$core.pragma('dart2js:noInline')
+  static DeleteBehaviouralExperimentRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteBehaviouralExperimentRequest>(
+          DeleteBehaviouralExperimentRequest.$_createMessage);
+  static DeleteBehaviouralExperimentRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+}
+
+class AddExperimentFeelingRequest extends $pb.GeneratedMessage {
+  factory AddExperimentFeelingRequest({
+    $core.int? experimentId,
+    FeelingInput? feeling,
+  }) {
+    final result = AddExperimentFeelingRequest._();
+    if (experimentId != null) result.experimentId = experimentId;
+    if (feeling != null) result.feeling = feeling;
+    return result;
+  }
+
+  AddExperimentFeelingRequest._();
+
+  factory AddExperimentFeelingRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      AddExperimentFeelingRequest()..mergeFromBuffer(data, registry);
+  factory AddExperimentFeelingRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      AddExperimentFeelingRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AddExperimentFeelingRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: AddExperimentFeelingRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'experimentId',
+        fieldType: $pb.PbFieldType.OU3)
+    ..aOM<FeelingInput>(2, _omitFieldNames ? '' : 'feeling',
+        subBuilder: FeelingInput.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AddExperimentFeelingRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AddExperimentFeelingRequest copyWith(
+          void Function(AddExperimentFeelingRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as AddExperimentFeelingRequest))
+          as AddExperimentFeelingRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use AddExperimentFeelingRequest() / AddExperimentFeelingRequest.new instead')
+  static AddExperimentFeelingRequest create() =>
+      AddExperimentFeelingRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      AddExperimentFeelingRequest._();
+  @$core.override
+  AddExperimentFeelingRequest createEmptyInstance() =>
+      AddExperimentFeelingRequest._();
+  @$core.pragma('dart2js:noInline')
+  static AddExperimentFeelingRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AddExperimentFeelingRequest>(
+          AddExperimentFeelingRequest.$_createMessage);
+  static AddExperimentFeelingRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get experimentId => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set experimentId($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasExperimentId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearExperimentId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  FeelingInput get feeling => $_getN(1);
+  @$pb.TagNumber(2)
+  set feeling(FeelingInput value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasFeeling() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearFeeling() => $_clearField(2);
+  @$pb.TagNumber(2)
+  FeelingInput ensureFeeling() => $_ensure(1);
 }
 
 class ListBiasesRequest extends $pb.GeneratedMessage {

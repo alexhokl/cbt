@@ -76,6 +76,7 @@ func TestAutoMigrateCreatesExpectedTables(t *testing.T) {
 		"cognitive_biases",
 		"thought_records",
 		"map_of_worries",
+		"behavioural_experiments",
 		"negative_thoughts",
 		"feelings",
 		"thought_biases",
@@ -85,6 +86,31 @@ func TestAutoMigrateCreatesExpectedTables(t *testing.T) {
 		t.Run(table, func(t *testing.T) {
 			if !db.Migrator().HasTable(table) {
 				t.Errorf("expected the table %q to exist", table)
+			}
+		})
+	}
+}
+
+func TestAutoMigrateDropsRetiredTriggers(t *testing.T) {
+	db := setupTestDB(t)
+
+	// A database created before a trigger was replaced still carries the old
+	// one, which would keep enforcing the old invariant alongside the new.
+	if err := db.Exec("CREATE TRIGGER feelings_single_parent_on_INSERT BEFORE INSERT ON feelings WHEN NEW.map_of_worry_id IS NULL AND NEW.thought_record_id IS NULL BEGIN SELECT RAISE(ABORT, 'retired'); END").Error; err != nil {
+		t.Fatalf("failed to create the retired trigger: %v", err)
+	}
+	if err := AutoMigrate(db); err != nil {
+		t.Fatalf("failed to migrate: %v", err)
+	}
+
+	for _, name := range retiredTriggers {
+		t.Run(name, func(t *testing.T) {
+			var count int64
+			if err := db.Raw("SELECT COUNT(*) FROM sqlite_master WHERE type = 'trigger' AND name = ?", name).Scan(&count).Error; err != nil {
+				t.Fatalf("failed to query the schema: %v", err)
+			}
+			if count != 0 {
+				t.Errorf("expected the trigger %q to be dropped", name)
 			}
 		})
 	}

@@ -149,6 +149,50 @@ func TestFeelingsTriggerRejectsRerating0nAMapOfWorry(t *testing.T) {
 	}
 }
 
+func TestFeelingsTriggerRejectsAnExperimentAndAnotherParent(t *testing.T) {
+	db := setupTestDB(t)
+
+	experiment, err := CreateBehaviouralExperiment(db, testUserID, CreateBehaviouralExperimentInput{Plan: "a plan"})
+	if err != nil {
+		t.Fatalf("failed to create the experiment: %v", err)
+	}
+	mapOfWorry, err := CreateMapOfWorry(db, testUserID, CreateMapOfWorryInput{Event: "an event"})
+	if err != nil {
+		t.Fatalf("failed to create the map: %v", err)
+	}
+
+	feeling := Feeling{
+		Name:                    "anxious",
+		UserID:                  testUserID,
+		MapOfWorryID:            &mapOfWorry.ID,
+		BehaviouralExperimentID: &experiment.ID,
+	}
+	if err := db.Create(&feeling).Error; err == nil {
+		t.Error("expected a feeling on an experiment and a map to be rejected")
+	}
+}
+
+func TestFeelingsTriggerAcceptsReratingOnAnExperiment(t *testing.T) {
+	db := setupTestDB(t)
+
+	experiment, err := CreateBehaviouralExperiment(db, testUserID, CreateBehaviouralExperimentInput{Plan: "a plan"})
+	if err != nil {
+		t.Fatalf("failed to create the experiment: %v", err)
+	}
+
+	// An experiment has a second sitting, and what was felt is not limited to
+	// what was predicted, so a rating after on its own is valid.
+	feeling := Feeling{
+		Name:                    "relieved",
+		UserID:                  testUserID,
+		BehaviouralExperimentID: &experiment.ID,
+		IntensityAfter:          intPtr(50),
+	}
+	if err := db.Create(&feeling).Error; err != nil {
+		t.Errorf("expected a rating after on an experiment's feeling to be accepted but got %v", err)
+	}
+}
+
 func TestThoughtsTriggerRejectsASecondHotThought(t *testing.T) {
 	db := setupTestDB(t)
 

@@ -21,10 +21,17 @@ func AutoMigrate(db *gorm.DB) error {
 		&CognitiveBias{},
 		&ThoughtRecord{},
 		&MapOfWorry{},
+		&BehaviouralExperiment{},
 		&NegativeThought{},
 		&Feeling{},
 	); err != nil {
 		return err
+	}
+
+	for _, name := range retiredTriggers {
+		if err := db.Exec(fmt.Sprintf("DROP TRIGGER IF EXISTS %s", name)).Error; err != nil {
+			return fmt.Errorf("failed to drop %s trigger: %w", name, err)
+		}
 	}
 
 	for _, trigger := range schemaTriggers() {
@@ -34,6 +41,21 @@ func AutoMigrate(db *gorm.DB) error {
 	}
 
 	return nil
+}
+
+// retiredTriggers are triggers an earlier schema created and the current one
+// replaces. Triggers are created with IF NOT EXISTS, so editing the condition
+// of an existing trigger would never reach a database that already has it.
+// A changed invariant is therefore registered under a new name and the old
+// name is listed here to be dropped.
+//
+// The feelings triggers were replaced when BehaviouralExperiment became a
+// third parent of a feeling.
+var retiredTriggers = []string{
+	"feelings_single_parent_on_INSERT",
+	"feelings_single_parent_on_UPDATE",
+	"feelings_after_needs_record_on_INSERT",
+	"feelings_after_needs_record_on_UPDATE",
 }
 
 // schemaTrigger describes a BEFORE INSERT/UPDATE trigger that aborts when the
@@ -67,12 +89,12 @@ func schemaTriggers() []schemaTrigger {
 		message   string
 	}{
 		{
-			// A feeling hangs off exactly one parent. Neither would orphan it;
-			// both would make it appear on two unrelated records.
-			name:      "feelings_single_parent",
+			// A feeling hangs off exactly one parent. None would orphan it;
+			// more would make it appear on unrelated records.
+			name:      "feelings_one_parent",
 			table:     "feelings",
-			condition: "(NEW.thought_record_id IS NULL AND NEW.map_of_worry_id IS NULL) OR (NEW.thought_record_id IS NOT NULL AND NEW.map_of_worry_id IS NOT NULL)",
-			message:   "a feeling must belong to exactly one of a thought record or a map of worry",
+			condition: "(NEW.thought_record_id IS NOT NULL) + (NEW.map_of_worry_id IS NOT NULL) + (NEW.behavioural_experiment_id IS NOT NULL) <> 1",
+			message:   "a feeling must belong to exactly one of a thought record, a map of worry or a behavioural experiment",
 		},
 		{
 			// Ratings are percentages. A value outside the range is a bug at
@@ -83,12 +105,13 @@ func schemaTriggers() []schemaTrigger {
 			message:   "a feeling intensity must be between 0 and 100",
 		},
 		{
-			// Re-rating belongs to the challenge step, which only a thought
-			// record has. A map of worry rates its feelings once.
-			name:      "feelings_after_needs_record",
+			// Re-rating belongs to a second sitting, which a thought record
+			// and a behavioural experiment have. A map of worry rates its
+			// feelings once.
+			name:      "feelings_after_needs_rerated_parent",
 			table:     "feelings",
-			condition: "NEW.intensity_after IS NOT NULL AND NEW.thought_record_id IS NULL",
-			message:   "only a feeling on a thought record can be re-rated",
+			condition: "NEW.intensity_after IS NOT NULL AND NEW.thought_record_id IS NULL AND NEW.behavioural_experiment_id IS NULL",
+			message:   "only a feeling on a thought record or a behavioural experiment can be re-rated",
 		},
 		{
 			// The hot thought is the single strongest thought of a record.

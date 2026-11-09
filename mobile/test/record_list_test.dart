@@ -28,36 +28,46 @@ void main() {
 
   setUp(() {
     service = MockRecordService();
-    when(() => service.listMapsOfWorry(search: any(named: 'search')))
-        .thenAnswer((_) async => <MapOfWorry>[]);
+    when(
+      () => service.listMapsOfWorry(search: any(named: 'search')),
+    ).thenAnswer((_) async => <MapOfWorry>[]);
   });
 
-  testWidgets('opens on the queue of records still to work through',
-      (tester) async {
-    when(() => service.listThoughtRecords(
-          challenged: any(named: 'challenged'),
-          search: any(named: 'search'),
-        )).thenAnswer((_) async => [buildRecord(event: 'still to do')]);
+  testWidgets('opens on the queue of records still to work through', (
+    tester,
+  ) async {
+    when(
+      () => service.listThoughtRecords(
+        challenged: any(named: 'challenged'),
+        search: any(named: 'search'),
+      ),
+    ).thenAnswer((_) async => [buildRecord(event: 'still to do')]);
 
     await tester.pumpWidget(wrap(RecordList(service: service)));
     await tester.pumpAndSettle();
 
     // The unchallenged queue is the reason the list is tabbed at all, so it is
     // what the app opens on.
-    verify(() => service.listThoughtRecords(challenged: false, search: ''))
-        .called(1);
+    verify(
+      () => service.listThoughtRecords(challenged: false, search: ''),
+    ).called(1);
     expect(find.text('still to do'), findsOneWidget);
   });
 
-  testWidgets('offers the challenge action only on unchallenged records',
-      (tester) async {
-    when(() => service.listThoughtRecords(
-          challenged: any(named: 'challenged'),
-          search: any(named: 'search'),
-        )).thenAnswer((_) async => [
-          buildRecord(id: 1, event: 'still to do'),
-          buildRecord(id: 2, event: 'already done', challenged: true),
-        ]);
+  testWidgets('offers the challenge action only on unchallenged records', (
+    tester,
+  ) async {
+    when(
+      () => service.listThoughtRecords(
+        challenged: any(named: 'challenged'),
+        search: any(named: 'search'),
+      ),
+    ).thenAnswer(
+      (_) async => [
+        buildRecord(id: 1, event: 'still to do'),
+        buildRecord(id: 2, event: 'already done', challenged: true),
+      ],
+    );
 
     await tester.pumpWidget(wrap(RecordList(service: service)));
     await tester.pumpAndSettle();
@@ -67,12 +77,15 @@ void main() {
     expect(find.byIcon(Icons.psychology_outlined), findsOneWidget);
   });
 
-  testWidgets('says so explicitly when there is nothing waiting',
-      (tester) async {
-    when(() => service.listThoughtRecords(
-          challenged: any(named: 'challenged'),
-          search: any(named: 'search'),
-        )).thenAnswer((_) async => <ThoughtRecord>[]);
+  testWidgets('says so explicitly when there is nothing waiting', (
+    tester,
+  ) async {
+    when(
+      () => service.listThoughtRecords(
+        challenged: any(named: 'challenged'),
+        search: any(named: 'search'),
+      ),
+    ).thenAnswer((_) async => <ThoughtRecord>[]);
 
     await tester.pumpWidget(wrap(RecordList(service: service)));
     await tester.pumpAndSettle();
@@ -81,12 +94,15 @@ void main() {
     expect(find.textContaining('Nothing waiting'), findsOneWidget);
   });
 
-  testWidgets('offers a retry when the server cannot be reached',
-      (tester) async {
-    when(() => service.listThoughtRecords(
-          challenged: any(named: 'challenged'),
-          search: any(named: 'search'),
-        )).thenThrow(RecordException('connection refused'));
+  testWidgets('offers a retry when the server cannot be reached', (
+    tester,
+  ) async {
+    when(
+      () => service.listThoughtRecords(
+        challenged: any(named: 'challenged'),
+        search: any(named: 'search'),
+      ),
+    ).thenThrow(RecordException('connection refused'));
 
     await tester.pumpWidget(wrap(RecordList(service: service)));
     await tester.pumpAndSettle();
@@ -96,18 +112,22 @@ void main() {
   });
 
   testWidgets('switches to maps of worry', (tester) async {
-    when(() => service.listThoughtRecords(
-          challenged: any(named: 'challenged'),
-          search: any(named: 'search'),
-        )).thenAnswer((_) async => <ThoughtRecord>[]);
-    when(() => service.listMapsOfWorry(search: any(named: 'search')))
-        .thenAnswer((_) async => [
-              MapOfWorry()
-                ..id = 1
-                ..event = 'a mapped event'
-                ..createdAt =
-                    Timestamp.fromDateTime(DateTime.utc(2026, 9, 25)),
-            ]);
+    when(
+      () => service.listThoughtRecords(
+        challenged: any(named: 'challenged'),
+        search: any(named: 'search'),
+      ),
+    ).thenAnswer((_) async => <ThoughtRecord>[]);
+    when(
+      () => service.listMapsOfWorry(search: any(named: 'search')),
+    ).thenAnswer(
+      (_) async => [
+        MapOfWorry()
+          ..id = 1
+          ..event = 'a mapped event'
+          ..createdAt = Timestamp.fromDateTime(DateTime.utc(2026, 9, 25)),
+      ],
+    );
 
     await tester.pumpWidget(wrap(RecordList(service: service)));
     await tester.pumpAndSettle();
@@ -116,6 +136,38 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('a mapped event'), findsOneWidget);
+  });
+
+  testWidgets('switches to behavioural experiments', (tester) async {
+    when(
+      () => service.listThoughtRecords(
+        challenged: any(named: 'challenged'),
+        search: any(named: 'search'),
+      ),
+    ).thenAnswer((_) async => <ThoughtRecord>[]);
+    when(
+      () => service.listBehaviouralExperiments(
+        completed: any(named: 'completed'),
+        search: any(named: 'search'),
+      ),
+    ).thenAnswer(
+      (_) async => [
+        BehaviouralExperiment()
+          ..id = 1
+          ..plan = 'take the earlier train'
+          ..createdAt = Timestamp.fromDateTime(DateTime.utc(2026, 9, 25)),
+      ],
+    );
+
+    await tester.pumpWidget(wrap(RecordList(service: service)));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('Experiments'));
+    await tester.tap(find.text('Experiments'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('take the earlier train'), findsOneWidget);
+    expect(find.textContaining('Not written up yet'), findsOneWidget);
   });
 
   group('strongestFeeling', () {

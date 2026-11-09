@@ -298,6 +298,80 @@ final $typed_data.Uint8List mapOfWorryDescriptor = $convert.base64Decode(
     'ZWRBdBI5Cgp1cGRhdGVkX2F0GAsgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJdX'
     'BkYXRlZEF0Qg4KDF9vY2N1cnJlZF9hdEISChBfZGVyaXZlZF9mcm9tX2lk');
 
+@$core.Deprecated('Use behaviouralExperimentDescriptor instead')
+const BehaviouralExperiment$json = {
+  '1': 'BehaviouralExperiment',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {'1': 'plan', '3': 2, '4': 1, '5': 9, '10': 'plan'},
+    {
+      '1': 'occurred_at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 0,
+      '10': 'occurredAt',
+      '17': true
+    },
+    {'1': 'prediction', '3': 4, '4': 1, '5': 9, '10': 'prediction'},
+    {'1': 'outcome', '3': 5, '4': 1, '5': 9, '10': 'outcome'},
+    {'1': 'learned', '3': 6, '4': 1, '5': 9, '10': 'learned'},
+    {'1': 'build_on', '3': 7, '4': 1, '5': 9, '10': 'buildOn'},
+    {
+      '1': 'completed_at',
+      '3': 8,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 1,
+      '10': 'completedAt',
+      '17': true
+    },
+    {
+      '1': 'feelings',
+      '3': 9,
+      '4': 3,
+      '5': 11,
+      '6': '.record.Feeling',
+      '10': 'feelings'
+    },
+    {
+      '1': 'created_at',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'createdAt'
+    },
+    {
+      '1': 'updated_at',
+      '3': 11,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'updatedAt'
+    },
+  ],
+  '8': [
+    {'1': '_occurred_at'},
+    {'1': '_completed_at'},
+  ],
+};
+
+/// Descriptor for `BehaviouralExperiment`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List behaviouralExperimentDescriptor = $convert.base64Decode(
+    'ChVCZWhhdmlvdXJhbEV4cGVyaW1lbnQSDgoCaWQYASABKA1SAmlkEhIKBHBsYW4YAiABKAlSBH'
+    'BsYW4SQAoLb2NjdXJyZWRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSABS'
+    'Cm9jY3VycmVkQXSIAQESHgoKcHJlZGljdGlvbhgEIAEoCVIKcHJlZGljdGlvbhIYCgdvdXRjb2'
+    '1lGAUgASgJUgdvdXRjb21lEhgKB2xlYXJuZWQYBiABKAlSB2xlYXJuZWQSGQoIYnVpbGRfb24Y'
+    'ByABKAlSB2J1aWxkT24SQgoMY29tcGxldGVkX2F0GAggASgLMhouZ29vZ2xlLnByb3RvYnVmLl'
+    'RpbWVzdGFtcEgBUgtjb21wbGV0ZWRBdIgBARIrCghmZWVsaW5ncxgJIAMoCzIPLnJlY29yZC5G'
+    'ZWVsaW5nUghmZWVsaW5ncxI5CgpjcmVhdGVkX2F0GAogASgLMhouZ29vZ2xlLnByb3RvYnVmLl'
+    'RpbWVzdGFtcFIJY3JlYXRlZEF0EjkKCnVwZGF0ZWRfYXQYCyABKAsyGi5nb29nbGUucHJvdG9i'
+    'dWYuVGltZXN0YW1wUgl1cGRhdGVkQXRCDgoMX29jY3VycmVkX2F0Qg8KDV9jb21wbGV0ZWRfYX'
+    'Q=');
+
 @$core.Deprecated('Use feelingInputDescriptor instead')
 const FeelingInput$json = {
   '1': 'FeelingInput',
@@ -1079,6 +1153,264 @@ const DeleteMapOfWorryRequest$json = {
 /// Descriptor for `DeleteMapOfWorryRequest`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List deleteMapOfWorryRequestDescriptor = $convert
     .base64Decode('ChdEZWxldGVNYXBPZldvcnJ5UmVxdWVzdBIOCgJpZBgBIAEoDVICaWQ=');
+
+@$core.Deprecated('Use listBehaviouralExperimentsRequestDescriptor instead')
+const ListBehaviouralExperimentsRequest$json = {
+  '1': 'ListBehaviouralExperimentsRequest',
+  '2': [
+    {
+      '1': 'completed',
+      '3': 1,
+      '4': 1,
+      '5': 8,
+      '9': 0,
+      '10': 'completed',
+      '17': true
+    },
+    {
+      '1': 'since',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 1,
+      '10': 'since',
+      '17': true
+    },
+    {'1': 'search', '3': 3, '4': 1, '5': 9, '10': 'search'},
+  ],
+  '8': [
+    {'1': '_completed'},
+    {'1': '_since'},
+  ],
+};
+
+/// Descriptor for `ListBehaviouralExperimentsRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listBehaviouralExperimentsRequestDescriptor =
+    $convert.base64Decode(
+        'CiFMaXN0QmVoYXZpb3VyYWxFeHBlcmltZW50c1JlcXVlc3QSIQoJY29tcGxldGVkGAEgASgISA'
+        'BSCWNvbXBsZXRlZIgBARI1CgVzaW5jZRgCIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3Rh'
+        'bXBIAVIFc2luY2WIAQESFgoGc2VhcmNoGAMgASgJUgZzZWFyY2hCDAoKX2NvbXBsZXRlZEIICg'
+        'Zfc2luY2U=');
+
+@$core.Deprecated('Use listBehaviouralExperimentsResponseDescriptor instead')
+const ListBehaviouralExperimentsResponse$json = {
+  '1': 'ListBehaviouralExperimentsResponse',
+  '2': [
+    {
+      '1': 'experiments',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.record.BehaviouralExperiment',
+      '10': 'experiments'
+    },
+  ],
+};
+
+/// Descriptor for `ListBehaviouralExperimentsResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listBehaviouralExperimentsResponseDescriptor =
+    $convert.base64Decode(
+        'CiJMaXN0QmVoYXZpb3VyYWxFeHBlcmltZW50c1Jlc3BvbnNlEj8KC2V4cGVyaW1lbnRzGAEgAy'
+        'gLMh0ucmVjb3JkLkJlaGF2aW91cmFsRXhwZXJpbWVudFILZXhwZXJpbWVudHM=');
+
+@$core.Deprecated('Use createBehaviouralExperimentRequestDescriptor instead')
+const CreateBehaviouralExperimentRequest$json = {
+  '1': 'CreateBehaviouralExperimentRequest',
+  '2': [
+    {'1': 'plan', '3': 1, '4': 1, '5': 9, '10': 'plan'},
+    {
+      '1': 'occurred_at',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 0,
+      '10': 'occurredAt',
+      '17': true
+    },
+    {'1': 'prediction', '3': 3, '4': 1, '5': 9, '10': 'prediction'},
+    {
+      '1': 'feelings',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.record.FeelingInput',
+      '10': 'feelings'
+    },
+  ],
+  '8': [
+    {'1': '_occurred_at'},
+  ],
+};
+
+/// Descriptor for `CreateBehaviouralExperimentRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createBehaviouralExperimentRequestDescriptor =
+    $convert.base64Decode(
+        'CiJDcmVhdGVCZWhhdmlvdXJhbEV4cGVyaW1lbnRSZXF1ZXN0EhIKBHBsYW4YASABKAlSBHBsYW'
+        '4SQAoLb2NjdXJyZWRfYXQYAiABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSABSCm9j'
+        'Y3VycmVkQXSIAQESHgoKcHJlZGljdGlvbhgDIAEoCVIKcHJlZGljdGlvbhIwCghmZWVsaW5ncx'
+        'gEIAMoCzIULnJlY29yZC5GZWVsaW5nSW5wdXRSCGZlZWxpbmdzQg4KDF9vY2N1cnJlZF9hdA==');
+
+@$core.Deprecated('Use getBehaviouralExperimentRequestDescriptor instead')
+const GetBehaviouralExperimentRequest$json = {
+  '1': 'GetBehaviouralExperimentRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `GetBehaviouralExperimentRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getBehaviouralExperimentRequestDescriptor =
+    $convert.base64Decode(
+        'Ch9HZXRCZWhhdmlvdXJhbEV4cGVyaW1lbnRSZXF1ZXN0Eg4KAmlkGAEgASgNUgJpZA==');
+
+@$core.Deprecated('Use updateBehaviouralExperimentRequestDescriptor instead')
+const UpdateBehaviouralExperimentRequest$json = {
+  '1': 'UpdateBehaviouralExperimentRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {'1': 'plan', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'plan', '17': true},
+    {
+      '1': 'occurred_at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 1,
+      '10': 'occurredAt',
+      '17': true
+    },
+    {'1': 'clear_occurred_at', '3': 4, '4': 1, '5': 8, '10': 'clearOccurredAt'},
+    {
+      '1': 'prediction',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'prediction',
+      '17': true
+    },
+    {
+      '1': 'outcome',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '9': 3,
+      '10': 'outcome',
+      '17': true
+    },
+    {
+      '1': 'learned',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '9': 4,
+      '10': 'learned',
+      '17': true
+    },
+    {
+      '1': 'build_on',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '9': 5,
+      '10': 'buildOn',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_plan'},
+    {'1': '_occurred_at'},
+    {'1': '_prediction'},
+    {'1': '_outcome'},
+    {'1': '_learned'},
+    {'1': '_build_on'},
+  ],
+};
+
+/// Descriptor for `UpdateBehaviouralExperimentRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateBehaviouralExperimentRequestDescriptor = $convert.base64Decode(
+    'CiJVcGRhdGVCZWhhdmlvdXJhbEV4cGVyaW1lbnRSZXF1ZXN0Eg4KAmlkGAEgASgNUgJpZBIXCg'
+    'RwbGFuGAIgASgJSABSBHBsYW6IAQESQAoLb2NjdXJyZWRfYXQYAyABKAsyGi5nb29nbGUucHJv'
+    'dG9idWYuVGltZXN0YW1wSAFSCm9jY3VycmVkQXSIAQESKgoRY2xlYXJfb2NjdXJyZWRfYXQYBC'
+    'ABKAhSD2NsZWFyT2NjdXJyZWRBdBIjCgpwcmVkaWN0aW9uGAUgASgJSAJSCnByZWRpY3Rpb26I'
+    'AQESHQoHb3V0Y29tZRgGIAEoCUgDUgdvdXRjb21liAEBEh0KB2xlYXJuZWQYByABKAlIBFIHbG'
+    'Vhcm5lZIgBARIeCghidWlsZF9vbhgIIAEoCUgFUgdidWlsZE9uiAEBQgcKBV9wbGFuQg4KDF9v'
+    'Y2N1cnJlZF9hdEINCgtfcHJlZGljdGlvbkIKCghfb3V0Y29tZUIKCghfbGVhcm5lZEILCglfYn'
+    'VpbGRfb24=');
+
+@$core.Deprecated('Use completeBehaviouralExperimentRequestDescriptor instead')
+const CompleteBehaviouralExperimentRequest$json = {
+  '1': 'CompleteBehaviouralExperimentRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {'1': 'outcome', '3': 2, '4': 1, '5': 9, '10': 'outcome'},
+    {'1': 'learned', '3': 3, '4': 1, '5': 9, '10': 'learned'},
+    {'1': 'build_on', '3': 4, '4': 1, '5': 9, '10': 'buildOn'},
+    {
+      '1': 'feeling_reratings',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.record.FeelingRerating',
+      '10': 'feelingReratings'
+    },
+    {
+      '1': 'new_feelings',
+      '3': 6,
+      '4': 3,
+      '5': 11,
+      '6': '.record.FeelingInput',
+      '10': 'newFeelings'
+    },
+  ],
+};
+
+/// Descriptor for `CompleteBehaviouralExperimentRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List completeBehaviouralExperimentRequestDescriptor =
+    $convert.base64Decode(
+        'CiRDb21wbGV0ZUJlaGF2aW91cmFsRXhwZXJpbWVudFJlcXVlc3QSDgoCaWQYASABKA1SAmlkEh'
+        'gKB291dGNvbWUYAiABKAlSB291dGNvbWUSGAoHbGVhcm5lZBgDIAEoCVIHbGVhcm5lZBIZCghi'
+        'dWlsZF9vbhgEIAEoCVIHYnVpbGRPbhJEChFmZWVsaW5nX3JlcmF0aW5ncxgFIAMoCzIXLnJlY2'
+        '9yZC5GZWVsaW5nUmVyYXRpbmdSEGZlZWxpbmdSZXJhdGluZ3MSNwoMbmV3X2ZlZWxpbmdzGAYg'
+        'AygLMhQucmVjb3JkLkZlZWxpbmdJbnB1dFILbmV3RmVlbGluZ3M=');
+
+@$core.Deprecated('Use deleteBehaviouralExperimentRequestDescriptor instead')
+const DeleteBehaviouralExperimentRequest$json = {
+  '1': 'DeleteBehaviouralExperimentRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `DeleteBehaviouralExperimentRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteBehaviouralExperimentRequestDescriptor =
+    $convert.base64Decode(
+        'CiJEZWxldGVCZWhhdmlvdXJhbEV4cGVyaW1lbnRSZXF1ZXN0Eg4KAmlkGAEgASgNUgJpZA==');
+
+@$core.Deprecated('Use addExperimentFeelingRequestDescriptor instead')
+const AddExperimentFeelingRequest$json = {
+  '1': 'AddExperimentFeelingRequest',
+  '2': [
+    {'1': 'experiment_id', '3': 1, '4': 1, '5': 13, '10': 'experimentId'},
+    {
+      '1': 'feeling',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.record.FeelingInput',
+      '10': 'feeling'
+    },
+  ],
+};
+
+/// Descriptor for `AddExperimentFeelingRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List addExperimentFeelingRequestDescriptor =
+    $convert.base64Decode(
+        'ChtBZGRFeHBlcmltZW50RmVlbGluZ1JlcXVlc3QSIwoNZXhwZXJpbWVudF9pZBgBIAEoDVIMZX'
+        'hwZXJpbWVudElkEi4KB2ZlZWxpbmcYAiABKAsyFC5yZWNvcmQuRmVlbGluZ0lucHV0UgdmZWVs'
+        'aW5n');
 
 @$core.Deprecated('Use listBiasesRequestDescriptor instead')
 const ListBiasesRequest$json = {

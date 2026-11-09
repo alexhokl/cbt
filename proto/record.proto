@@ -10,7 +10,7 @@ option go_package = "github.com/alexhokl/cbt/proto";
 // RecordService is the gRPC API served by `cbt serve`. RPCs are added here and
 // registered in cmd/serve.go.
 //
-// Both record types and the cognitive bias vocabulary live on a single service
+// Every record type and the cognitive bias vocabulary live on a single service
 // rather than one service per entity: the client wrapper and the interceptor
 // wiring would otherwise be duplicated for no gain, and listing across both
 // record types needs a single endpoint anyway.
@@ -72,6 +72,29 @@ service RecordService {
   // alternatives derived from it is rejected.
   rpc DeleteMapOfWorry(DeleteMapOfWorryRequest) returns (google.protobuf.Empty);
 
+  // ListBehaviouralExperiments returns the user's behavioural experiments,
+  // most recent first. Filtering by completed = false yields the experiments
+  // still to be carried out.
+  rpc ListBehaviouralExperiments(ListBehaviouralExperimentsRequest) returns (ListBehaviouralExperimentsResponse);
+  // CreateBehaviouralExperiment creates an experiment. Only the plan is
+  // required; feelings given here are the ones predicted.
+  rpc CreateBehaviouralExperiment(CreateBehaviouralExperimentRequest) returns (BehaviouralExperiment);
+  // GetBehaviouralExperiment returns a single experiment by identifier.
+  rpc GetBehaviouralExperiment(GetBehaviouralExperimentRequest) returns (BehaviouralExperiment);
+  // UpdateBehaviouralExperiment changes the free text columns of an
+  // experiment without marking it completed. Fields left unset keep their
+  // current value.
+  rpc UpdateBehaviouralExperiment(UpdateBehaviouralExperimentRequest) returns (BehaviouralExperiment);
+  // CompleteBehaviouralExperiment records the second sitting: what actually
+  // happened, what was learned, how to build on it, and how each feeling was
+  // actually felt. It stamps completed_at so the experiment leaves the queue.
+  rpc CompleteBehaviouralExperiment(CompleteBehaviouralExperimentRequest) returns (BehaviouralExperiment);
+  // DeleteBehaviouralExperiment removes an experiment along with its
+  // feelings.
+  rpc DeleteBehaviouralExperiment(DeleteBehaviouralExperimentRequest) returns (google.protobuf.Empty);
+  // AddExperimentFeeling attaches a predicted feeling to an experiment.
+  rpc AddExperimentFeeling(AddExperimentFeelingRequest) returns (BehaviouralExperiment);
+
   // ListBiases returns the user's cognitive bias vocabulary, ordered by name.
   rpc ListBiases(ListBiasesRequest) returns (ListBiasesResponse);
   // CreateBias adds a user defined bias alongside the seeded ones.
@@ -125,8 +148,10 @@ message Feeling {
   string name = 2;
   // intensity_before is the rating given when the feeling was recorded.
   optional int32 intensity_before = 3;
-  // intensity_after is the re-rating given during the challenge. It is only
-  // ever set on feelings belonging to a thought record.
+  // intensity_after is the re-rating given during the challenge of a thought
+  // record, or once a behavioural experiment has been carried out. It is
+  // never set on a map of worry. On an experiment it may be set without
+  // intensity_before, for a feeling that was felt but not predicted.
   optional int32 intensity_after = 4;
 }
 
@@ -166,6 +191,29 @@ message MapOfWorry {
   // derived_from_id points at the map this one reworks. The contrast between
   // the two is the therapeutic payload, so they are read side by side.
   optional uint32 derived_from_id = 8;
+  repeated Feeling feelings = 9;
+  google.protobuf.Timestamp created_at = 10;
+  google.protobuf.Timestamp updated_at = 11;
+}
+
+// BehaviouralExperiment is the thought record for behavioural experiments:
+// "what are you going to try?", "what do you predict will happen and how will
+// you feel?", "what actually happened?", "what have you learned from this?",
+// and "how can you build on this?".
+message BehaviouralExperiment {
+  uint32 id = 1;
+  string plan = 2;
+  // occurred_at is when the experiment is, or was, carried out. It is absent
+  // when the user did not say.
+  optional google.protobuf.Timestamp occurred_at = 3;
+  string prediction = 4;
+  string outcome = 5;
+  string learned = 6;
+  string build_on = 7;
+  // completed_at is set once the outcome has been recorded, and absent while
+  // the experiment is still to be carried out.
+  optional google.protobuf.Timestamp completed_at = 8;
+  // feelings are rated before (predicted) and after (actually felt).
   repeated Feeling feelings = 9;
   google.protobuf.Timestamp created_at = 10;
   google.protobuf.Timestamp updated_at = 11;
@@ -372,6 +420,63 @@ message UpdateMapOfWorryRequest {
 
 message DeleteMapOfWorryRequest {
   uint32 id = 1;
+}
+
+message ListBehaviouralExperimentsRequest {
+  // completed filters by whether the outcome has been recorded. Absent
+  // returns both; false is the queue of experiments still to be carried out.
+  optional bool completed = 1;
+  optional google.protobuf.Timestamp since = 2;
+  // search matches every column of the experiment.
+  string search = 3;
+}
+
+message ListBehaviouralExperimentsResponse {
+  repeated BehaviouralExperiment experiments = 1;
+}
+
+message CreateBehaviouralExperimentRequest {
+  string plan = 1;
+  optional google.protobuf.Timestamp occurred_at = 2;
+  string prediction = 3;
+  // feelings are the ones predicted, rated before the experiment.
+  repeated FeelingInput feelings = 4;
+}
+
+message GetBehaviouralExperimentRequest {
+  uint32 id = 1;
+}
+
+message UpdateBehaviouralExperimentRequest {
+  uint32 id = 1;
+  optional string plan = 2;
+  optional google.protobuf.Timestamp occurred_at = 3;
+  bool clear_occurred_at = 4;
+  optional string prediction = 5;
+  optional string outcome = 6;
+  optional string learned = 7;
+  optional string build_on = 8;
+}
+
+message CompleteBehaviouralExperimentRequest {
+  uint32 id = 1;
+  string outcome = 2;
+  string learned = 3;
+  string build_on = 4;
+  // feeling_reratings rate the predicted feelings as they were actually felt.
+  repeated FeelingRerating feeling_reratings = 5;
+  // new_feelings are feelings that were felt but not predicted. Their
+  // intensity is stored as intensity_after.
+  repeated FeelingInput new_feelings = 6;
+}
+
+message DeleteBehaviouralExperimentRequest {
+  uint32 id = 1;
+}
+
+message AddExperimentFeelingRequest {
+  uint32 experiment_id = 1;
+  FeelingInput feeling = 2;
 }
 
 message ListBiasesRequest {}

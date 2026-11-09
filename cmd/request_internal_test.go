@@ -553,3 +553,137 @@ func TestBuildChallengeRequestFoldsFlagsIntoOneJudgement(t *testing.T) {
 		t.Error("expected the biases to be cleared in the same judgement")
 	}
 }
+
+func TestBuildCreateBehaviouralExperimentRequestCarriesThePrediction(t *testing.T) {
+	req, err := buildCreateBehaviouralExperimentRequest(
+		[]string{"ask a question at the end of the team meeting"},
+		createBehaviouralExperimentOptions{
+			At:         "yesterday",
+			Prediction: "someone will think it is obvious",
+			Feelings:   []string{"embarrassed=70"},
+		},
+		referenceNow,
+	)
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+
+	if req.GetPlan() != "ask a question at the end of the team meeting" {
+		t.Errorf("unexpected plan %q", req.GetPlan())
+	}
+	if req.GetPrediction() != "someone will think it is obvious" {
+		t.Errorf("unexpected prediction %q", req.GetPrediction())
+	}
+	if req.OccurredAt == nil {
+		t.Error("expected an experiment time from --at")
+	}
+	if len(req.GetFeelings()) != 1 || req.GetFeelings()[0].GetIntensity() != 70 {
+		t.Errorf("expected one feeling predicted at 70 but got %v", req.GetFeelings())
+	}
+}
+
+func TestBuildUpdateBehaviouralExperimentRequestSendsOnlyTypedFlags(t *testing.T) {
+	opts := updateBehaviouralExperimentOptions{
+		Plan:    "not typed",
+		Outcome: "there were empty seats",
+	}
+	req, err := buildUpdateBehaviouralExperimentRequest([]string{"2"}, opts, stubFlags{changed: map[string]bool{"outcome": true}}, referenceNow)
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+
+	if req.GetId() != 2 {
+		t.Errorf("unexpected id %d", req.GetId())
+	}
+	if req.Outcome == nil || req.GetOutcome() != "there were empty seats" {
+		t.Errorf("expected the typed outcome to be sent but got %v", req.Outcome)
+	}
+	for name, value := range map[string]*string{
+		"plan":       req.Plan,
+		"prediction": req.Prediction,
+		"learned":    req.Learned,
+		"build-on":   req.BuildOn,
+	} {
+		if value != nil {
+			t.Errorf("expected --%s to be left out but got %q", name, *value)
+		}
+	}
+	if req.OccurredAt != nil {
+		t.Error("expected no experiment time when --at was not typed")
+	}
+}
+
+func TestBuildCompleteRequestParsesReratingsAndNewFeelings(t *testing.T) {
+	req, err := buildCompleteRequest([]string{"2"}, completeOptions{
+		Outcome:   "two people said they had the same question",
+		Learned:   "the question was worth asking",
+		BuildOn:   "ask the next one during the meeting",
+		Reratings: []string{"5=20"},
+		Feelings:  []string{"relieved=50"},
+	})
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+
+	if req.GetOutcome() != "two people said they had the same question" ||
+		req.GetLearned() != "the question was worth asking" ||
+		req.GetBuildOn() != "ask the next one during the meeting" {
+		t.Errorf("unexpected prose %q / %q / %q", req.GetOutcome(), req.GetLearned(), req.GetBuildOn())
+	}
+	if len(req.GetFeelingReratings()) != 1 ||
+		req.GetFeelingReratings()[0].GetFeelingId() != 5 ||
+		req.GetFeelingReratings()[0].GetIntensityAfter() != 20 {
+		t.Errorf("unexpected re-ratings %v", req.GetFeelingReratings())
+	}
+	if len(req.GetNewFeelings()) != 1 ||
+		req.GetNewFeelings()[0].GetName() != "relieved" ||
+		req.GetNewFeelings()[0].GetIntensity() != 50 {
+		t.Errorf("unexpected new feelings %v", req.GetNewFeelings())
+	}
+}
+
+func TestBuildCompleteRequestRejectsMalformedInput(t *testing.T) {
+	tests := []struct {
+		name string
+		opts completeOptions
+	}{
+		{"re-rating without a rating", completeOptions{Reratings: []string{"5"}}},
+		{"re-rating out of range", completeOptions{Reratings: []string{"5=150"}}},
+		{"feeling without a name", completeOptions{Feelings: []string{"=50"}}},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if _, err := buildCompleteRequest([]string{"2"}, test.opts); err == nil {
+				t.Error("expected the input to be rejected")
+			}
+		})
+	}
+}
+
+func TestBuildListBehaviouralExperimentsRequestSelectsTheQueue(t *testing.T) {
+	tests := []struct {
+		name     string
+		opts     listBehaviouralExperimentsOptions
+		expected *bool
+	}{
+		{"everything", listBehaviouralExperimentsOptions{}, nil},
+		{"not completed", listBehaviouralExperimentsOptions{NotCompleted: true}, boolPtr(false)},
+		{"completed", listBehaviouralExperimentsOptions{Completed: true}, boolPtr(true)},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			req, err := buildListBehaviouralExperimentsRequest(test.opts, referenceNow)
+			if err != nil {
+				t.Fatalf("failed to build the request: %v", err)
+			}
+			switch {
+			case test.expected == nil && req.Completed != nil:
+				t.Errorf("expected no completion filter but got %v", req.GetCompleted())
+			case test.expected != nil && (req.Completed == nil || req.GetCompleted() != *test.expected):
+				t.Errorf("expected completed=%v but got %v", *test.expected, req.Completed)
+			}
+		})
+	}
+}

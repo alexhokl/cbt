@@ -21,6 +21,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabMaps => 'Maps of worry';
 
   @override
+  String get tabExperiments => 'Experiments';
+
+  @override
   String get menuBiases => 'Cognitive biases';
 
   @override
@@ -38,6 +41,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get emptyMaps => 'No maps of worry yet.';
 
   @override
+  String get emptyExperiments => 'No behavioural experiments yet.';
+
+  @override
   String get newThoughtRecord => 'New thought record';
 
   @override
@@ -48,6 +54,12 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get editMapOfWorry => 'Edit map of worry';
+
+  @override
+  String get newExperiment => 'New behavioural experiment';
+
+  @override
+  String get editExperiment => 'Edit behavioural experiment';
 
   @override
   String get fieldEvent => 'What happened';
@@ -89,6 +101,28 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get fieldBehaviour => 'What I did as a result';
+
+  @override
+  String get fieldPlan => 'What are you going to try?';
+
+  @override
+  String get fieldExperimentWhen => 'When you try it';
+
+  @override
+  String get fieldPrediction =>
+      'What do you predict will happen and how will you feel?';
+
+  @override
+  String get fieldPredictedFeelings => 'Feelings you predict';
+
+  @override
+  String get fieldOutcome => 'What actually happened?';
+
+  @override
+  String get fieldLearned => 'What have you learned from this?';
+
+  @override
+  String get fieldBuildOn => 'How can you build on this?';
 
   @override
   String get addThought => 'Add a thought';
@@ -184,6 +218,37 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get notYetChallenged => 'Not worked through yet';
+
+  @override
+  String get completeExperiment => 'Write up how it went';
+
+  @override
+  String completeTitle(int id) {
+    return 'Writing up experiment $id';
+  }
+
+  @override
+  String get completeIntro =>
+      'This is what you planned and predicted. Read it back, then write down how it went.';
+
+  @override
+  String get completeStepRerate => 'How strongly did you actually feel these?';
+
+  @override
+  String get completeStepNewFeelings =>
+      'Did you feel anything you did not predict?';
+
+  @override
+  String completedOn(String date) {
+    return 'Written up on $date';
+  }
+
+  @override
+  String get notYetCompleted => 'Not written up yet';
+
+  @override
+  String get planRequired =>
+      'Write down what you are going to try before saving.';
 
   @override
   String get alternativeReading => 'An alternative reading of the same event';

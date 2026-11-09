@@ -271,6 +271,52 @@ func toProtoMapsOfWorry(maps []database.MapOfWorry) ([]*proto.MapOfWorry, error)
 	return converted, nil
 }
 
+// toProtoBehaviouralExperiment converts an experiment together with its
+// feelings.
+func toProtoBehaviouralExperiment(experiment *database.BehaviouralExperiment) (*proto.BehaviouralExperiment, error) {
+	if experiment == nil {
+		return nil, status.Error(codes.Internal, "behavioural experiment is missing")
+	}
+
+	id, err := toProtoID(experiment.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	feelings, err := toProtoFeelings(experiment.Feelings)
+	if err != nil {
+		return nil, err
+	}
+
+	return &proto.BehaviouralExperiment{
+		Id:          id,
+		Plan:        experiment.Plan,
+		OccurredAt:  toProtoTimestamp(experiment.OccurredAt),
+		Prediction:  experiment.Prediction,
+		Outcome:     experiment.Outcome,
+		Learned:     experiment.Learned,
+		BuildOn:     experiment.BuildOn,
+		CompletedAt: toProtoTimestamp(experiment.CompletedAt),
+		Feelings:    feelings,
+		CreatedAt:   timestamppb.New(experiment.CreatedAt),
+		UpdatedAt:   timestamppb.New(experiment.UpdatedAt),
+	}, nil
+}
+
+// toProtoBehaviouralExperiments converts a list of experiments.
+func toProtoBehaviouralExperiments(experiments []database.BehaviouralExperiment) ([]*proto.BehaviouralExperiment, error) {
+	converted := make([]*proto.BehaviouralExperiment, 0, len(experiments))
+	for index := range experiments {
+		protoExperiment, err := toProtoBehaviouralExperiment(&experiments[index])
+		if err != nil {
+			return nil, err
+		}
+		converted = append(converted, protoExperiment)
+	}
+
+	return converted, nil
+}
+
 // toFeelingInputs converts wire feelings to the operation input type.
 func toFeelingInputs(inputs []*proto.FeelingInput) []database.FeelingInput {
 	converted := make([]database.FeelingInput, 0, len(inputs))

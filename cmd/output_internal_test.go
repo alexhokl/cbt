@@ -276,6 +276,7 @@ func TestEmptyListingsSaySoExplicitly(t *testing.T) {
 	}{
 		{"thought records", func(out *bytes.Buffer) error { return writeThoughtRecordTable(out, nil) }},
 		{"maps of worry", func(out *bytes.Buffer) error { return writeMapOfWorryTable(out, nil) }},
+		{"behavioural experiments", func(out *bytes.Buffer) error { return writeBehaviouralExperimentTable(out, nil) }},
 		{"biases", func(out *bytes.Buffer) error { return writeBiasTable(out, nil) }},
 	}
 
@@ -426,5 +427,103 @@ func TestWriteThoughtRecordDetailNeverShowsBothJudgements(t *testing.T) {
 	rendered := out.String()
 	if strings.Contains(rendered, "(factual)") && strings.Contains(rendered, "mind-reading") {
 		t.Errorf("expected only one judgement to be shown but got:\n%s", rendered)
+	}
+}
+
+func TestWriteBehaviouralExperimentTableStaysNarrow(t *testing.T) {
+	var out bytes.Buffer
+
+	experiments := []*proto.BehaviouralExperiment{
+		{
+			Id:          12,
+			Plan:        "ask a question at the end of the team meeting instead of waiting to email it afterwards",
+			CreatedAt:   timestamppb.New(referenceNow),
+			CompletedAt: timestamppb.New(referenceNow),
+			Feelings: []*proto.Feeling{
+				{Id: 1, Name: "embarrassed", IntensityBefore: int32Ptr(70), IntensityAfter: int32Ptr(20)},
+				{Id: 2, Name: "relieved", IntensityAfter: int32Ptr(50)},
+			},
+		},
+	}
+
+	if err := writeBehaviouralExperimentTable(&out, experiments); err != nil {
+		t.Fatalf("failed to write the table: %v", err)
+	}
+
+	rendered := out.String()
+	if !strings.Contains(rendered, "COMPLETED") || !strings.Contains(rendered, "yes") {
+		t.Errorf("expected the completion column but got:\n%s", rendered)
+	}
+	for _, line := range strings.Split(strings.TrimRight(rendered, "\n"), "\n") {
+		if width := len([]rune(line)); width > 80 {
+			t.Errorf("expected every line to fit in 80 columns but got %d: %q", width, line)
+		}
+	}
+}
+
+func TestWriteBehaviouralExperimentDetailOmitsEmptyColumns(t *testing.T) {
+	var out bytes.Buffer
+
+	experiment := &proto.BehaviouralExperiment{
+		Id:        2,
+		Plan:      "take the earlier train",
+		CreatedAt: timestamppb.New(referenceNow),
+		UpdatedAt: timestamppb.New(referenceNow),
+	}
+
+	if err := writeBehaviouralExperimentDetail(&out, experiment); err != nil {
+		t.Fatalf("failed to write the detail: %v", err)
+	}
+
+	rendered := out.String()
+	if !strings.Contains(rendered, "not yet completed") {
+		t.Errorf("expected the experiment to be shown as not completed but got:\n%s", rendered)
+	}
+	for _, label := range []string{"what I predict", "feelings:", "what actually happened", "what I have learned", "how I can build"} {
+		if strings.Contains(rendered, label) {
+			t.Errorf("expected the empty column %q to be omitted but got:\n%s", label, rendered)
+		}
+	}
+}
+
+func TestWriteBehaviouralExperimentDetailShowsBothSittings(t *testing.T) {
+	var out bytes.Buffer
+
+	experiment := &proto.BehaviouralExperiment{
+		Id:          2,
+		Plan:        "ask a question at the end of the team meeting",
+		Prediction:  "someone will think it is obvious",
+		Outcome:     "two people said they had the same question",
+		Learned:     "the question was worth asking",
+		BuildOn:     "ask the next one during the meeting",
+		CompletedAt: timestamppb.New(referenceNow),
+		CreatedAt:   timestamppb.New(referenceNow),
+		Feelings: []*proto.Feeling{
+			{Id: 5, Name: "embarrassed", IntensityBefore: int32Ptr(70), IntensityAfter: int32Ptr(20)},
+			{Id: 6, Name: "relieved", IntensityAfter: int32Ptr(50)},
+		},
+	}
+
+	if err := writeBehaviouralExperimentDetail(&out, experiment); err != nil {
+		t.Fatalf("failed to write the detail: %v", err)
+	}
+
+	rendered := out.String()
+	expected := []string{
+		"what I am going to try:",
+		"what I predict will happen and how I will feel:",
+		"[5] embarrassed 70% -> 20%",
+		"[6] relieved unrated -> 50%",
+		"what actually happened:",
+		"what I have learned from this:",
+		"how I can build on this:",
+	}
+	position := 0
+	for _, fragment := range expected {
+		index := strings.Index(rendered[position:], fragment)
+		if index < 0 {
+			t.Fatalf("expected %q after position %d in:\n%s", fragment, position, rendered)
+		}
+		position += index + len(fragment)
 	}
 }

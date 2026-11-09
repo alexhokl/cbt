@@ -38,6 +38,20 @@ alternatives first.`,
 	RunE:        runDeleteMapOfWorry,
 }
 
+// deleteBehaviouralExperimentCmd removes a behavioural experiment.
+var deleteBehaviouralExperimentCmd = &cobra.Command{
+	Use:     "experiment [id]",
+	Aliases: []string{"behavioural-experiment", "be"},
+	Short:   "Delete a behavioural experiment",
+	Long: `Delete a behavioural experiment along with its feelings.
+
+There is no undo.`,
+	Example:     `  cbt delete experiment 2`,
+	Args:        cobra.ExactArgs(1),
+	Annotations: map[string]string{annotationRequiresService: "true"},
+	RunE:        runDeleteBehaviouralExperiment,
+}
+
 // deleteBiasCmd removes a user defined cognitive bias.
 var deleteBiasCmd = &cobra.Command{
 	Use:   "bias [id]",
@@ -54,6 +68,7 @@ cannot be deleted either: doing so would change how a past record reads.`,
 func init() {
 	deleteCmd.AddCommand(deleteThoughtRecordCmd)
 	deleteCmd.AddCommand(deleteMapOfWorryCmd)
+	deleteCmd.AddCommand(deleteBehaviouralExperimentCmd)
 	deleteCmd.AddCommand(deleteBiasCmd)
 }
 
@@ -93,6 +108,25 @@ func runDeleteMapOfWorry(cmd *cobra.Command, args []string) error {
 	}
 
 	return writeDeleted(cmd.OutOrStdout(), "map of worry", id)
+}
+
+func runDeleteBehaviouralExperiment(cmd *cobra.Command, args []string) error {
+	id, err := parseRecordID(args[0])
+	if err != nil {
+		return err
+	}
+
+	conn, err := dial()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = conn.Close() }()
+
+	if _, err := proto.NewRecordServiceClient(conn).DeleteBehaviouralExperiment(cmd.Context(), &proto.DeleteBehaviouralExperimentRequest{Id: id}); err != nil {
+		return fmt.Errorf("failed to delete the behavioural experiment: %w", err)
+	}
+
+	return writeDeleted(cmd.OutOrStdout(), "behavioural experiment", id)
 }
 
 func runDeleteBias(cmd *cobra.Command, args []string) error {

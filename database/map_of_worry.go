@@ -91,7 +91,7 @@ func CreateMapOfWorry(db *gorm.DB, userID uint, input CreateMapOfWorryInput) (*M
 		}
 
 		if len(input.Feelings) > 0 {
-			feelings, err := buildFeelings(input.Feelings, userID, nil, &mapOfWorry.ID)
+			feelings, err := buildFeelings(input.Feelings, userID, feelingParent{MapOfWorryID: &mapOfWorry.ID})
 			if err != nil {
 				return err
 			}

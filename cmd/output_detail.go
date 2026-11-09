@@ -169,6 +169,66 @@ func writeMapContrast(out io.Writer, response *proto.GetMapOfWorryResponse) erro
 	return nil
 }
 
+// writeBehaviouralExperimentDetail renders an experiment as a vertical layout
+// in the order of its columns: what was tried, the prediction, what actually
+// happened, what was learned, how to build on it. Feelings sit between the
+// prediction and the outcome, so each prediction can be read against how it
+// actually felt.
+func writeBehaviouralExperimentDetail(out io.Writer, experiment *proto.BehaviouralExperiment) error {
+	header := fmt.Sprintf("Behavioural experiment %d", experiment.GetId())
+	if experiment.CompletedAt != nil {
+		header += fmt.Sprintf(" (completed %s)", experiment.GetCompletedAt().AsTime().Local().Format(time.DateOnly))
+	} else {
+		header += " (not yet completed)"
+	}
+	if _, err := fmt.Fprintln(out, header); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	when := "when written"
+	value := experiment.GetCreatedAt().AsTime()
+	if experiment.OccurredAt != nil {
+		when = "when"
+		value = experiment.GetOccurredAt().AsTime()
+	}
+	if err := writeField(out, when, value.Local().Format("2006-01-02 15:04")); err != nil {
+		return err
+	}
+
+	if err := writeField(out, "what I am going to try", experiment.GetPlan()); err != nil {
+		return err
+	}
+	if err := writeField(out, "what I predict will happen and how I will feel", experiment.GetPrediction()); err != nil {
+		return err
+	}
+
+	if len(experiment.GetFeelings()) > 0 {
+		if _, err := fmt.Fprintln(out, "feelings:"); err != nil {
+			return fmt.Errorf("failed to write output: %w", err)
+		}
+		for _, feeling := range experiment.GetFeelings() {
+			if err := writeFeeling(out, feeling); err != nil {
+				return err
+			}
+		}
+	}
+
+	for _, field := range []struct {
+		label string
+		value string
+	}{
+		{"what actually happened", experiment.GetOutcome()},
+		{"what I have learned from this", experiment.GetLearned()},
+		{"how I can build on this", experiment.GetBuildOn()},
+	} {
+		if err := writeField(out, field.label, field.value); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // writeField renders one labelled paragraph, wrapped and indented. An empty
 // value produces no output at all, so a record in progress reads as what has
 // been written rather than as a form with blanks.
@@ -240,3 +300,4 @@ func writeFeeling(out io.Writer, feeling *proto.Feeling) error {
 
 	return nil
 }
+

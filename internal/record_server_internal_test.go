@@ -86,6 +86,18 @@ func TestHandlersRejectAnUnauthenticatedContext(t *testing.T) {
 			_, err := server.CreateMapOfWorry(ctx, &proto.CreateMapOfWorryRequest{Event: "an event"})
 			return err
 		}},
+		{"ListBehaviouralExperiments", func() error {
+			_, err := server.ListBehaviouralExperiments(ctx, &proto.ListBehaviouralExperimentsRequest{})
+			return err
+		}},
+		{"CreateBehaviouralExperiment", func() error {
+			_, err := server.CreateBehaviouralExperiment(ctx, &proto.CreateBehaviouralExperimentRequest{Plan: "a plan"})
+			return err
+		}},
+		{"CompleteBehaviouralExperiment", func() error {
+			_, err := server.CompleteBehaviouralExperiment(ctx, &proto.CompleteBehaviouralExperimentRequest{Id: 1})
+			return err
+		}},
 		{"ListBiases", func() error {
 			_, err := server.ListBiases(ctx, &proto.ListBiasesRequest{})
 			return err
@@ -655,5 +667,111 @@ func TestSetThoughtFactualRejectsAnUnauthenticatedContext(t *testing.T) {
 	_, err := server.SetThoughtFactual(context.Background(), &proto.SetThoughtFactualRequest{Id: 1})
 	if got := statusCode(err); got != codes.Unauthenticated {
 		t.Errorf("expected Unauthenticated but got %v", got)
+	}
+}
+
+func TestCompleteBehaviouralExperimentRoundTrips(t *testing.T) {
+	server := newTestServer(t)
+	ctx := authenticatedContext()
+
+	created, err := server.CreateBehaviouralExperiment(ctx, &proto.CreateBehaviouralExperimentRequest{
+		Plan:       "ask a question at the end of the team meeting",
+		Prediction: "someone will think it is obvious",
+		Feelings:   []*proto.FeelingInput{{Name: "embarrassed", Intensity: proto2Int32(70)}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the experiment: %v", err)
+	}
+	if created.CompletedAt != nil {
+		t.Error("expected a new experiment not to be completed")
+	}
+
+	pending, err := server.ListBehaviouralExperiments(ctx, &proto.ListBehaviouralExperimentsRequest{Completed: new(bool)})
+	if err != nil {
+		t.Fatalf("failed to list the experiments: %v", err)
+	}
+	if len(pending.GetExperiments()) != 1 {
+		t.Fatalf("expected one experiment still to be carried out but got %d", len(pending.GetExperiments()))
+	}
+
+	if _, err := server.CompleteBehaviouralExperiment(ctx, &proto.CompleteBehaviouralExperimentRequest{
+		Id:               created.GetId(),
+		Outcome:          "two people said they had the same question",
+		FeelingReratings: []*proto.FeelingRerating{{FeelingId: created.GetFeelings()[0].GetId(), IntensityAfter: 20}},
+		NewFeelings:      []*proto.FeelingInput{{Name: "relieved", Intensity: proto2Int32(50)}},
+	}); err != nil {
+		t.Fatalf("failed to complete the experiment: %v", err)
+	}
+
+	got, err := server.GetBehaviouralExperiment(ctx, &proto.GetBehaviouralExperimentRequest{Id: created.GetId()})
+	if err != nil {
+		t.Fatalf("failed to get the experiment: %v", err)
+	}
+	if got.CompletedAt == nil {
+		t.Error("expected the experiment to be completed")
+	}
+	if got.GetOutcome() != "two people said they had the same question" {
+		t.Errorf("unexpected outcome %q", got.GetOutcome())
+	}
+	if len(got.GetFeelings()) != 2 {
+		t.Fatalf("expected two feelings but got %d", len(got.GetFeelings()))
+	}
+	for _, feeling := range got.GetFeelings() {
+		if feeling.IntensityAfter == nil {
+			t.Errorf("expected %q to carry a rating after", feeling.GetName())
+		}
+		if feeling.GetName() == "relieved" && feeling.IntensityBefore != nil {
+			t.Error("expected the unpredicted feeling to carry no prediction")
+		}
+	}
+
+	pending, err = server.ListBehaviouralExperiments(ctx, &proto.ListBehaviouralExperimentsRequest{Completed: new(bool)})
+	if err != nil {
+		t.Fatalf("failed to list the experiments: %v", err)
+	}
+	if len(pending.GetExperiments()) != 0 {
+		t.Errorf("expected the queue to be empty but got %d", len(pending.GetExperiments()))
+	}
+}
+
+func TestBehaviouralExperimentErrorsAreMapped(t *testing.T) {
+	server := newTestServer(t)
+	ctx := authenticatedContext()
+
+	tests := []struct {
+		name     string
+		run      func() error
+		expected codes.Code
+	}{
+		{"blank plan", func() error {
+			_, err := server.CreateBehaviouralExperiment(ctx, &proto.CreateBehaviouralExperimentRequest{Plan: " "})
+			return err
+		}, codes.InvalidArgument},
+		{"missing experiment", func() error {
+			_, err := server.GetBehaviouralExperiment(ctx, &proto.GetBehaviouralExperimentRequest{Id: 99})
+			return err
+		}, codes.NotFound},
+		{"rerating out of range", func() error {
+			created, err := server.CreateBehaviouralExperiment(ctx, &proto.CreateBehaviouralExperimentRequest{
+				Plan:     "take the earlier train",
+				Feelings: []*proto.FeelingInput{{Name: "anxious", Intensity: proto2Int32(40)}},
+			})
+			if err != nil {
+				t.Fatalf("failed to create the experiment: %v", err)
+			}
+			_, err = server.CompleteBehaviouralExperiment(ctx, &proto.CompleteBehaviouralExperimentRequest{
+				Id:               created.GetId(),
+				FeelingReratings: []*proto.FeelingRerating{{FeelingId: created.GetFeelings()[0].GetId(), IntensityAfter: 150}},
+			})
+			return err
+		}, codes.InvalidArgument},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if got := statusCode(test.run()); got != test.expected {
+				t.Errorf("expected %v but got %v", test.expected, got)
+			}
+		})
 	}
 }

@@ -9,7 +9,7 @@ import (
 // User is an authenticated Tailscale user. It is created on first sight by
 // the Tailscale authentication interceptor and referenced by TailscaleAddress
 // and every per-user record (CognitiveBias, ThoughtRecord, MapOfWorry,
-// NegativeThought, Feeling).
+// BehaviouralExperiment, NegativeThought, Feeling).
 //
 // User creation also seeds the builtin cognitive biases for that user; see
 // SeedBuiltinBiases.
@@ -156,8 +156,9 @@ type NegativeThought struct {
 	Biases []CognitiveBias `gorm:"many2many:thought_biases;"`
 }
 
-// Feeling is a single emotion rated on a 0-100 scale, attached to either a
-// ThoughtRecord or a MapOfWorry. Exactly one of the two foreign keys is set.
+// Feeling is a single emotion rated on a 0-100 scale, attached to a
+// ThoughtRecord, a MapOfWorry or a BehaviouralExperiment. Exactly one of the
+// three foreign keys is set.
 //
 // Rating is what makes the record useful: "anxious 20% and angry 80%" says
 // something that the bare words do not, and re-rating after the challenge is
@@ -170,17 +171,21 @@ type Feeling struct {
 	// IntensityBefore is the 0-100 rating given when the feeling was recorded,
 	// or nil when the user did not rate it.
 	IntensityBefore *int
-	// IntensityAfter is the 0-100 re-rating given during the challenge. It is
-	// only ever set on feelings belonging to a ThoughtRecord: a map of worry
-	// has no challenge step, so a map's feelings are rated once.
+	// IntensityAfter is the 0-100 re-rating given during the challenge of a
+	// ThoughtRecord, or once a BehaviouralExperiment has been carried out. A
+	// map of worry has no second sitting, so a map's feelings are rated once.
+	//
+	// On an experiment a feeling may carry IntensityAfter alone: what was
+	// actually felt is not limited to what was predicted.
 	IntensityAfter *int
-	// ThoughtRecordID and MapOfWorryID are mutually exclusive. The
-	// feelings_single_parent triggers enforce that exactly one is set, which
-	// GORM cannot express as a struct tag.
-	ThoughtRecordID *uint `gorm:"index"`
-	MapOfWorryID    *uint `gorm:"index"`
-	UserID          uint  `gorm:"not null;index"`
-	User            User  `gorm:"foreignKey:UserID"`
+	// ThoughtRecordID, MapOfWorryID and BehaviouralExperimentID are mutually
+	// exclusive. The feelings_one_parent triggers enforce that exactly one is
+	// set, which GORM cannot express as a struct tag.
+	ThoughtRecordID         *uint `gorm:"index"`
+	MapOfWorryID            *uint `gorm:"index"`
+	BehaviouralExperimentID *uint `gorm:"index"`
+	UserID                  uint  `gorm:"not null;index"`
+	User                    User  `gorm:"foreignKey:UserID"`
 }
 
 // MapOfWorry is the six column map which traces a single event all the way
@@ -219,4 +224,45 @@ type MapOfWorry struct {
 	User          User        `gorm:"foreignKey:UserID"`
 	// Feelings are the emotions recorded against the event, rated once.
 	Feelings []Feeling `gorm:"foreignKey:MapOfWorryID"`
+}
+
+// BehaviouralExperiment is the thought record for behavioural experiments:
+// "what are you going to try?", "what do you predict will happen and how will
+// you feel?", "what actually happened?", "what have you learned from this?",
+// and "how can you build on this?".
+//
+// Like a thought record it is written in two sittings. Plan and Prediction,
+// with the feelings predicted, are written before the experiment; Outcome,
+// Learned and BuildOn, with what was actually felt, afterwards. CompletedAt
+// records when the second sitting happened and is what
+// ListBehaviouralExperiments filters on, so the experiments not yet carried
+// out form a queue.
+//
+// Only Plan is required. Every other column is optional so that an experiment
+// can be written up a piece at a time.
+type BehaviouralExperiment struct {
+	gorm.Model
+	// Plan answers "what are you going to try?". It is stored verbatim apart
+	// from surrounding whitespace.
+	Plan string `gorm:"not null"`
+	// OccurredAt is when the experiment is, or was, carried out. It is nil
+	// when the user did not say; see ThoughtRecord.OccurredAt.
+	OccurredAt *time.Time
+	// Prediction answers "what do you predict will happen and how will you
+	// feel?" in prose. The numeric side of how it will feel lives in
+	// Feeling.IntensityBefore.
+	Prediction string `gorm:""`
+	// Outcome answers "what actually happened?".
+	Outcome string `gorm:""`
+	// Learned answers "what have you learned from this?".
+	Learned string `gorm:""`
+	// BuildOn answers "how can you build on this?".
+	BuildOn string `gorm:""`
+	// CompletedAt is set when the outcome is recorded and nil beforehand.
+	CompletedAt *time.Time `gorm:"index"`
+	UserID      uint       `gorm:"not null;index"`
+	User        User       `gorm:"foreignKey:UserID"`
+	// Feelings are the emotions predicted before the experiment and rated
+	// again afterwards, together with any felt but not predicted.
+	Feelings []Feeling `gorm:"foreignKey:BehaviouralExperimentID"`
 }

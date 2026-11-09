@@ -35,7 +35,7 @@ type Metrics struct {
 	AuthAttempts metric.Int64Counter
 
 	// RecordsCreated counts records as they are written, labelled by record
-	// type (thought_record or map_of_worry). It answers whether the practice
+	// type (thought_record, map_of_worry or behavioural_experiment). It answers whether the practice
 	// is actually being kept up, which is the single thing worth measuring
 	// about a journal.
 	RecordsCreated metric.Int64Counter
@@ -58,6 +58,8 @@ const (
 const (
 	recordTypeThoughtRecord = "thought_record"
 	recordTypeMapOfWorry    = "map_of_worry"
+
+	recordTypeBehaviouralExperiment = "behavioural_experiment"
 )
 
 // challengeLatencyBuckets are hours. The SDK default boundaries are tuned for

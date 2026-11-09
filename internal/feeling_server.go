@@ -60,6 +60,33 @@ func (s *RecordServer) AddMapFeeling(ctx context.Context, req *proto.AddMapFeeli
 	return converted, nil
 }
 
+// AddExperimentFeeling attaches a predicted feeling to a behavioural
+// experiment.
+func (s *RecordServer) AddExperimentFeeling(ctx context.Context, req *proto.AddExperimentFeelingRequest) (*proto.BehaviouralExperiment, error) {
+	ctx, span := startSpan(ctx, "AddExperimentFeeling")
+	defer span.End()
+
+	userID, err := userIDFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	inputs := toFeelingInputs([]*proto.FeelingInput{req.GetFeeling()})
+	experiment, err := database.AddExperimentFeeling(s.DB.WithContext(ctx), userID, uint(req.GetExperimentId()), inputs[0])
+	if err != nil {
+		return nil, mapDatabaseError(err)
+	}
+
+	converted, err := toProtoBehaviouralExperiment(experiment)
+	if err != nil {
+		return nil, err
+	}
+
+	endSpanOk(span)
+
+	return converted, nil
+}
+
 // DeleteFeeling removes a feeling from whichever record it belongs to.
 func (s *RecordServer) DeleteFeeling(ctx context.Context, req *proto.DeleteFeelingRequest) (*emptypb.Empty, error) {
 	ctx, span := startSpan(ctx, "DeleteFeeling")

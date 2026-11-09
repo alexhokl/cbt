@@ -118,6 +118,12 @@ abstract class AppLocalizations {
   /// **'Maps of worry'**
   String get tabMaps;
 
+  /// Tab holding behavioural experiments.
+  ///
+  /// In en, this message translates to:
+  /// **'Experiments'**
+  String get tabExperiments;
+
   /// Overflow menu entry opening the bias list.
   ///
   /// In en, this message translates to:
@@ -148,6 +154,12 @@ abstract class AppLocalizations {
   /// **'No maps of worry yet.'**
   String get emptyMaps;
 
+  /// Shown when there are no behavioural experiments.
+  ///
+  /// In en, this message translates to:
+  /// **'No behavioural experiments yet.'**
+  String get emptyExperiments;
+
   /// Title of the page creating a thought record.
   ///
   /// In en, this message translates to:
@@ -171,6 +183,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Edit map of worry'**
   String get editMapOfWorry;
+
+  /// Title of the page creating a behavioural experiment.
+  ///
+  /// In en, this message translates to:
+  /// **'New behavioural experiment'**
+  String get newExperiment;
+
+  /// Title of the page editing a behavioural experiment.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit behavioural experiment'**
+  String get editExperiment;
 
   /// Label for the event column.
   ///
@@ -249,6 +273,48 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'What I did as a result'**
   String get fieldBehaviour;
+
+  /// Label for the plan column of a behavioural experiment.
+  ///
+  /// In en, this message translates to:
+  /// **'What are you going to try?'**
+  String get fieldPlan;
+
+  /// Label for when a behavioural experiment takes place.
+  ///
+  /// In en, this message translates to:
+  /// **'When you try it'**
+  String get fieldExperimentWhen;
+
+  /// Label for the prediction column of a behavioural experiment.
+  ///
+  /// In en, this message translates to:
+  /// **'What do you predict will happen and how will you feel?'**
+  String get fieldPrediction;
+
+  /// Label for the feelings rated before a behavioural experiment.
+  ///
+  /// In en, this message translates to:
+  /// **'Feelings you predict'**
+  String get fieldPredictedFeelings;
+
+  /// Label for the outcome column of a behavioural experiment.
+  ///
+  /// In en, this message translates to:
+  /// **'What actually happened?'**
+  String get fieldOutcome;
+
+  /// Label for the learning column of a behavioural experiment.
+  ///
+  /// In en, this message translates to:
+  /// **'What have you learned from this?'**
+  String get fieldLearned;
+
+  /// Label for the build-on column of a behavioural experiment.
+  ///
+  /// In en, this message translates to:
+  /// **'How can you build on this?'**
+  String get fieldBuildOn;
 
   /// Button adding a negative thought.
   ///
@@ -411,6 +477,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Not worked through yet'**
   String get notYetChallenged;
+
+  /// Button opening the page recording the outcome of a behavioural experiment.
+  ///
+  /// In en, this message translates to:
+  /// **'Write up how it went'**
+  String get completeExperiment;
+
+  /// Title of the page recording the outcome of a behavioural experiment.
+  ///
+  /// In en, this message translates to:
+  /// **'Writing up experiment {id}'**
+  String completeTitle(int id);
+
+  /// Introduction shown above the frozen plan on the completion page.
+  ///
+  /// In en, this message translates to:
+  /// **'This is what you planned and predicted. Read it back, then write down how it went.'**
+  String get completeIntro;
+
+  /// Prompt for rating the predicted feelings as they were actually felt.
+  ///
+  /// In en, this message translates to:
+  /// **'How strongly did you actually feel these?'**
+  String get completeStepRerate;
+
+  /// Prompt for adding feelings that were felt but not predicted.
+  ///
+  /// In en, this message translates to:
+  /// **'Did you feel anything you did not predict?'**
+  String get completeStepNewFeelings;
+
+  /// Shown on a behavioural experiment whose outcome has been recorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Written up on {date}'**
+  String completedOn(String date);
+
+  /// Shown on a behavioural experiment whose outcome has not been recorded.
+  ///
+  /// In en, this message translates to:
+  /// **'Not written up yet'**
+  String get notYetCompleted;
+
+  /// Validation message when the plan of a behavioural experiment is blank.
+  ///
+  /// In en, this message translates to:
+  /// **'Write down what you are going to try before saving.'**
+  String get planRequired;
 
   /// Header above a derived map of worry.
   ///

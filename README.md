@@ -5,7 +5,7 @@ A journal for cognitive behavioural therapy thought records.
 It records what you write and shows it back to you. It does not interpret an
 entry, score it, or tell you what it means.
 
-## The two exercises
+## The three exercises
 
 **Thought record**:
 
@@ -25,6 +25,19 @@ for it.
 
 Writing a second, healthier map of the same event with `--alternative-to` links
 the two so they can be read side by side. That contrast is the exercise.
+
+**Thought record for behavioural experiments**:
+
+| What are you going to try? | What do you predict will happen and how will you feel? | What actually happened? | What have you learned from this? | How can you build on this? |
+|---|---|---|---|---|
+
+Like a thought record, it is written in two sittings. The plan and the
+prediction come before the experiment, with each feeling you predict rated
+0-100. What actually happened, what you learned and how you can build on it
+come after, together with how strongly each feeling was actually felt.
+`cbt complete` records that second part, and
+`cbt list experiments --not-completed` is the queue of experiments still to be
+carried out.
 
 ## Using it
 
@@ -52,6 +65,21 @@ cbt challenge 1 \
 
 # what is still waiting
 cbt list thought-records --unchallenged
+
+# plan a behavioural experiment
+cbt create experiment "ask a question at the end of the team meeting" \
+  --prediction "someone will think it is obvious" \
+  --feeling embarrassed=70
+
+# afterwards, write up how it went
+cbt get experiment 1
+cbt complete 1 \
+  --outcome "two people said they had the same question" \
+  --learned "the question was worth asking" \
+  --build-on "ask the next one during the meeting" \
+  --rerate 1=20 --feeling relieved=50
+
+cbt list experiments --not-completed
 ```
 
 Feelings are rated 0-100 and re-rated during the challenge, because seeing

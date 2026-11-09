@@ -145,8 +145,9 @@ class _EditRecordPageState extends State<EditRecordPage> {
     } on RecordException catch (error) {
       if (!mounted) return;
       setState(() => _saving = false);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(error.message)));
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text(error.message)));
     }
   }
 
@@ -156,7 +157,9 @@ class _EditRecordPageState extends State<EditRecordPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(_isEditing ? l10n.editThoughtRecord : l10n.newThoughtRecord),
+        title: Text(
+          _isEditing ? l10n.editThoughtRecord : l10n.newThoughtRecord,
+        ),
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -178,7 +181,9 @@ class _EditRecordPageState extends State<EditRecordPage> {
             contentPadding: EdgeInsets.zero,
             title: Text(l10n.fieldWhen),
             subtitle: Text(
-              _occurredAt == null ? l10n.fieldWhenUnset : formatDate(_occurredAt!),
+              _occurredAt == null
+                  ? l10n.fieldWhenUnset
+                  : formatDate(_occurredAt!),
             ),
             trailing: const Icon(Icons.calendar_today_outlined),
             onTap: _pickDate,
@@ -189,8 +194,10 @@ class _EditRecordPageState extends State<EditRecordPage> {
           // that a re-rating can be tied to the feeling it belongs to.
           if (!_isEditing) ...[
             const SizedBox(height: 16),
-            Text(l10n.fieldThoughts,
-                style: Theme.of(context).textTheme.titleSmall),
+            Text(
+              l10n.fieldThoughts,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
             for (var index = 0; index < _thoughts.length; index++)
               _thoughtEditor(index, l10n),
             TextButton.icon(
@@ -199,8 +206,10 @@ class _EditRecordPageState extends State<EditRecordPage> {
               label: Text(l10n.addThought),
             ),
             const SizedBox(height: 16),
-            Text(l10n.fieldFeelings,
-                style: Theme.of(context).textTheme.titleSmall),
+            Text(
+              l10n.fieldFeelings,
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
             for (var index = 0; index < _feelings.length; index++)
               _feelingEditor(index, l10n),
             TextButton.icon(
@@ -280,8 +289,31 @@ class _EditRecordPageState extends State<EditRecordPage> {
     );
   }
 
-  Widget _feelingEditor(int index, AppLocalizations l10n) {
-    final draft = _feelings[index];
+  Widget _feelingEditor(int index, AppLocalizations l10n) => FeelingDraftEditor(
+    draft: _feelings[index],
+    onChanged: () => setState(() {}),
+    onRemove: () => setState(() => _feelings.removeAt(index)),
+  );
+}
+
+/// FeelingDraftEditor edits one [FeelingDraft]: a name and an optional rating.
+/// It writes straight into the draft and calls [onChanged] so the owning page
+/// can rebuild.
+class FeelingDraftEditor extends StatelessWidget {
+  const FeelingDraftEditor({
+    super.key,
+    required this.draft,
+    required this.onChanged,
+    required this.onRemove,
+  });
+
+  final FeelingDraft draft;
+  final VoidCallback onChanged;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
 
     return Card(
       child: Padding(
@@ -301,7 +333,7 @@ class _EditRecordPageState extends State<EditRecordPage> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete_outline),
-                  onPressed: () => setState(() => _feelings.removeAt(index)),
+                  onPressed: onRemove,
                 ),
               ],
             ),
@@ -312,10 +344,11 @@ class _EditRecordPageState extends State<EditRecordPage> {
                 // number on it.
                 Checkbox(
                   value: draft.rated,
-                  onChanged: (value) => setState(() {
+                  onChanged: (value) {
                     draft.rated = value ?? false;
                     draft.intensity ??= 50;
-                  }),
+                    onChanged();
+                  },
                 ),
                 Expanded(
                   child: draft.rated
@@ -325,8 +358,10 @@ class _EditRecordPageState extends State<EditRecordPage> {
                           max: 100,
                           divisions: 20,
                           label: '${draft.intensity ?? 50}%',
-                          onChanged: (value) => setState(
-                              () => draft.intensity = value.round()),
+                          onChanged: (value) {
+                            draft.intensity = value.round();
+                            onChanged();
+                          },
                         )
                       : Text(l10n.feelingUnrated),
                 ),
@@ -340,4 +375,5 @@ class _EditRecordPageState extends State<EditRecordPage> {
 }
 
 /// Converts a local date to the wire timestamp type.
-Timestamp timestampFrom(DateTime value) => Timestamp.fromDateTime(value.toUtc());
+Timestamp timestampFrom(DateTime value) =>
+    Timestamp.fromDateTime(value.toUtc());

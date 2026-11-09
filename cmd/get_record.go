@@ -36,9 +36,21 @@ exercise.`,
 	RunE:        runGetMapOfWorry,
 }
 
+// getBehaviouralExperimentCmd shows a single behavioural experiment in full.
+var getBehaviouralExperimentCmd = &cobra.Command{
+	Use:         "experiment [id]",
+	Aliases:     []string{"behavioural-experiment", "be"},
+	Short:       "Show a behavioural experiment in full",
+	Example:     `  cbt get experiment 2`,
+	Args:        cobra.ExactArgs(1),
+	Annotations: map[string]string{annotationRequiresService: "true"},
+	RunE:        runGetBehaviouralExperiment,
+}
+
 func init() {
 	getCmd.AddCommand(getThoughtRecordCmd)
 	getCmd.AddCommand(getMapOfWorryCmd)
+	getCmd.AddCommand(getBehaviouralExperimentCmd)
 }
 
 func runGetThoughtRecord(cmd *cobra.Command, args []string) error {
@@ -79,6 +91,26 @@ func runGetMapOfWorry(cmd *cobra.Command, args []string) error {
 	}
 
 	return writeMapContrast(cmd.OutOrStdout(), response)
+}
+
+func runGetBehaviouralExperiment(cmd *cobra.Command, args []string) error {
+	id, err := parseRecordID(args[0])
+	if err != nil {
+		return err
+	}
+
+	conn, err := dial()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = conn.Close() }()
+
+	experiment, err := proto.NewRecordServiceClient(conn).GetBehaviouralExperiment(cmd.Context(), &proto.GetBehaviouralExperimentRequest{Id: id})
+	if err != nil {
+		return fmt.Errorf("failed to get the behavioural experiment: %w", err)
+	}
+
+	return writeBehaviouralExperimentDetail(cmd.OutOrStdout(), experiment)
 }
 
 // parseRecordID converts a positional identifier argument. Identifiers are

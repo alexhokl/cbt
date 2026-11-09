@@ -20,30 +20,37 @@ import (
 const _ = grpc.SupportPackageIsVersion9
 
 const (
-	RecordService_ListThoughtRecords_FullMethodName     = "/record.RecordService/ListThoughtRecords"
-	RecordService_CreateThoughtRecord_FullMethodName    = "/record.RecordService/CreateThoughtRecord"
-	RecordService_GetThoughtRecord_FullMethodName       = "/record.RecordService/GetThoughtRecord"
-	RecordService_UpdateThoughtRecord_FullMethodName    = "/record.RecordService/UpdateThoughtRecord"
-	RecordService_ChallengeThoughtRecord_FullMethodName = "/record.RecordService/ChallengeThoughtRecord"
-	RecordService_DeleteThoughtRecord_FullMethodName    = "/record.RecordService/DeleteThoughtRecord"
-	RecordService_AddThought_FullMethodName             = "/record.RecordService/AddThought"
-	RecordService_UpdateThought_FullMethodName          = "/record.RecordService/UpdateThought"
-	RecordService_SetHotThought_FullMethodName          = "/record.RecordService/SetHotThought"
-	RecordService_SetThoughtFactual_FullMethodName      = "/record.RecordService/SetThoughtFactual"
-	RecordService_SetThoughtEvidence_FullMethodName     = "/record.RecordService/SetThoughtEvidence"
-	RecordService_DeleteThought_FullMethodName          = "/record.RecordService/DeleteThought"
-	RecordService_AddFeeling_FullMethodName             = "/record.RecordService/AddFeeling"
-	RecordService_AddMapFeeling_FullMethodName          = "/record.RecordService/AddMapFeeling"
-	RecordService_DeleteFeeling_FullMethodName          = "/record.RecordService/DeleteFeeling"
-	RecordService_ListMapsOfWorry_FullMethodName        = "/record.RecordService/ListMapsOfWorry"
-	RecordService_CreateMapOfWorry_FullMethodName       = "/record.RecordService/CreateMapOfWorry"
-	RecordService_GetMapOfWorry_FullMethodName          = "/record.RecordService/GetMapOfWorry"
-	RecordService_UpdateMapOfWorry_FullMethodName       = "/record.RecordService/UpdateMapOfWorry"
-	RecordService_DeleteMapOfWorry_FullMethodName       = "/record.RecordService/DeleteMapOfWorry"
-	RecordService_ListBiases_FullMethodName             = "/record.RecordService/ListBiases"
-	RecordService_CreateBias_FullMethodName             = "/record.RecordService/CreateBias"
-	RecordService_RenameBias_FullMethodName             = "/record.RecordService/RenameBias"
-	RecordService_DeleteBias_FullMethodName             = "/record.RecordService/DeleteBias"
+	RecordService_ListThoughtRecords_FullMethodName            = "/record.RecordService/ListThoughtRecords"
+	RecordService_CreateThoughtRecord_FullMethodName           = "/record.RecordService/CreateThoughtRecord"
+	RecordService_GetThoughtRecord_FullMethodName              = "/record.RecordService/GetThoughtRecord"
+	RecordService_UpdateThoughtRecord_FullMethodName           = "/record.RecordService/UpdateThoughtRecord"
+	RecordService_ChallengeThoughtRecord_FullMethodName        = "/record.RecordService/ChallengeThoughtRecord"
+	RecordService_DeleteThoughtRecord_FullMethodName           = "/record.RecordService/DeleteThoughtRecord"
+	RecordService_AddThought_FullMethodName                    = "/record.RecordService/AddThought"
+	RecordService_UpdateThought_FullMethodName                 = "/record.RecordService/UpdateThought"
+	RecordService_SetHotThought_FullMethodName                 = "/record.RecordService/SetHotThought"
+	RecordService_SetThoughtFactual_FullMethodName             = "/record.RecordService/SetThoughtFactual"
+	RecordService_SetThoughtEvidence_FullMethodName            = "/record.RecordService/SetThoughtEvidence"
+	RecordService_DeleteThought_FullMethodName                 = "/record.RecordService/DeleteThought"
+	RecordService_AddFeeling_FullMethodName                    = "/record.RecordService/AddFeeling"
+	RecordService_AddMapFeeling_FullMethodName                 = "/record.RecordService/AddMapFeeling"
+	RecordService_DeleteFeeling_FullMethodName                 = "/record.RecordService/DeleteFeeling"
+	RecordService_ListMapsOfWorry_FullMethodName               = "/record.RecordService/ListMapsOfWorry"
+	RecordService_CreateMapOfWorry_FullMethodName              = "/record.RecordService/CreateMapOfWorry"
+	RecordService_GetMapOfWorry_FullMethodName                 = "/record.RecordService/GetMapOfWorry"
+	RecordService_UpdateMapOfWorry_FullMethodName              = "/record.RecordService/UpdateMapOfWorry"
+	RecordService_DeleteMapOfWorry_FullMethodName              = "/record.RecordService/DeleteMapOfWorry"
+	RecordService_ListBehaviouralExperiments_FullMethodName    = "/record.RecordService/ListBehaviouralExperiments"
+	RecordService_CreateBehaviouralExperiment_FullMethodName   = "/record.RecordService/CreateBehaviouralExperiment"
+	RecordService_GetBehaviouralExperiment_FullMethodName      = "/record.RecordService/GetBehaviouralExperiment"
+	RecordService_UpdateBehaviouralExperiment_FullMethodName   = "/record.RecordService/UpdateBehaviouralExperiment"
+	RecordService_CompleteBehaviouralExperiment_FullMethodName = "/record.RecordService/CompleteBehaviouralExperiment"
+	RecordService_DeleteBehaviouralExperiment_FullMethodName   = "/record.RecordService/DeleteBehaviouralExperiment"
+	RecordService_AddExperimentFeeling_FullMethodName          = "/record.RecordService/AddExperimentFeeling"
+	RecordService_ListBiases_FullMethodName                    = "/record.RecordService/ListBiases"
+	RecordService_CreateBias_FullMethodName                    = "/record.RecordService/CreateBias"
+	RecordService_RenameBias_FullMethodName                    = "/record.RecordService/RenameBias"
+	RecordService_DeleteBias_FullMethodName                    = "/record.RecordService/DeleteBias"
 )
 
 // RecordServiceClient is the client API for RecordService service.
@@ -53,7 +60,7 @@ const (
 // RecordService is the gRPC API served by `cbt serve`. RPCs are added here and
 // registered in cmd/serve.go.
 //
-// Both record types and the cognitive bias vocabulary live on a single service
+// Every record type and the cognitive bias vocabulary live on a single service
 // rather than one service per entity: the client wrapper and the interceptor
 // wiring would otherwise be duplicated for no gain, and listing across both
 // record types needs a single endpoint anyway.
@@ -111,6 +118,28 @@ type RecordServiceClient interface {
 	// DeleteMapOfWorry removes a map along with its feelings. A map with
 	// alternatives derived from it is rejected.
 	DeleteMapOfWorry(ctx context.Context, in *DeleteMapOfWorryRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// ListBehaviouralExperiments returns the user's behavioural experiments,
+	// most recent first. Filtering by completed = false yields the experiments
+	// still to be carried out.
+	ListBehaviouralExperiments(ctx context.Context, in *ListBehaviouralExperimentsRequest, opts ...grpc.CallOption) (*ListBehaviouralExperimentsResponse, error)
+	// CreateBehaviouralExperiment creates an experiment. Only the plan is
+	// required; feelings given here are the ones predicted.
+	CreateBehaviouralExperiment(ctx context.Context, in *CreateBehaviouralExperimentRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error)
+	// GetBehaviouralExperiment returns a single experiment by identifier.
+	GetBehaviouralExperiment(ctx context.Context, in *GetBehaviouralExperimentRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error)
+	// UpdateBehaviouralExperiment changes the free text columns of an
+	// experiment without marking it completed. Fields left unset keep their
+	// current value.
+	UpdateBehaviouralExperiment(ctx context.Context, in *UpdateBehaviouralExperimentRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error)
+	// CompleteBehaviouralExperiment records the second sitting: what actually
+	// happened, what was learned, how to build on it, and how each feeling was
+	// actually felt. It stamps completed_at so the experiment leaves the queue.
+	CompleteBehaviouralExperiment(ctx context.Context, in *CompleteBehaviouralExperimentRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error)
+	// DeleteBehaviouralExperiment removes an experiment along with its
+	// feelings.
+	DeleteBehaviouralExperiment(ctx context.Context, in *DeleteBehaviouralExperimentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// AddExperimentFeeling attaches a predicted feeling to an experiment.
+	AddExperimentFeeling(ctx context.Context, in *AddExperimentFeelingRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error)
 	// ListBiases returns the user's cognitive bias vocabulary, ordered by name.
 	ListBiases(ctx context.Context, in *ListBiasesRequest, opts ...grpc.CallOption) (*ListBiasesResponse, error)
 	// CreateBias adds a user defined bias alongside the seeded ones.
@@ -329,6 +358,76 @@ func (c *recordServiceClient) DeleteMapOfWorry(ctx context.Context, in *DeleteMa
 	return out, nil
 }
 
+func (c *recordServiceClient) ListBehaviouralExperiments(ctx context.Context, in *ListBehaviouralExperimentsRequest, opts ...grpc.CallOption) (*ListBehaviouralExperimentsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListBehaviouralExperimentsResponse)
+	err := c.cc.Invoke(ctx, RecordService_ListBehaviouralExperiments_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) CreateBehaviouralExperiment(ctx context.Context, in *CreateBehaviouralExperimentRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BehaviouralExperiment)
+	err := c.cc.Invoke(ctx, RecordService_CreateBehaviouralExperiment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) GetBehaviouralExperiment(ctx context.Context, in *GetBehaviouralExperimentRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BehaviouralExperiment)
+	err := c.cc.Invoke(ctx, RecordService_GetBehaviouralExperiment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) UpdateBehaviouralExperiment(ctx context.Context, in *UpdateBehaviouralExperimentRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BehaviouralExperiment)
+	err := c.cc.Invoke(ctx, RecordService_UpdateBehaviouralExperiment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) CompleteBehaviouralExperiment(ctx context.Context, in *CompleteBehaviouralExperimentRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BehaviouralExperiment)
+	err := c.cc.Invoke(ctx, RecordService_CompleteBehaviouralExperiment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) DeleteBehaviouralExperiment(ctx context.Context, in *DeleteBehaviouralExperimentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, RecordService_DeleteBehaviouralExperiment_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) AddExperimentFeeling(ctx context.Context, in *AddExperimentFeelingRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(BehaviouralExperiment)
+	err := c.cc.Invoke(ctx, RecordService_AddExperimentFeeling_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *recordServiceClient) ListBiases(ctx context.Context, in *ListBiasesRequest, opts ...grpc.CallOption) (*ListBiasesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListBiasesResponse)
@@ -376,7 +475,7 @@ func (c *recordServiceClient) DeleteBias(ctx context.Context, in *DeleteBiasRequ
 // RecordService is the gRPC API served by `cbt serve`. RPCs are added here and
 // registered in cmd/serve.go.
 //
-// Both record types and the cognitive bias vocabulary live on a single service
+// Every record type and the cognitive bias vocabulary live on a single service
 // rather than one service per entity: the client wrapper and the interceptor
 // wiring would otherwise be duplicated for no gain, and listing across both
 // record types needs a single endpoint anyway.
@@ -434,6 +533,28 @@ type RecordServiceServer interface {
 	// DeleteMapOfWorry removes a map along with its feelings. A map with
 	// alternatives derived from it is rejected.
 	DeleteMapOfWorry(context.Context, *DeleteMapOfWorryRequest) (*emptypb.Empty, error)
+	// ListBehaviouralExperiments returns the user's behavioural experiments,
+	// most recent first. Filtering by completed = false yields the experiments
+	// still to be carried out.
+	ListBehaviouralExperiments(context.Context, *ListBehaviouralExperimentsRequest) (*ListBehaviouralExperimentsResponse, error)
+	// CreateBehaviouralExperiment creates an experiment. Only the plan is
+	// required; feelings given here are the ones predicted.
+	CreateBehaviouralExperiment(context.Context, *CreateBehaviouralExperimentRequest) (*BehaviouralExperiment, error)
+	// GetBehaviouralExperiment returns a single experiment by identifier.
+	GetBehaviouralExperiment(context.Context, *GetBehaviouralExperimentRequest) (*BehaviouralExperiment, error)
+	// UpdateBehaviouralExperiment changes the free text columns of an
+	// experiment without marking it completed. Fields left unset keep their
+	// current value.
+	UpdateBehaviouralExperiment(context.Context, *UpdateBehaviouralExperimentRequest) (*BehaviouralExperiment, error)
+	// CompleteBehaviouralExperiment records the second sitting: what actually
+	// happened, what was learned, how to build on it, and how each feeling was
+	// actually felt. It stamps completed_at so the experiment leaves the queue.
+	CompleteBehaviouralExperiment(context.Context, *CompleteBehaviouralExperimentRequest) (*BehaviouralExperiment, error)
+	// DeleteBehaviouralExperiment removes an experiment along with its
+	// feelings.
+	DeleteBehaviouralExperiment(context.Context, *DeleteBehaviouralExperimentRequest) (*emptypb.Empty, error)
+	// AddExperimentFeeling attaches a predicted feeling to an experiment.
+	AddExperimentFeeling(context.Context, *AddExperimentFeelingRequest) (*BehaviouralExperiment, error)
 	// ListBiases returns the user's cognitive bias vocabulary, ordered by name.
 	ListBiases(context.Context, *ListBiasesRequest) (*ListBiasesResponse, error)
 	// CreateBias adds a user defined bias alongside the seeded ones.
@@ -511,6 +632,27 @@ func (UnimplementedRecordServiceServer) UpdateMapOfWorry(context.Context, *Updat
 }
 func (UnimplementedRecordServiceServer) DeleteMapOfWorry(context.Context, *DeleteMapOfWorryRequest) (*emptypb.Empty, error) {
 	return nil, status.Error(codes.Unimplemented, "method DeleteMapOfWorry not implemented")
+}
+func (UnimplementedRecordServiceServer) ListBehaviouralExperiments(context.Context, *ListBehaviouralExperimentsRequest) (*ListBehaviouralExperimentsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListBehaviouralExperiments not implemented")
+}
+func (UnimplementedRecordServiceServer) CreateBehaviouralExperiment(context.Context, *CreateBehaviouralExperimentRequest) (*BehaviouralExperiment, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateBehaviouralExperiment not implemented")
+}
+func (UnimplementedRecordServiceServer) GetBehaviouralExperiment(context.Context, *GetBehaviouralExperimentRequest) (*BehaviouralExperiment, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetBehaviouralExperiment not implemented")
+}
+func (UnimplementedRecordServiceServer) UpdateBehaviouralExperiment(context.Context, *UpdateBehaviouralExperimentRequest) (*BehaviouralExperiment, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateBehaviouralExperiment not implemented")
+}
+func (UnimplementedRecordServiceServer) CompleteBehaviouralExperiment(context.Context, *CompleteBehaviouralExperimentRequest) (*BehaviouralExperiment, error) {
+	return nil, status.Error(codes.Unimplemented, "method CompleteBehaviouralExperiment not implemented")
+}
+func (UnimplementedRecordServiceServer) DeleteBehaviouralExperiment(context.Context, *DeleteBehaviouralExperimentRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteBehaviouralExperiment not implemented")
+}
+func (UnimplementedRecordServiceServer) AddExperimentFeeling(context.Context, *AddExperimentFeelingRequest) (*BehaviouralExperiment, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddExperimentFeeling not implemented")
 }
 func (UnimplementedRecordServiceServer) ListBiases(context.Context, *ListBiasesRequest) (*ListBiasesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListBiases not implemented")
@@ -905,6 +1047,132 @@ func _RecordService_DeleteMapOfWorry_Handler(srv interface{}, ctx context.Contex
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RecordService_ListBehaviouralExperiments_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListBehaviouralExperimentsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).ListBehaviouralExperiments(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_ListBehaviouralExperiments_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).ListBehaviouralExperiments(ctx, req.(*ListBehaviouralExperimentsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_CreateBehaviouralExperiment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateBehaviouralExperimentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).CreateBehaviouralExperiment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_CreateBehaviouralExperiment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).CreateBehaviouralExperiment(ctx, req.(*CreateBehaviouralExperimentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_GetBehaviouralExperiment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetBehaviouralExperimentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).GetBehaviouralExperiment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_GetBehaviouralExperiment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).GetBehaviouralExperiment(ctx, req.(*GetBehaviouralExperimentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_UpdateBehaviouralExperiment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateBehaviouralExperimentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).UpdateBehaviouralExperiment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_UpdateBehaviouralExperiment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).UpdateBehaviouralExperiment(ctx, req.(*UpdateBehaviouralExperimentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_CompleteBehaviouralExperiment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CompleteBehaviouralExperimentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).CompleteBehaviouralExperiment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_CompleteBehaviouralExperiment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).CompleteBehaviouralExperiment(ctx, req.(*CompleteBehaviouralExperimentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_DeleteBehaviouralExperiment_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteBehaviouralExperimentRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).DeleteBehaviouralExperiment(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_DeleteBehaviouralExperiment_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).DeleteBehaviouralExperiment(ctx, req.(*DeleteBehaviouralExperimentRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_AddExperimentFeeling_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddExperimentFeelingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).AddExperimentFeeling(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_AddExperimentFeeling_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).AddExperimentFeeling(ctx, req.(*AddExperimentFeelingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RecordService_ListBiases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListBiasesRequest)
 	if err := dec(in); err != nil {
@@ -1063,6 +1331,34 @@ var RecordService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "DeleteMapOfWorry",
 			Handler:    _RecordService_DeleteMapOfWorry_Handler,
+		},
+		{
+			MethodName: "ListBehaviouralExperiments",
+			Handler:    _RecordService_ListBehaviouralExperiments_Handler,
+		},
+		{
+			MethodName: "CreateBehaviouralExperiment",
+			Handler:    _RecordService_CreateBehaviouralExperiment_Handler,
+		},
+		{
+			MethodName: "GetBehaviouralExperiment",
+			Handler:    _RecordService_GetBehaviouralExperiment_Handler,
+		},
+		{
+			MethodName: "UpdateBehaviouralExperiment",
+			Handler:    _RecordService_UpdateBehaviouralExperiment_Handler,
+		},
+		{
+			MethodName: "CompleteBehaviouralExperiment",
+			Handler:    _RecordService_CompleteBehaviouralExperiment_Handler,
+		},
+		{
+			MethodName: "DeleteBehaviouralExperiment",
+			Handler:    _RecordService_DeleteBehaviouralExperiment_Handler,
+		},
+		{
+			MethodName: "AddExperimentFeeling",
+			Handler:    _RecordService_AddExperimentFeeling_Handler,
 		},
 		{
 			MethodName: "ListBiases",

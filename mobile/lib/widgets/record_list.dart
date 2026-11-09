@@ -5,15 +5,17 @@ import '../l10n/app_localizations.dart';
 import '../proto/record.pb.dart';
 import '../services/record_service.dart';
 import 'challenge_page.dart';
+import 'edit_experiment_page.dart';
 import 'edit_map_page.dart';
 import 'edit_record_page.dart';
+import 'experiment_detail_page.dart';
 import 'map_detail_page.dart';
 import 'record_detail_page.dart';
 import 'settings_page.dart';
 
 /// Which listing is showing. The unchallenged tab is the day's work queue,
 /// which is the reason the list is tabbed at all rather than one flat feed.
-enum RecordView { toChallenge, challenged, maps }
+enum RecordView { toChallenge, challenged, maps, experiments }
 
 class RecordList extends StatefulWidget {
   const RecordList({super.key, this.service});
@@ -30,6 +32,7 @@ class RecordListState extends State<RecordList> {
   RecordView _view = RecordView.toChallenge;
   List<ThoughtRecord> _records = <ThoughtRecord>[];
   List<MapOfWorry> _maps = <MapOfWorry>[];
+  List<BehaviouralExperiment> _experiments = <BehaviouralExperiment>[];
   bool _loading = true;
   String? _error;
 
@@ -64,6 +67,15 @@ class RecordListState extends State<RecordList> {
         });
         return;
       }
+      if (_view == RecordView.experiments) {
+        final experiments = await service.listBehaviouralExperiments();
+        if (!mounted) return;
+        setState(() {
+          _experiments = experiments;
+          _loading = false;
+        });
+        return;
+      }
 
       final records = await service.listThoughtRecords(
         challenged: _view == RecordView.challenged,
@@ -83,19 +95,14 @@ class RecordListState extends State<RecordList> {
   }
 
   Future<void> _create() async {
-    if (_view == RecordView.maps) {
-      await Navigator.of(context).push<void>(
-        MaterialPageRoute(
-          builder: (_) => EditMapPage(service: widget.service),
-        ),
-      );
-    } else {
-      await Navigator.of(context).push<void>(
-        MaterialPageRoute(
-          builder: (_) => EditRecordPage(service: widget.service),
-        ),
-      );
-    }
+    final Widget page = switch (_view) {
+      RecordView.maps => EditMapPage(service: widget.service),
+      RecordView.experiments => EditExperimentPage(service: widget.service),
+      _ => EditRecordPage(service: widget.service),
+    };
+    await Navigator.of(
+      context,
+    ).push<void>(MaterialPageRoute(builder: (_) => page));
     await load();
   }
 
@@ -127,23 +134,33 @@ class RecordListState extends State<RecordList> {
       ),
       body: Column(
         children: [
-          SegmentedButton<RecordView>(
-            segments: [
-              ButtonSegment(
-                value: RecordView.toChallenge,
-                label: Text(l10n.tabToChallenge),
-              ),
-              ButtonSegment(
-                value: RecordView.challenged,
-                label: Text(l10n.tabChallenged),
-              ),
-              ButtonSegment(
-                value: RecordView.maps,
-                label: Text(l10n.tabMaps),
-              ),
-            ],
-            selected: <RecordView>{_view},
-            onSelectionChanged: (selection) => selectView(selection.first),
+          // Four segments do not fit every phone width, so the row scrolls
+          // rather than squeezing the labels.
+          SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 8),
+            child: SegmentedButton<RecordView>(
+              segments: [
+                ButtonSegment(
+                  value: RecordView.toChallenge,
+                  label: Text(l10n.tabToChallenge),
+                ),
+                ButtonSegment(
+                  value: RecordView.challenged,
+                  label: Text(l10n.tabChallenged),
+                ),
+                ButtonSegment(
+                  value: RecordView.maps,
+                  label: Text(l10n.tabMaps),
+                ),
+                ButtonSegment(
+                  value: RecordView.experiments,
+                  label: Text(l10n.tabExperiments),
+                ),
+              ],
+              selected: <RecordView>{_view},
+              onSelectionChanged: (selection) => selectView(selection.first),
+            ),
           ),
           Expanded(child: _buildBody(l10n)),
         ],
@@ -188,6 +205,20 @@ class RecordListState extends State<RecordList> {
       );
     }
 
+    if (_view == RecordView.experiments) {
+      if (_experiments.isEmpty) {
+        return _emptyState(l10n.emptyExperiments);
+      }
+      return RefreshIndicator(
+        onRefresh: load,
+        child: ListView.builder(
+          itemCount: _experiments.length,
+          itemBuilder: (context, index) =>
+              _experimentTile(_experiments[index], l10n),
+        ),
+      );
+    }
+
     if (_records.isEmpty) {
       return _emptyState(
         _view == RecordView.toChallenge
@@ -206,19 +237,19 @@ class RecordListState extends State<RecordList> {
   }
 
   Widget _emptyState(String message) => LayoutBuilder(
-        builder: (context, constraints) => SingleChildScrollView(
-          physics: const AlwaysScrollableScrollPhysics(),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(minHeight: constraints.maxHeight),
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.all(32),
-                child: Text(message, textAlign: TextAlign.center),
-              ),
-            ),
+    builder: (context, constraints) => SingleChildScrollView(
+      physics: const AlwaysScrollableScrollPhysics(),
+      child: ConstrainedBox(
+        constraints: BoxConstraints(minHeight: constraints.maxHeight),
+        child: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(32),
+            child: Text(message, textAlign: TextAlign.center),
           ),
         ),
-      );
+      ),
+    ),
+  );
 
   Widget _recordTile(ThoughtRecord record, AppLocalizations l10n) {
     return ListTile(
@@ -237,10 +268,8 @@ class RecordListState extends State<RecordList> {
               onPressed: () async {
                 await Navigator.of(context).push<void>(
                   MaterialPageRoute(
-                    builder: (_) => ChallengePage(
-                      record: record,
-                      service: widget.service,
-                    ),
+                    builder: (_) =>
+                        ChallengePage(record: record, service: widget.service),
                   ),
                 );
                 await load();
@@ -249,10 +278,8 @@ class RecordListState extends State<RecordList> {
       onTap: () async {
         await Navigator.of(context).push<void>(
           MaterialPageRoute(
-            builder: (_) => RecordDetailPage(
-              recordId: record.id,
-              service: widget.service,
-            ),
+            builder: (_) =>
+                RecordDetailPage(recordId: record.id, service: widget.service),
           ),
         );
         await load();
@@ -262,10 +289,16 @@ class RecordListState extends State<RecordList> {
 
   Widget _mapTile(MapOfWorry mapOfWorry) {
     return ListTile(
-      title: Text(mapOfWorry.event, maxLines: 2, overflow: TextOverflow.ellipsis),
+      title: Text(
+        mapOfWorry.event,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
       subtitle: Text(
         formatEventDate(
-          mapOfWorry.hasOccurredAt() ? mapOfWorry.occurredAt.toDateTime() : null,
+          mapOfWorry.hasOccurredAt()
+              ? mapOfWorry.occurredAt.toDateTime()
+              : null,
           mapOfWorry.createdAt.toDateTime(),
         ),
       ),
@@ -275,8 +308,39 @@ class RecordListState extends State<RecordList> {
       onTap: () async {
         await Navigator.of(context).push<void>(
           MaterialPageRoute(
-            builder: (_) => MapDetailPage(
-              mapId: mapOfWorry.id,
+            builder: (_) =>
+                MapDetailPage(mapId: mapOfWorry.id, service: widget.service),
+          ),
+        );
+        await load();
+      },
+    );
+  }
+
+  Widget _experimentTile(
+    BehaviouralExperiment experiment,
+    AppLocalizations l10n,
+  ) {
+    return ListTile(
+      title: Text(
+        experiment.plan,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Text(
+        '${formatEventDate(experiment.hasOccurredAt() ? experiment.occurredAt.toDateTime() : null, experiment.createdAt.toDateTime())}'
+        '  ·  ${experiment.hasCompletedAt() ? l10n.completedOn(formatDate(experiment.completedAt.toDateTime().toLocal())) : l10n.notYetCompleted}',
+      ),
+      leading: Icon(
+        experiment.hasCompletedAt()
+            ? Icons.fact_check_outlined
+            : Icons.science_outlined,
+      ),
+      onTap: () async {
+        await Navigator.of(context).push<void>(
+          MaterialPageRoute(
+            builder: (_) => ExperimentDetailPage(
+              experimentId: experiment.id,
               service: widget.service,
             ),
           ),

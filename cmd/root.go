@@ -34,7 +34,7 @@ var rootOpts rootOptions
 var rootCmd = &cobra.Command{
 	Use:   AppName,
 	Short: "A journal for cognitive behavioural therapy thought records",
-	Long: `cbt keeps thought records and maps of worry.
+	Long: `cbt keeps thought records, maps of worry and behavioural experiments.
 
 It is a journal, not a therapist: it records what you write and shows it back
 to you, and never interprets an entry or offers advice.`,

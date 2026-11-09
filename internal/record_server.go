@@ -272,6 +272,7 @@ func mapDatabaseError(err error) error {
 		return nil
 	case errors.Is(err, database.ErrThoughtRecordNotFound),
 		errors.Is(err, database.ErrMapOfWorryNotFound),
+		errors.Is(err, database.ErrBehaviouralExperimentNotFound),
 		errors.Is(err, database.ErrThoughtNotFound),
 		errors.Is(err, database.ErrFeelingNotFound),
 		errors.Is(err, database.ErrBiasNotFound):
@@ -279,6 +280,7 @@ func mapDatabaseError(err error) error {
 	case errors.Is(err, database.ErrBiasExists):
 		return status.Error(codes.AlreadyExists, err.Error())
 	case errors.Is(err, database.ErrEventEmpty),
+		errors.Is(err, database.ErrPlanEmpty),
 		errors.Is(err, database.ErrThoughtBodyEmpty),
 		errors.Is(err, database.ErrFeelingNameEmpty),
 		errors.Is(err, database.ErrFeelingIntensityRange),

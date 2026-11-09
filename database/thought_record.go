@@ -127,7 +127,7 @@ func CreateThoughtRecord(db *gorm.DB, userID uint, input CreateThoughtRecordInpu
 		}
 
 		if len(input.Feelings) > 0 {
-			feelings, err := buildFeelings(input.Feelings, userID, &record.ID, nil)
+			feelings, err := buildFeelings(input.Feelings, userID, feelingParent{ThoughtRecordID: &record.ID})
 			if err != nil {
 				return err
 			}
@@ -279,7 +279,7 @@ func ChallengeThoughtRecord(db *gorm.DB, userID uint, id uint, input ChallengeIn
 			return fmt.Errorf("failed to challenge the thought record: %w", err)
 		}
 
-		if err := applyFeelingRerating(tx, userID, id, input.FeelingIntensitiesAfter); err != nil {
+		if err := applyFeelingRerating(tx, userID, feelingParent{ThoughtRecordID: &id}, input.FeelingIntensitiesAfter); err != nil {
 			return err
 		}
 		if err := applyThoughtJudgements(tx, userID, id, input.Thoughts); err != nil {
@@ -293,31 +293,6 @@ func ChallengeThoughtRecord(db *gorm.DB, userID uint, id uint, input ChallengeIn
 	}
 
 	return &record, nil
-}
-
-// applyFeelingRerating writes the post-challenge rating of each named feeling.
-// Feelings belonging to another record are rejected so a mistyped identifier
-// cannot quietly rewrite an unrelated entry.
-func applyFeelingRerating(tx *gorm.DB, userID uint, recordID uint, ratings map[uint]int) error {
-	for feelingID, intensity := range ratings {
-		if err := validateIntensity(&intensity); err != nil {
-			return err
-		}
-
-		var feeling Feeling
-		if err := findFeeling(tx, userID, feelingID, &feeling); err != nil {
-			return err
-		}
-		if feeling.ThoughtRecordID == nil || *feeling.ThoughtRecordID != recordID {
-			return fmt.Errorf("%w: %d does not belong to thought record %d", ErrFeelingNotFound, feelingID, recordID)
-		}
-
-		if err := tx.Model(&feeling).Update("intensity_after", intensity).Error; err != nil {
-			return fmt.Errorf("failed to re-rate the feeling: %w", err)
-		}
-	}
-
-	return nil
 }
 
 // applyThoughtJudgements records what was decided about each thought: the

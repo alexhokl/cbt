@@ -24,7 +24,7 @@ export 'record.pb.dart';
 /// RecordService is the gRPC API served by `cbt serve`. RPCs are added here and
 /// registered in cmd/serve.go.
 ///
-/// Both record types and the cognitive bias vocabulary live on a single service
+/// Every record type and the cognitive bias vocabulary live on a single service
 /// rather than one service per entity: the client wrapper and the interceptor
 /// wiring would otherwise be duplicated for no gain, and listing across both
 /// record types needs a single endpoint anyway.
@@ -214,6 +214,77 @@ class RecordServiceClient extends $grpc.Client {
     return $createUnaryCall(_$deleteMapOfWorry, request, options: options);
   }
 
+  /// ListBehaviouralExperiments returns the user's behavioural experiments,
+  /// most recent first. Filtering by completed = false yields the experiments
+  /// still to be carried out.
+  $grpc.ResponseFuture<$0.ListBehaviouralExperimentsResponse>
+      listBehaviouralExperiments(
+    $0.ListBehaviouralExperimentsRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listBehaviouralExperiments, request,
+        options: options);
+  }
+
+  /// CreateBehaviouralExperiment creates an experiment. Only the plan is
+  /// required; feelings given here are the ones predicted.
+  $grpc.ResponseFuture<$0.BehaviouralExperiment> createBehaviouralExperiment(
+    $0.CreateBehaviouralExperimentRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createBehaviouralExperiment, request,
+        options: options);
+  }
+
+  /// GetBehaviouralExperiment returns a single experiment by identifier.
+  $grpc.ResponseFuture<$0.BehaviouralExperiment> getBehaviouralExperiment(
+    $0.GetBehaviouralExperimentRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getBehaviouralExperiment, request,
+        options: options);
+  }
+
+  /// UpdateBehaviouralExperiment changes the free text columns of an
+  /// experiment without marking it completed. Fields left unset keep their
+  /// current value.
+  $grpc.ResponseFuture<$0.BehaviouralExperiment> updateBehaviouralExperiment(
+    $0.UpdateBehaviouralExperimentRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$updateBehaviouralExperiment, request,
+        options: options);
+  }
+
+  /// CompleteBehaviouralExperiment records the second sitting: what actually
+  /// happened, what was learned, how to build on it, and how each feeling was
+  /// actually felt. It stamps completed_at so the experiment leaves the queue.
+  $grpc.ResponseFuture<$0.BehaviouralExperiment> completeBehaviouralExperiment(
+    $0.CompleteBehaviouralExperimentRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$completeBehaviouralExperiment, request,
+        options: options);
+  }
+
+  /// DeleteBehaviouralExperiment removes an experiment along with its
+  /// feelings.
+  $grpc.ResponseFuture<$1.Empty> deleteBehaviouralExperiment(
+    $0.DeleteBehaviouralExperimentRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$deleteBehaviouralExperiment, request,
+        options: options);
+  }
+
+  /// AddExperimentFeeling attaches a predicted feeling to an experiment.
+  $grpc.ResponseFuture<$0.BehaviouralExperiment> addExperimentFeeling(
+    $0.AddExperimentFeelingRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$addExperimentFeeling, request, options: options);
+  }
+
   /// ListBiases returns the user's cognitive bias vocabulary, ordered by name.
   $grpc.ResponseFuture<$0.ListBiasesResponse> listBiases(
     $0.ListBiasesRequest request, {
@@ -348,6 +419,43 @@ class RecordServiceClient extends $grpc.Client {
           '/record.RecordService/DeleteMapOfWorry',
           ($0.DeleteMapOfWorryRequest value) => value.writeToBuffer(),
           $1.Empty.fromBuffer);
+  static final _$listBehaviouralExperiments = $grpc.ClientMethod<
+          $0.ListBehaviouralExperimentsRequest,
+          $0.ListBehaviouralExperimentsResponse>(
+      '/record.RecordService/ListBehaviouralExperiments',
+      ($0.ListBehaviouralExperimentsRequest value) => value.writeToBuffer(),
+      $0.ListBehaviouralExperimentsResponse.fromBuffer);
+  static final _$createBehaviouralExperiment = $grpc.ClientMethod<
+          $0.CreateBehaviouralExperimentRequest, $0.BehaviouralExperiment>(
+      '/record.RecordService/CreateBehaviouralExperiment',
+      ($0.CreateBehaviouralExperimentRequest value) => value.writeToBuffer(),
+      $0.BehaviouralExperiment.fromBuffer);
+  static final _$getBehaviouralExperiment = $grpc.ClientMethod<
+          $0.GetBehaviouralExperimentRequest, $0.BehaviouralExperiment>(
+      '/record.RecordService/GetBehaviouralExperiment',
+      ($0.GetBehaviouralExperimentRequest value) => value.writeToBuffer(),
+      $0.BehaviouralExperiment.fromBuffer);
+  static final _$updateBehaviouralExperiment = $grpc.ClientMethod<
+          $0.UpdateBehaviouralExperimentRequest, $0.BehaviouralExperiment>(
+      '/record.RecordService/UpdateBehaviouralExperiment',
+      ($0.UpdateBehaviouralExperimentRequest value) => value.writeToBuffer(),
+      $0.BehaviouralExperiment.fromBuffer);
+  static final _$completeBehaviouralExperiment = $grpc.ClientMethod<
+          $0.CompleteBehaviouralExperimentRequest, $0.BehaviouralExperiment>(
+      '/record.RecordService/CompleteBehaviouralExperiment',
+      ($0.CompleteBehaviouralExperimentRequest value) => value.writeToBuffer(),
+      $0.BehaviouralExperiment.fromBuffer);
+  static final _$deleteBehaviouralExperiment =
+      $grpc.ClientMethod<$0.DeleteBehaviouralExperimentRequest, $1.Empty>(
+          '/record.RecordService/DeleteBehaviouralExperiment',
+          ($0.DeleteBehaviouralExperimentRequest value) =>
+              value.writeToBuffer(),
+          $1.Empty.fromBuffer);
+  static final _$addExperimentFeeling = $grpc.ClientMethod<
+          $0.AddExperimentFeelingRequest, $0.BehaviouralExperiment>(
+      '/record.RecordService/AddExperimentFeeling',
+      ($0.AddExperimentFeelingRequest value) => value.writeToBuffer(),
+      $0.BehaviouralExperiment.fromBuffer);
   static final _$listBiases =
       $grpc.ClientMethod<$0.ListBiasesRequest, $0.ListBiasesResponse>(
           '/record.RecordService/ListBiases',
@@ -542,6 +650,70 @@ abstract class RecordServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.DeleteMapOfWorryRequest.fromBuffer(value),
         ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListBehaviouralExperimentsRequest,
+            $0.ListBehaviouralExperimentsResponse>(
+        'ListBehaviouralExperiments',
+        listBehaviouralExperiments_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.ListBehaviouralExperimentsRequest.fromBuffer(value),
+        ($0.ListBehaviouralExperimentsResponse value) =>
+            value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CreateBehaviouralExperimentRequest,
+            $0.BehaviouralExperiment>(
+        'CreateBehaviouralExperiment',
+        createBehaviouralExperiment_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.CreateBehaviouralExperimentRequest.fromBuffer(value),
+        ($0.BehaviouralExperiment value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetBehaviouralExperimentRequest,
+            $0.BehaviouralExperiment>(
+        'GetBehaviouralExperiment',
+        getBehaviouralExperiment_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.GetBehaviouralExperimentRequest.fromBuffer(value),
+        ($0.BehaviouralExperiment value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UpdateBehaviouralExperimentRequest,
+            $0.BehaviouralExperiment>(
+        'UpdateBehaviouralExperiment',
+        updateBehaviouralExperiment_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.UpdateBehaviouralExperimentRequest.fromBuffer(value),
+        ($0.BehaviouralExperiment value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CompleteBehaviouralExperimentRequest,
+            $0.BehaviouralExperiment>(
+        'CompleteBehaviouralExperiment',
+        completeBehaviouralExperiment_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.CompleteBehaviouralExperimentRequest.fromBuffer(value),
+        ($0.BehaviouralExperiment value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.DeleteBehaviouralExperimentRequest, $1.Empty>(
+            'DeleteBehaviouralExperiment',
+            deleteBehaviouralExperiment_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.DeleteBehaviouralExperimentRequest.fromBuffer(value),
+            ($1.Empty value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.AddExperimentFeelingRequest,
+            $0.BehaviouralExperiment>(
+        'AddExperimentFeeling',
+        addExperimentFeeling_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.AddExperimentFeelingRequest.fromBuffer(value),
+        ($0.BehaviouralExperiment value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListBiasesRequest, $0.ListBiasesResponse>(
         'ListBiases',
         listBiases_Pre,
@@ -738,6 +910,70 @@ abstract class RecordServiceBase extends $grpc.Service {
 
   $async.Future<$1.Empty> deleteMapOfWorry(
       $grpc.ServiceCall call, $0.DeleteMapOfWorryRequest request);
+
+  $async.Future<$0.ListBehaviouralExperimentsResponse>
+      listBehaviouralExperiments_Pre($grpc.ServiceCall $call,
+          $async.Future<$0.ListBehaviouralExperimentsRequest> $request) async {
+    return listBehaviouralExperiments($call, await $request);
+  }
+
+  $async.Future<$0.ListBehaviouralExperimentsResponse>
+      listBehaviouralExperiments(
+          $grpc.ServiceCall call, $0.ListBehaviouralExperimentsRequest request);
+
+  $async.Future<$0.BehaviouralExperiment> createBehaviouralExperiment_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CreateBehaviouralExperimentRequest> $request) async {
+    return createBehaviouralExperiment($call, await $request);
+  }
+
+  $async.Future<$0.BehaviouralExperiment> createBehaviouralExperiment(
+      $grpc.ServiceCall call, $0.CreateBehaviouralExperimentRequest request);
+
+  $async.Future<$0.BehaviouralExperiment> getBehaviouralExperiment_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.GetBehaviouralExperimentRequest> $request) async {
+    return getBehaviouralExperiment($call, await $request);
+  }
+
+  $async.Future<$0.BehaviouralExperiment> getBehaviouralExperiment(
+      $grpc.ServiceCall call, $0.GetBehaviouralExperimentRequest request);
+
+  $async.Future<$0.BehaviouralExperiment> updateBehaviouralExperiment_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.UpdateBehaviouralExperimentRequest> $request) async {
+    return updateBehaviouralExperiment($call, await $request);
+  }
+
+  $async.Future<$0.BehaviouralExperiment> updateBehaviouralExperiment(
+      $grpc.ServiceCall call, $0.UpdateBehaviouralExperimentRequest request);
+
+  $async.Future<$0.BehaviouralExperiment> completeBehaviouralExperiment_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CompleteBehaviouralExperimentRequest> $request) async {
+    return completeBehaviouralExperiment($call, await $request);
+  }
+
+  $async.Future<$0.BehaviouralExperiment> completeBehaviouralExperiment(
+      $grpc.ServiceCall call, $0.CompleteBehaviouralExperimentRequest request);
+
+  $async.Future<$1.Empty> deleteBehaviouralExperiment_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.DeleteBehaviouralExperimentRequest> $request) async {
+    return deleteBehaviouralExperiment($call, await $request);
+  }
+
+  $async.Future<$1.Empty> deleteBehaviouralExperiment(
+      $grpc.ServiceCall call, $0.DeleteBehaviouralExperimentRequest request);
+
+  $async.Future<$0.BehaviouralExperiment> addExperimentFeeling_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.AddExperimentFeelingRequest> $request) async {
+    return addExperimentFeeling($call, await $request);
+  }
+
+  $async.Future<$0.BehaviouralExperiment> addExperimentFeeling(
+      $grpc.ServiceCall call, $0.AddExperimentFeelingRequest request);
 
   $async.Future<$0.ListBiasesResponse> listBiases_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListBiasesRequest> $request) async {

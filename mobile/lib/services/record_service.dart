@@ -148,6 +148,59 @@ class RecordService {
         (client) => client.deleteMapOfWorry(DeleteMapOfWorryRequest()..id = id),
       );
 
+  Future<List<BehaviouralExperiment>> listBehaviouralExperiments({
+    bool? completed,
+    String search = '',
+  }) {
+    final request = ListBehaviouralExperimentsRequest()..search = search;
+    if (completed != null) {
+      request.completed = completed;
+    }
+    return _call(
+      (client) async =>
+          (await client.listBehaviouralExperiments(request)).experiments,
+    );
+  }
+
+  Future<BehaviouralExperiment> getBehaviouralExperiment(int id) => _call(
+        (client) => client.getBehaviouralExperiment(
+          GetBehaviouralExperimentRequest()..id = id,
+        ),
+      );
+
+  Future<BehaviouralExperiment> createBehaviouralExperiment(
+    CreateBehaviouralExperimentRequest request,
+  ) =>
+      _call((client) => client.createBehaviouralExperiment(request));
+
+  Future<BehaviouralExperiment> updateBehaviouralExperiment(
+    UpdateBehaviouralExperimentRequest request,
+  ) =>
+      _call((client) => client.updateBehaviouralExperiment(request));
+
+  Future<BehaviouralExperiment> completeBehaviouralExperiment(
+    CompleteBehaviouralExperimentRequest request,
+  ) =>
+      _call((client) => client.completeBehaviouralExperiment(request));
+
+  Future<void> deleteBehaviouralExperiment(int id) => _call(
+        (client) => client.deleteBehaviouralExperiment(
+          DeleteBehaviouralExperimentRequest()..id = id,
+        ),
+      );
+
+  Future<BehaviouralExperiment> addExperimentFeeling(
+    int experimentId,
+    FeelingInput feeling,
+  ) =>
+      _call(
+        (client) => client.addExperimentFeeling(
+          AddExperimentFeelingRequest()
+            ..experimentId = experimentId
+            ..feeling = feeling,
+        ),
+      );
+
   Future<List<CognitiveBias>> listBiases() => _call(
         (client) async =>
             (await client.listBiases(ListBiasesRequest())).biases,

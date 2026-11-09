@@ -111,6 +111,48 @@ func writeMapOfWorryTable(out io.Writer, maps []*proto.MapOfWorry) error {
 	return nil
 }
 
+// writeBehaviouralExperimentTable renders behavioural experiments as a narrow
+// aligned table. Like the thought record listing, it answers what was tried
+// and whether there is still work to do on it.
+func writeBehaviouralExperimentTable(out io.Writer, experiments []*proto.BehaviouralExperiment) error {
+	if len(experiments) == 0 {
+		if _, err := fmt.Fprintln(out, "  (none)"); err != nil {
+			return fmt.Errorf("failed to write output: %w", err)
+		}
+		return nil
+	}
+
+	writer := tabwriter.NewWriter(out, 0, 0, 2, ' ', 0)
+	if _, err := fmt.Fprintln(writer, "ID\tWHEN\tPLAN\tFEELING\tCOMPLETED"); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	for _, experiment := range experiments {
+		completed := "no"
+		if experiment.CompletedAt != nil {
+			completed = "yes"
+		}
+
+		if _, err := fmt.Fprintf(
+			writer,
+			"%d\t%s\t%s\t%s\t%s\n",
+			experiment.GetId(),
+			formatEventDate(experiment.OccurredAt, experiment.GetCreatedAt().AsTime()),
+			truncate(experiment.GetPlan(), eventColumnWidth),
+			strongestFeeling(experiment.GetFeelings()),
+			completed,
+		); err != nil {
+			return fmt.Errorf("failed to write output: %w", err)
+		}
+	}
+
+	if err := writer.Flush(); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	return nil
+}
+
 // writeBiasTable renders the cognitive bias vocabulary.
 func writeBiasTable(out io.Writer, biases []*proto.CognitiveBias) error {
 	if len(biases) == 0 {
@@ -173,6 +215,24 @@ func writeMapOfWorryLine(out io.Writer, mapOfWorry *proto.MapOfWorry) error {
 	}
 
 	if _, err := fmt.Fprintf(out, "%s (%s)\n", truncate(mapOfWorry.GetEvent(), eventColumnWidth), strings.Join(details, ", ")); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	return nil
+}
+
+// writeBehaviouralExperimentLine renders a single experiment as a one line
+// confirmation.
+func writeBehaviouralExperimentLine(out io.Writer, experiment *proto.BehaviouralExperiment) error {
+	details := []string{fmt.Sprintf("id %d", experiment.GetId())}
+	if len(experiment.GetFeelings()) > 0 {
+		details = append(details, fmt.Sprintf("feelings %d", len(experiment.GetFeelings())))
+	}
+	if experiment.CompletedAt != nil {
+		details = append(details, "completed")
+	}
+
+	if _, err := fmt.Fprintf(out, "%s (%s)\n", truncate(experiment.GetPlan(), eventColumnWidth), strings.Join(details, ", ")); err != nil {
 		return fmt.Errorf("failed to write output: %w", err)
 	}
 
