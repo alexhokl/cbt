@@ -122,6 +122,32 @@ func (s *RecordServer) SetThoughtFactual(ctx context.Context, req *proto.SetThou
 	return converted, nil
 }
 
+// SetThoughtEvidence records what supports a thought, without marking the
+// record as challenged.
+func (s *RecordServer) SetThoughtEvidence(ctx context.Context, req *proto.SetThoughtEvidenceRequest) (*proto.ThoughtRecord, error) {
+	ctx, span := startSpan(ctx, "SetThoughtEvidence")
+	defer span.End()
+
+	userID, err := userIDFromContext(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	record, err := database.SetThoughtEvidence(s.DB.WithContext(ctx), userID, uint(req.GetId()), req.GetEvidence())
+	if err != nil {
+		return nil, mapDatabaseError(err)
+	}
+
+	converted, err := toProtoThoughtRecord(record)
+	if err != nil {
+		return nil, err
+	}
+
+	endSpanOk(span)
+
+	return converted, nil
+}
+
 // DeleteThought removes a thought from its record. The updated record is
 // returned rather than an empty response so the caller does not have to fetch
 // it again to redraw.

@@ -40,6 +40,7 @@ class ChallengePage extends StatefulWidget {
 
 class _ChallengePageState extends State<ChallengePage> {
   final TextEditingController _alternativeController = TextEditingController();
+  final TextEditingController _evidenceController = TextEditingController();
   final TextEditingController _feelingsNowController = TextEditingController();
 
   /// The biases selected for each thought, keyed by thought id. The selection
@@ -52,6 +53,11 @@ class _ChallengePageState extends State<ChallengePage> {
   /// turning this on clears the chips rather than leaving the server to refuse
   /// a request the screen should not have allowed to be built.
   final Map<int, bool> _thoughtFactual = <int, bool>{};
+
+  /// How much each thought is still believed, keyed by thought id. There is
+  /// no rating from the first sitting to start from, so a thought stays
+  /// unrated, and is sent without a belief, until its slider is moved.
+  final Map<int, int?> _beliefs = <int, int?>{};
 
   /// The re-rating of each feeling, keyed by feeling id. A feeling starts at
   /// its original rating so an untouched slider records "unchanged" rather
@@ -67,11 +73,14 @@ class _ChallengePageState extends State<ChallengePage> {
   void initState() {
     super.initState();
     _alternativeController.text = widget.record.alternativeView;
+    _evidenceController.text = widget.record.evidenceForAlternative;
     _feelingsNowController.text = widget.record.feelingsNow;
     for (final thought in widget.record.thoughts) {
       _thoughtBiases[thought.id] =
           thought.biases.map((bias) => bias.name).toSet();
       _thoughtFactual[thought.id] = thought.isFactual;
+      _beliefs[thought.id] =
+          thought.hasBeliefAfter() ? thought.beliefAfter : null;
     }
     for (final feeling in widget.record.feelings) {
       _reratings[feeling.id] = feeling.hasIntensityAfter()
@@ -84,6 +93,7 @@ class _ChallengePageState extends State<ChallengePage> {
   @override
   void dispose() {
     _alternativeController.dispose();
+    _evidenceController.dispose();
     _feelingsNowController.dispose();
     super.dispose();
   }
@@ -119,6 +129,7 @@ class _ChallengePageState extends State<ChallengePage> {
     final request = ChallengeThoughtRecordRequest()
       ..id = widget.record.id
       ..alternativeView = _alternativeController.text
+      ..evidenceForAlternative = _evidenceController.text
       ..feelingsNow = _feelingsNowController.text;
 
     _reratings.forEach((feelingId, intensity) {
@@ -132,12 +143,13 @@ class _ChallengePageState extends State<ChallengePage> {
     _thoughtBiases.forEach((thoughtId, names) {
       // The wrapper is always sent, including when empty: an absent wrapper
       // means "leave the biases alone", which is the opposite instruction.
-      request.thoughts.add(
-        ThoughtJudgement()
-          ..thoughtId = thoughtId
-          ..biases = (BiasNames()..names.addAll(names))
-          ..isFactual = _thoughtFactual[thoughtId] ?? false,
-      );
+      final judgement = ThoughtJudgement()
+        ..thoughtId = thoughtId
+        ..biases = (BiasNames()..names.addAll(names))
+        ..isFactual = _thoughtFactual[thoughtId] ?? false;
+      final belief = _beliefs[thoughtId];
+      if (belief != null) judgement.beliefAfter = belief;
+      request.thoughts.add(judgement);
     });
 
     try {
@@ -231,6 +243,26 @@ class _ChallengePageState extends State<ChallengePage> {
           decoration: const InputDecoration(border: OutlineInputBorder()),
         ),
 
+        const SizedBox(height: 24),
+        Text(l10n.challengeStepEvidence,
+            style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 8),
+        TextField(
+          key: const Key('evidence'),
+          controller: _evidenceController,
+          minLines: 3,
+          maxLines: 10,
+          decoration: const InputDecoration(border: OutlineInputBorder()),
+        ),
+
+        if (widget.record.thoughts.isNotEmpty) ...[
+          const SizedBox(height: 24),
+          Text(l10n.challengeStepBelief,
+              style: Theme.of(context).textTheme.titleMedium),
+          for (final thought in widget.record.thoughts)
+            _beliefRater(thought, l10n),
+        ],
+
         if (widget.record.feelings.isNotEmpty) ...[
           const SizedBox(height: 24),
           Text(l10n.challengeStepRerate,
@@ -319,6 +351,32 @@ class _ChallengePageState extends State<ChallengePage> {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _beliefRater(NegativeThought thought, AppLocalizations l10n) {
+    final current = _beliefs[thought.id];
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          children: [
+            Expanded(child: Text(thought.body)),
+            Text(current == null ? l10n.feelingUnrated : '$current%'),
+          ],
+        ),
+        Slider(
+          key: Key('belief-${thought.id}'),
+          value: (current ?? 0).toDouble(),
+          min: 0,
+          max: 100,
+          divisions: 20,
+          label: '${current ?? 0}%',
+          onChanged: (value) =>
+              setState(() => _beliefs[thought.id] = value.round()),
+        ),
+      ],
     );
   }
 

@@ -113,6 +113,27 @@ void main() {
       'the invite may simply have failed to send',
     );
 
+    // The text fields are scrollables of their own, so the list is named.
+    final list = find.byType(Scrollable).first;
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('evidence')),
+      200,
+      scrollable: list,
+    );
+    await tester.enterText(
+      find.byKey(const Key('evidence')),
+      'the calendar shows the invite as unsent',
+    );
+
+    // Tapping the middle of the slider rates the thought at 50%.
+    await tester.scrollUntilVisible(
+      find.byKey(const Key('belief-7')),
+      200,
+      scrollable: list,
+    );
+    await tester.tap(find.byKey(const Key('belief-7')));
+    await tester.pumpAndSettle();
+
     await tester.tap(find.text('Save'));
     await tester.pumpAndSettle();
 
@@ -127,6 +148,11 @@ void main() {
     );
     expect(captured.thoughts.single.thoughtId, 7);
     expect(captured.thoughts.single.biases.names, contains('catastrophising'));
+    expect(
+      captured.evidenceForAlternative,
+      'the calendar shows the invite as unsent',
+    );
+    expect(captured.thoughts.single.beliefAfter, 50);
     expect(captured.feelingReratings.single.feelingId, 4);
   });
 
@@ -149,6 +175,9 @@ void main() {
     // An untouched slider must record "unchanged" rather than silently
     // dropping the feeling to zero, which would read as a resolved record.
     expect(captured.feelingReratings.single.intensityAfter, 80);
+    // A thought has no earlier belief rating to start from, so an untouched
+    // slider sends nothing rather than inventing one.
+    expect(captured.thoughts.single.hasBeliefAfter(), isFalse);
   });
 
   testWidgets('keeps the biases a thought already carried', (tester) async {

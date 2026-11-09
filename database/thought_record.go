@@ -28,8 +28,9 @@ type ThoughtRecordFilter struct {
 	// this instant, falling back to the creation time for records where the
 	// user did not say when the event happened.
 	Since *time.Time
-	// Search matches free text across the event, the alternative view and the
-	// bodies of the thoughts, case insensitively.
+	// Search matches free text across the event, the alternative view, the
+	// evidence for it, and the bodies of the thoughts and the evidence for
+	// them, case insensitively.
 	Search string
 }
 
@@ -37,28 +38,30 @@ type ThoughtRecordFilter struct {
 // Only Event is required; a record is routinely opened with nothing else and
 // completed later.
 type CreateThoughtRecordInput struct {
-	Event           string
-	OccurredAt      *time.Time
-	AlternativeView string
-	FeelingsNow     string
-	Thoughts        []ThoughtInput
-	Feelings        []FeelingInput
+	Event                  string
+	OccurredAt             *time.Time
+	AlternativeView        string
+	EvidenceForAlternative string
+	FeelingsNow            string
+	Thoughts               []ThoughtInput
+	Feelings               []FeelingInput
 }
 
 // UpdateThoughtRecordInput carries the columns to change on an existing
 // record. A nil field is left as it is, which is what allows a record to be
 // filled in a column at a time.
 type UpdateThoughtRecordInput struct {
-	Event           *string
-	OccurredAt      *time.Time
-	ClearOccurredAt bool
-	AlternativeView *string
-	FeelingsNow     *string
+	Event                  *string
+	OccurredAt             *time.Time
+	ClearOccurredAt        bool
+	AlternativeView        *string
+	EvidenceForAlternative *string
+	FeelingsNow            *string
 }
 
 // ThoughtJudgement is the outcome of examining one thought during a challenge:
 // which distortions it carries, or that it carries none because the thought
-// was an accurate reading of the situation.
+// was an accurate reading of the situation, and how much it is still believed.
 //
 // Both halves live in one value so they cannot disagree. Validation is applied
 // to the resulting state of the thought, not just to what this request
@@ -69,16 +72,24 @@ type ThoughtJudgement struct {
 	// already attached alone; an empty slice detaches them all, which is how a
 	// thought is recorded as carrying no distortion.
 	Biases []string
-	// IsFactual records that the thought was judged an accurate reading.
-	IsFactual bool
+	// IsFactual records whether the thought was judged an accurate reading.
+	// Nil leaves the stored judgement alone, so a judgement can carry only a
+	// belief rating without un-marking a thought judged factual earlier.
+	IsFactual *bool
+	// BeliefAfter is how much the thought is still believed, 0-100. Nil
+	// leaves the stored rating alone.
+	BeliefAfter *int
 }
 
 // ChallengeInput carries the second sitting of a thought record: the
-// alternative view, the re-rating of each feeling, and the judgement made
-// about each thought.
+// alternative view and the evidence for it, the re-rating of each feeling, and
+// the judgement made about each thought.
 type ChallengeInput struct {
 	// AlternativeView answers "is there any other way I can look at this?".
 	AlternativeView string
+	// EvidenceForAlternative answers "what evidence do you have to support
+	// this alternative view?".
+	EvidenceForAlternative string
 	// FeelingsNow answers "how do I feel now?" in prose.
 	FeelingsNow string
 	// FeelingIntensitiesAfter maps a feeling identifier to its re-rating.
@@ -100,11 +111,12 @@ func CreateThoughtRecord(db *gorm.DB, userID uint, input CreateThoughtRecordInpu
 	var record ThoughtRecord
 	err := db.Transaction(func(tx *gorm.DB) error {
 		record = ThoughtRecord{
-			Event:           event,
-			OccurredAt:      input.OccurredAt,
-			AlternativeView: strings.TrimSpace(input.AlternativeView),
-			FeelingsNow:     strings.TrimSpace(input.FeelingsNow),
-			UserID:          userID,
+			Event:                  event,
+			OccurredAt:             input.OccurredAt,
+			AlternativeView:        strings.TrimSpace(input.AlternativeView),
+			EvidenceForAlternative: strings.TrimSpace(input.EvidenceForAlternative),
+			FeelingsNow:            strings.TrimSpace(input.FeelingsNow),
+			UserID:                 userID,
 		}
 		if err := tx.Create(&record).Error; err != nil {
 			return fmt.Errorf("failed to create the thought record: %w", err)
@@ -158,12 +170,14 @@ func ListThoughtRecords(db *gorm.DB, userID uint, filter ThoughtRecordFilter) ([
 		query = query.Where(
 			db.Where("LOWER(event) LIKE ?", pattern).
 				Or("LOWER(alternative_view) LIKE ?", pattern).
+				Or("LOWER(evidence_for_alternative) LIKE ?", pattern).
 				Or("id IN (?)", db.
 					Table("negative_thoughts").
 					Select("thought_record_id").
 					Where("user_id = ?", userID).
 					Where("deleted_at IS NULL").
-					Where("LOWER(body) LIKE ?", pattern),
+					Where(db.Where("LOWER(body) LIKE ?", pattern).
+						Or("LOWER(evidence) LIKE ?", pattern)),
 				),
 		)
 	}
@@ -213,6 +227,9 @@ func UpdateThoughtRecord(db *gorm.DB, userID uint, id uint, input UpdateThoughtR
 		if input.AlternativeView != nil {
 			updates["alternative_view"] = strings.TrimSpace(*input.AlternativeView)
 		}
+		if input.EvidenceForAlternative != nil {
+			updates["evidence_for_alternative"] = strings.TrimSpace(*input.EvidenceForAlternative)
+		}
 		if input.FeelingsNow != nil {
 			updates["feelings_now"] = strings.TrimSpace(*input.FeelingsNow)
 		}
@@ -233,8 +250,9 @@ func UpdateThoughtRecord(db *gorm.DB, userID uint, id uint, input UpdateThoughtR
 }
 
 // ChallengeThoughtRecord records the second sitting of a thought record: the
-// alternative view, the prose answer to "how do I feel now?", the re-rating of
-// each feeling, and the biases identified in each thought. ChallengedAt is
+// alternative view and the evidence for it, the prose answer to "how do I feel
+// now?", the re-rating of each feeling, and the biases identified in each
+// thought and how much it is still believed. ChallengedAt is
 // stamped so the record leaves the unchallenged queue.
 //
 // Challenging a record that has already been challenged is allowed and
@@ -250,6 +268,9 @@ func ChallengeThoughtRecord(db *gorm.DB, userID uint, id uint, input ChallengeIn
 		updates := map[string]any{"challenged_at": time.Now()}
 		if view := strings.TrimSpace(input.AlternativeView); view != "" {
 			updates["alternative_view"] = view
+		}
+		if evidence := strings.TrimSpace(input.EvidenceForAlternative); evidence != "" {
+			updates["evidence_for_alternative"] = evidence
 		}
 		if now := strings.TrimSpace(input.FeelingsNow); now != "" {
 			updates["feelings_now"] = now
@@ -300,12 +321,14 @@ func applyFeelingRerating(tx *gorm.DB, userID uint, recordID uint, ratings map[u
 }
 
 // applyThoughtJudgements records what was decided about each thought: the
-// biases it carries, and whether it was judged an accurate reading.
+// biases it carries, whether it was judged an accurate reading, and how much
+// it is still believed.
 //
 // Biases are replaced rather than added to, which keeps the challenge
 // idempotent: running it again with a corrected list leaves the corrected
 // list, not the union of both attempts. A nil list leaves the existing biases
-// alone, so a judgement can record only that a thought is factual.
+// alone, so a judgement can record only that a thought is factual; a nil
+// IsFactual or BeliefAfter likewise leaves the stored value alone.
 func applyThoughtJudgements(tx *gorm.DB, userID uint, recordID uint, judgements map[uint]ThoughtJudgement) error {
 	for thoughtID, judgement := range judgements {
 		var thought NegativeThought
@@ -316,6 +339,15 @@ func applyThoughtJudgements(tx *gorm.DB, userID uint, recordID uint, judgements 
 			return fmt.Errorf("%w: %d does not belong to thought record %d", ErrThoughtNotFound, thoughtID, recordID)
 		}
 
+		if err := validateBelief(judgement.BeliefAfter); err != nil {
+			return err
+		}
+
+		isFactual := thought.IsFactual
+		if judgement.IsFactual != nil {
+			isFactual = *judgement.IsFactual
+		}
+
 		if judgement.Biases != nil {
 			biases, err := findBiasesByName(tx, userID, judgement.Biases)
 			if err != nil {
@@ -323,23 +355,32 @@ func applyThoughtJudgements(tx *gorm.DB, userID uint, recordID uint, judgements 
 			}
 			// The contradiction is checked against the state the thought is
 			// about to be left in, so a judgement that only sets IsFactual is
-			// still caught against biases attached by an earlier sitting.
-			if judgement.IsFactual && len(biases) > 0 {
+			// still caught against biases attached by an earlier sitting, and
+			// one that only names biases is caught against an earlier factual
+			// judgement.
+			if isFactual && len(biases) > 0 {
 				return fmt.Errorf("%w: thought %d carries %d", ErrThoughtFactualWithBias, thoughtID, len(biases))
 			}
 			if err := tx.Model(&thought).Association("Biases").Replace(biases); err != nil {
 				return fmt.Errorf("failed to attach the cognitive biases: %w", err)
 			}
-		} else if judgement.IsFactual {
+		} else if isFactual && !thought.IsFactual {
 			count := tx.Model(&thought).Association("Biases").Count()
 			if count > 0 {
 				return fmt.Errorf("%w: thought %d carries %d", ErrThoughtFactualWithBias, thoughtID, count)
 			}
 		}
 
-		if judgement.IsFactual != thought.IsFactual {
-			if err := tx.Model(&thought).Update("is_factual", judgement.IsFactual).Error; err != nil {
-				return fmt.Errorf("failed to record whether the thought is factual: %w", err)
+		updates := map[string]any{}
+		if isFactual != thought.IsFactual {
+			updates["is_factual"] = isFactual
+		}
+		if judgement.BeliefAfter != nil {
+			updates["belief_after"] = *judgement.BeliefAfter
+		}
+		if len(updates) > 0 {
+			if err := tx.Model(&thought).Updates(updates).Error; err != nil {
+				return fmt.Errorf("failed to record the judgement of the thought: %w", err)
 			}
 		}
 	}

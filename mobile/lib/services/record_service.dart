@@ -108,6 +108,14 @@ class RecordService {
         (client) => client.setHotThought(SetHotThoughtRequest()..id = id),
       );
 
+  Future<ThoughtRecord> setThoughtEvidence(int id, String evidence) => _call(
+        (client) => client.setThoughtEvidence(
+          SetThoughtEvidenceRequest()
+            ..id = id
+            ..evidence = evidence,
+        ),
+      );
+
   Future<ThoughtRecord> addFeeling(int recordId, FeelingInput feeling) => _call(
         (client) => client.addFeeling(
           AddFeelingRequest()

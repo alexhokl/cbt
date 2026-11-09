@@ -27,7 +27,7 @@ class CognitiveBias extends $pb.GeneratedMessage {
     $core.String? name,
     $core.bool? isBuiltin,
   }) {
-    final result = create();
+    final result = CognitiveBias._();
     if (id != null) result.id = id;
     if (name != null) result.name = name;
     if (isBuiltin != null) result.isBuiltin = isBuiltin;
@@ -38,15 +38,15 @@ class CognitiveBias extends $pb.GeneratedMessage {
 
   factory CognitiveBias.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      CognitiveBias()..mergeFromBuffer(data, registry);
   factory CognitiveBias.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      CognitiveBias()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'CognitiveBias',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: CognitiveBias.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aOB(3, _omitFieldNames ? '' : 'isBuiltin')
@@ -63,12 +63,15 @@ class CognitiveBias extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use CognitiveBias() / CognitiveBias.new instead')
   static CognitiveBias create() => CognitiveBias._();
+  static $pb.GeneratedMessage $_createMessage() => CognitiveBias._();
   @$core.override
-  CognitiveBias createEmptyInstance() => create();
+  CognitiveBias createEmptyInstance() => CognitiveBias._();
   @$core.pragma('dart2js:noInline')
-  static CognitiveBias getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CognitiveBias>(create);
+  static CognitiveBias getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CognitiveBias>(
+          CognitiveBias.$_createMessage);
   static CognitiveBias? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -109,14 +112,18 @@ class NegativeThought extends $pb.GeneratedMessage {
     $core.Iterable<CognitiveBias>? biases,
     $core.int? parentId,
     $core.bool? isFactual,
+    $core.int? beliefAfter,
+    $core.String? evidence,
   }) {
-    final result = create();
+    final result = NegativeThought._();
     if (id != null) result.id = id;
     if (body != null) result.body = body;
     if (isHot != null) result.isHot = isHot;
     if (biases != null) result.biases.addAll(biases);
     if (parentId != null) result.parentId = parentId;
     if (isFactual != null) result.isFactual = isFactual;
+    if (beliefAfter != null) result.beliefAfter = beliefAfter;
+    if (evidence != null) result.evidence = evidence;
     return result;
   }
 
@@ -124,22 +131,24 @@ class NegativeThought extends $pb.GeneratedMessage {
 
   factory NegativeThought.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      NegativeThought()..mergeFromBuffer(data, registry);
   factory NegativeThought.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      NegativeThought()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'NegativeThought',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: NegativeThought.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'body')
     ..aOB(3, _omitFieldNames ? '' : 'isHot')
     ..pPM<CognitiveBias>(4, _omitFieldNames ? '' : 'biases',
-        subBuilder: CognitiveBias.create)
+        subBuilder: CognitiveBias.$_createMessage)
     ..aI(5, _omitFieldNames ? '' : 'parentId', fieldType: $pb.PbFieldType.OU3)
     ..aOB(6, _omitFieldNames ? '' : 'isFactual')
+    ..aI(7, _omitFieldNames ? '' : 'beliefAfter')
+    ..aOS(8, _omitFieldNames ? '' : 'evidence')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -153,12 +162,15 @@ class NegativeThought extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use NegativeThought() / NegativeThought.new instead')
   static NegativeThought create() => NegativeThought._();
+  static $pb.GeneratedMessage $_createMessage() => NegativeThought._();
   @$core.override
-  NegativeThought createEmptyInstance() => create();
+  NegativeThought createEmptyInstance() => NegativeThought._();
   @$core.pragma('dart2js:noInline')
-  static NegativeThought getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<NegativeThought>(create);
+  static NegativeThought getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<NegativeThought>(
+          NegativeThought.$_createMessage);
   static NegativeThought? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -220,6 +232,27 @@ class NegativeThought extends $pb.GeneratedMessage {
   $core.bool hasIsFactual() => $_has(5);
   @$pb.TagNumber(6)
   void clearIsFactual() => $_clearField(6);
+
+  /// belief_after is how much the thought is still believed, 0-100, given
+  /// during the challenge. It is absent until the thought has been re-rated.
+  @$pb.TagNumber(7)
+  $core.int get beliefAfter => $_getIZ(6);
+  @$pb.TagNumber(7)
+  set beliefAfter($core.int value) => $_setSignedInt32(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasBeliefAfter() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearBeliefAfter() => $_clearField(7);
+
+  /// evidence answers "what evidence do you have that supports this thought?".
+  @$pb.TagNumber(8)
+  $core.String get evidence => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set evidence($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasEvidence() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearEvidence() => $_clearField(8);
 }
 
 /// Feeling is a single emotion rated on a 0-100 scale.
@@ -230,7 +263,7 @@ class Feeling extends $pb.GeneratedMessage {
     $core.int? intensityBefore,
     $core.int? intensityAfter,
   }) {
-    final result = create();
+    final result = Feeling._();
     if (id != null) result.id = id;
     if (name != null) result.name = name;
     if (intensityBefore != null) result.intensityBefore = intensityBefore;
@@ -242,15 +275,15 @@ class Feeling extends $pb.GeneratedMessage {
 
   factory Feeling.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      Feeling()..mergeFromBuffer(data, registry);
   factory Feeling.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      Feeling()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'Feeling',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: Feeling.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..aI(3, _omitFieldNames ? '' : 'intensityBefore')
@@ -267,12 +300,14 @@ class Feeling extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use Feeling() / Feeling.new instead')
   static Feeling create() => Feeling._();
+  static $pb.GeneratedMessage $_createMessage() => Feeling._();
   @$core.override
-  Feeling createEmptyInstance() => create();
+  Feeling createEmptyInstance() => Feeling._();
   @$core.pragma('dart2js:noInline')
-  static Feeling getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Feeling>(create);
+  static Feeling getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<Feeling>(Feeling.$_createMessage);
   static Feeling? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -315,9 +350,10 @@ class Feeling extends $pb.GeneratedMessage {
   void clearIntensityAfter() => $_clearField(4);
 }
 
-/// ThoughtRecord is the six column thought record: event, negative thought(s),
-/// negative feeling(s), cognitive bias, "is there any other way I can look at
-/// this?", and "how do I feel now?".
+/// ThoughtRecord is the thought record: event, negative thought(s), negative
+/// feeling(s), cognitive bias, "is there any other way I can look at this?",
+/// "what evidence do you have to support this alternative view?", and "how much
+/// do you still believe your initial thoughts? how do you feel now?".
 class ThoughtRecord extends $pb.GeneratedMessage {
   factory ThoughtRecord({
     $core.int? id,
@@ -330,8 +366,9 @@ class ThoughtRecord extends $pb.GeneratedMessage {
     $core.Iterable<Feeling>? feelings,
     $2.Timestamp? createdAt,
     $2.Timestamp? updatedAt,
+    $core.String? evidenceForAlternative,
   }) {
-    final result = create();
+    final result = ThoughtRecord._();
     if (id != null) result.id = id;
     if (event != null) result.event = event;
     if (occurredAt != null) result.occurredAt = occurredAt;
@@ -342,6 +379,8 @@ class ThoughtRecord extends $pb.GeneratedMessage {
     if (feelings != null) result.feelings.addAll(feelings);
     if (createdAt != null) result.createdAt = createdAt;
     if (updatedAt != null) result.updatedAt = updatedAt;
+    if (evidenceForAlternative != null)
+      result.evidenceForAlternative = evidenceForAlternative;
     return result;
   }
 
@@ -349,31 +388,32 @@ class ThoughtRecord extends $pb.GeneratedMessage {
 
   factory ThoughtRecord.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      ThoughtRecord()..mergeFromBuffer(data, registry);
   factory ThoughtRecord.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      ThoughtRecord()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ThoughtRecord',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: ThoughtRecord.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'event')
     ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'occurredAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..aOS(4, _omitFieldNames ? '' : 'alternativeView')
     ..aOS(5, _omitFieldNames ? '' : 'feelingsNow')
     ..aOM<$2.Timestamp>(6, _omitFieldNames ? '' : 'challengedAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..pPM<NegativeThought>(7, _omitFieldNames ? '' : 'thoughts',
-        subBuilder: NegativeThought.create)
+        subBuilder: NegativeThought.$_createMessage)
     ..pPM<Feeling>(8, _omitFieldNames ? '' : 'feelings',
-        subBuilder: Feeling.create)
+        subBuilder: Feeling.$_createMessage)
     ..aOM<$2.Timestamp>(9, _omitFieldNames ? '' : 'createdAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..aOM<$2.Timestamp>(10, _omitFieldNames ? '' : 'updatedAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..aOS(11, _omitFieldNames ? '' : 'evidenceForAlternative')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -387,12 +427,15 @@ class ThoughtRecord extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use ThoughtRecord() / ThoughtRecord.new instead')
   static ThoughtRecord create() => ThoughtRecord._();
+  static $pb.GeneratedMessage $_createMessage() => ThoughtRecord._();
   @$core.override
-  ThoughtRecord createEmptyInstance() => create();
+  ThoughtRecord createEmptyInstance() => ThoughtRecord._();
   @$core.pragma('dart2js:noInline')
-  static ThoughtRecord getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ThoughtRecord>(create);
+  static ThoughtRecord getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ThoughtRecord>(
+          ThoughtRecord.$_createMessage);
   static ThoughtRecord? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -484,6 +527,17 @@ class ThoughtRecord extends $pb.GeneratedMessage {
   void clearUpdatedAt() => $_clearField(10);
   @$pb.TagNumber(10)
   $2.Timestamp ensureUpdatedAt() => $_ensure(9);
+
+  /// evidence_for_alternative answers "what evidence do you have to support
+  /// this alternative view?".
+  @$pb.TagNumber(11)
+  $core.String get evidenceForAlternative => $_getSZ(10);
+  @$pb.TagNumber(11)
+  set evidenceForAlternative($core.String value) => $_setString(10, value);
+  @$pb.TagNumber(11)
+  $core.bool hasEvidenceForAlternative() => $_has(10);
+  @$pb.TagNumber(11)
+  void clearEvidenceForAlternative() => $_clearField(11);
 }
 
 /// MapOfWorry traces a single event through to the behaviour it produced.
@@ -501,7 +555,7 @@ class MapOfWorry extends $pb.GeneratedMessage {
     $2.Timestamp? createdAt,
     $2.Timestamp? updatedAt,
   }) {
-    final result = create();
+    final result = MapOfWorry._();
     if (id != null) result.id = id;
     if (event != null) result.event = event;
     if (occurredAt != null) result.occurredAt = occurredAt;
@@ -523,19 +577,19 @@ class MapOfWorry extends $pb.GeneratedMessage {
 
   factory MapOfWorry.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      MapOfWorry()..mergeFromBuffer(data, registry);
   factory MapOfWorry.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      MapOfWorry()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'MapOfWorry',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: MapOfWorry.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'event')
     ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'occurredAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..aOS(4, _omitFieldNames ? '' : 'thoughts')
     ..aOS(5, _omitFieldNames ? '' : 'whatTheseThoughtsMean')
     ..aOS(6, _omitFieldNames ? '' : 'physicalSensations')
@@ -543,11 +597,11 @@ class MapOfWorry extends $pb.GeneratedMessage {
     ..aI(8, _omitFieldNames ? '' : 'derivedFromId',
         fieldType: $pb.PbFieldType.OU3)
     ..pPM<Feeling>(9, _omitFieldNames ? '' : 'feelings',
-        subBuilder: Feeling.create)
+        subBuilder: Feeling.$_createMessage)
     ..aOM<$2.Timestamp>(10, _omitFieldNames ? '' : 'createdAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..aOM<$2.Timestamp>(11, _omitFieldNames ? '' : 'updatedAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -560,12 +614,14 @@ class MapOfWorry extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use MapOfWorry() / MapOfWorry.new instead')
   static MapOfWorry create() => MapOfWorry._();
+  static $pb.GeneratedMessage $_createMessage() => MapOfWorry._();
   @$core.override
-  MapOfWorry createEmptyInstance() => create();
+  MapOfWorry createEmptyInstance() => MapOfWorry._();
   @$core.pragma('dart2js:noInline')
   static MapOfWorry getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<MapOfWorry>(create);
+      $pb.GeneratedMessage.$_defaultFor<MapOfWorry>(MapOfWorry.$_createMessage);
   static MapOfWorry? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -677,7 +733,7 @@ class FeelingInput extends $pb.GeneratedMessage {
     $core.String? name,
     $core.int? intensity,
   }) {
-    final result = create();
+    final result = FeelingInput._();
     if (name != null) result.name = name;
     if (intensity != null) result.intensity = intensity;
     return result;
@@ -687,15 +743,15 @@ class FeelingInput extends $pb.GeneratedMessage {
 
   factory FeelingInput.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      FeelingInput()..mergeFromBuffer(data, registry);
   factory FeelingInput.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      FeelingInput()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'FeelingInput',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: FeelingInput.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..aI(2, _omitFieldNames ? '' : 'intensity')
     ..hasRequiredFields = false;
@@ -711,12 +767,15 @@ class FeelingInput extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use FeelingInput() / FeelingInput.new instead')
   static FeelingInput create() => FeelingInput._();
+  static $pb.GeneratedMessage $_createMessage() => FeelingInput._();
   @$core.override
-  FeelingInput createEmptyInstance() => create();
+  FeelingInput createEmptyInstance() => FeelingInput._();
   @$core.pragma('dart2js:noInline')
-  static FeelingInput getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FeelingInput>(create);
+  static FeelingInput getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FeelingInput>(
+          FeelingInput.$_createMessage);
   static FeelingInput? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -744,11 +803,13 @@ class ThoughtInput extends $pb.GeneratedMessage {
     $core.String? body,
     $core.bool? isHot,
     $core.Iterable<$core.String>? biases,
+    $core.String? evidence,
   }) {
-    final result = create();
+    final result = ThoughtInput._();
     if (body != null) result.body = body;
     if (isHot != null) result.isHot = isHot;
     if (biases != null) result.biases.addAll(biases);
+    if (evidence != null) result.evidence = evidence;
     return result;
   }
 
@@ -756,18 +817,19 @@ class ThoughtInput extends $pb.GeneratedMessage {
 
   factory ThoughtInput.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      ThoughtInput()..mergeFromBuffer(data, registry);
   factory ThoughtInput.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      ThoughtInput()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ThoughtInput',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: ThoughtInput.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'body')
     ..aOB(2, _omitFieldNames ? '' : 'isHot')
     ..pPS(3, _omitFieldNames ? '' : 'biases')
+    ..aOS(4, _omitFieldNames ? '' : 'evidence')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -781,12 +843,15 @@ class ThoughtInput extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use ThoughtInput() / ThoughtInput.new instead')
   static ThoughtInput create() => ThoughtInput._();
+  static $pb.GeneratedMessage $_createMessage() => ThoughtInput._();
   @$core.override
-  ThoughtInput createEmptyInstance() => create();
+  ThoughtInput createEmptyInstance() => ThoughtInput._();
   @$core.pragma('dart2js:noInline')
-  static ThoughtInput getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ThoughtInput>(create);
+  static ThoughtInput getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ThoughtInput>(
+          ThoughtInput.$_createMessage);
   static ThoughtInput? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -811,6 +876,16 @@ class ThoughtInput extends $pb.GeneratedMessage {
   /// tag, so an unrecognised name is reported as a typo rather than coined.
   @$pb.TagNumber(3)
   $pb.PbList<$core.String> get biases => $_getList(2);
+
+  /// evidence is what supports the thought. It is optional.
+  @$pb.TagNumber(4)
+  $core.String get evidence => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set evidence($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasEvidence() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearEvidence() => $_clearField(4);
 }
 
 class ListThoughtRecordsRequest extends $pb.GeneratedMessage {
@@ -819,7 +894,7 @@ class ListThoughtRecordsRequest extends $pb.GeneratedMessage {
     $2.Timestamp? since,
     $core.String? search,
   }) {
-    final result = create();
+    final result = ListThoughtRecordsRequest._();
     if (challenged != null) result.challenged = challenged;
     if (since != null) result.since = since;
     if (search != null) result.search = search;
@@ -830,18 +905,18 @@ class ListThoughtRecordsRequest extends $pb.GeneratedMessage {
 
   factory ListThoughtRecordsRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      ListThoughtRecordsRequest()..mergeFromBuffer(data, registry);
   factory ListThoughtRecordsRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      ListThoughtRecordsRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ListThoughtRecordsRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: ListThoughtRecordsRequest.$_createMessage)
     ..aOB(1, _omitFieldNames ? '' : 'challenged')
     ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'since',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..aOS(3, _omitFieldNames ? '' : 'search')
     ..hasRequiredFields = false;
 
@@ -857,12 +932,18 @@ class ListThoughtRecordsRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ListThoughtRecordsRequest() / ListThoughtRecordsRequest.new instead')
   static ListThoughtRecordsRequest create() => ListThoughtRecordsRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      ListThoughtRecordsRequest._();
   @$core.override
-  ListThoughtRecordsRequest createEmptyInstance() => create();
+  ListThoughtRecordsRequest createEmptyInstance() =>
+      ListThoughtRecordsRequest._();
   @$core.pragma('dart2js:noInline')
   static ListThoughtRecordsRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListThoughtRecordsRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<ListThoughtRecordsRequest>(
+          ListThoughtRecordsRequest.$_createMessage);
   static ListThoughtRecordsRequest? _defaultInstance;
 
   /// challenged filters by whether the record has been challenged. Absent
@@ -889,7 +970,8 @@ class ListThoughtRecordsRequest extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   $2.Timestamp ensureSince() => $_ensure(1);
 
-  /// search matches the event, the alternative view and the thought bodies.
+  /// search matches the event, the alternative view, the evidence for it, and
+  /// the thought bodies and the evidence for them.
   @$pb.TagNumber(3)
   $core.String get search => $_getSZ(2);
   @$pb.TagNumber(3)
@@ -904,7 +986,7 @@ class ListThoughtRecordsResponse extends $pb.GeneratedMessage {
   factory ListThoughtRecordsResponse({
     $core.Iterable<ThoughtRecord>? records,
   }) {
-    final result = create();
+    final result = ListThoughtRecordsResponse._();
     if (records != null) result.records.addAll(records);
     return result;
   }
@@ -913,17 +995,17 @@ class ListThoughtRecordsResponse extends $pb.GeneratedMessage {
 
   factory ListThoughtRecordsResponse.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      ListThoughtRecordsResponse()..mergeFromBuffer(data, registry);
   factory ListThoughtRecordsResponse.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      ListThoughtRecordsResponse()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ListThoughtRecordsResponse',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: ListThoughtRecordsResponse.$_createMessage)
     ..pPM<ThoughtRecord>(1, _omitFieldNames ? '' : 'records',
-        subBuilder: ThoughtRecord.create)
+        subBuilder: ThoughtRecord.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -939,12 +1021,18 @@ class ListThoughtRecordsResponse extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ListThoughtRecordsResponse() / ListThoughtRecordsResponse.new instead')
   static ListThoughtRecordsResponse create() => ListThoughtRecordsResponse._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      ListThoughtRecordsResponse._();
   @$core.override
-  ListThoughtRecordsResponse createEmptyInstance() => create();
+  ListThoughtRecordsResponse createEmptyInstance() =>
+      ListThoughtRecordsResponse._();
   @$core.pragma('dart2js:noInline')
   static ListThoughtRecordsResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListThoughtRecordsResponse>(create);
+      $pb.GeneratedMessage.$_defaultFor<ListThoughtRecordsResponse>(
+          ListThoughtRecordsResponse.$_createMessage);
   static ListThoughtRecordsResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -959,14 +1047,17 @@ class CreateThoughtRecordRequest extends $pb.GeneratedMessage {
     $core.String? feelingsNow,
     $core.Iterable<ThoughtInput>? thoughts,
     $core.Iterable<FeelingInput>? feelings,
+    $core.String? evidenceForAlternative,
   }) {
-    final result = create();
+    final result = CreateThoughtRecordRequest._();
     if (event != null) result.event = event;
     if (occurredAt != null) result.occurredAt = occurredAt;
     if (alternativeView != null) result.alternativeView = alternativeView;
     if (feelingsNow != null) result.feelingsNow = feelingsNow;
     if (thoughts != null) result.thoughts.addAll(thoughts);
     if (feelings != null) result.feelings.addAll(feelings);
+    if (evidenceForAlternative != null)
+      result.evidenceForAlternative = evidenceForAlternative;
     return result;
   }
 
@@ -974,24 +1065,25 @@ class CreateThoughtRecordRequest extends $pb.GeneratedMessage {
 
   factory CreateThoughtRecordRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      CreateThoughtRecordRequest()..mergeFromBuffer(data, registry);
   factory CreateThoughtRecordRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      CreateThoughtRecordRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'CreateThoughtRecordRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: CreateThoughtRecordRequest.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'event')
     ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'occurredAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..aOS(3, _omitFieldNames ? '' : 'alternativeView')
     ..aOS(4, _omitFieldNames ? '' : 'feelingsNow')
     ..pPM<ThoughtInput>(5, _omitFieldNames ? '' : 'thoughts',
-        subBuilder: ThoughtInput.create)
+        subBuilder: ThoughtInput.$_createMessage)
     ..pPM<FeelingInput>(6, _omitFieldNames ? '' : 'feelings',
-        subBuilder: FeelingInput.create)
+        subBuilder: FeelingInput.$_createMessage)
+    ..aOS(7, _omitFieldNames ? '' : 'evidenceForAlternative')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1007,12 +1099,18 @@ class CreateThoughtRecordRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use CreateThoughtRecordRequest() / CreateThoughtRecordRequest.new instead')
   static CreateThoughtRecordRequest create() => CreateThoughtRecordRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      CreateThoughtRecordRequest._();
   @$core.override
-  CreateThoughtRecordRequest createEmptyInstance() => create();
+  CreateThoughtRecordRequest createEmptyInstance() =>
+      CreateThoughtRecordRequest._();
   @$core.pragma('dart2js:noInline')
   static CreateThoughtRecordRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateThoughtRecordRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<CreateThoughtRecordRequest>(
+          CreateThoughtRecordRequest.$_createMessage);
   static CreateThoughtRecordRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1058,13 +1156,22 @@ class CreateThoughtRecordRequest extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(6)
   $pb.PbList<FeelingInput> get feelings => $_getList(5);
+
+  @$pb.TagNumber(7)
+  $core.String get evidenceForAlternative => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set evidenceForAlternative($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasEvidenceForAlternative() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearEvidenceForAlternative() => $_clearField(7);
 }
 
 class GetThoughtRecordRequest extends $pb.GeneratedMessage {
   factory GetThoughtRecordRequest({
     $core.int? id,
   }) {
-    final result = create();
+    final result = GetThoughtRecordRequest._();
     if (id != null) result.id = id;
     return result;
   }
@@ -1073,15 +1180,15 @@ class GetThoughtRecordRequest extends $pb.GeneratedMessage {
 
   factory GetThoughtRecordRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      GetThoughtRecordRequest()..mergeFromBuffer(data, registry);
   factory GetThoughtRecordRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      GetThoughtRecordRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'GetThoughtRecordRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: GetThoughtRecordRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
@@ -1097,12 +1204,16 @@ class GetThoughtRecordRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use GetThoughtRecordRequest() / GetThoughtRecordRequest.new instead')
   static GetThoughtRecordRequest create() => GetThoughtRecordRequest._();
+  static $pb.GeneratedMessage $_createMessage() => GetThoughtRecordRequest._();
   @$core.override
-  GetThoughtRecordRequest createEmptyInstance() => create();
+  GetThoughtRecordRequest createEmptyInstance() => GetThoughtRecordRequest._();
   @$core.pragma('dart2js:noInline')
   static GetThoughtRecordRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetThoughtRecordRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<GetThoughtRecordRequest>(
+          GetThoughtRecordRequest.$_createMessage);
   static GetThoughtRecordRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1123,14 +1234,17 @@ class UpdateThoughtRecordRequest extends $pb.GeneratedMessage {
     $core.bool? clearOccurredAt_4,
     $core.String? alternativeView,
     $core.String? feelingsNow,
+    $core.String? evidenceForAlternative,
   }) {
-    final result = create();
+    final result = UpdateThoughtRecordRequest._();
     if (id != null) result.id = id;
     if (event != null) result.event = event;
     if (occurredAt != null) result.occurredAt = occurredAt;
     if (clearOccurredAt_4 != null) result.clearOccurredAt_4 = clearOccurredAt_4;
     if (alternativeView != null) result.alternativeView = alternativeView;
     if (feelingsNow != null) result.feelingsNow = feelingsNow;
+    if (evidenceForAlternative != null)
+      result.evidenceForAlternative = evidenceForAlternative;
     return result;
   }
 
@@ -1138,22 +1252,23 @@ class UpdateThoughtRecordRequest extends $pb.GeneratedMessage {
 
   factory UpdateThoughtRecordRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      UpdateThoughtRecordRequest()..mergeFromBuffer(data, registry);
   factory UpdateThoughtRecordRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      UpdateThoughtRecordRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'UpdateThoughtRecordRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: UpdateThoughtRecordRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'event')
     ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'occurredAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..aOB(4, _omitFieldNames ? '' : 'clearOccurredAt')
     ..aOS(5, _omitFieldNames ? '' : 'alternativeView')
     ..aOS(6, _omitFieldNames ? '' : 'feelingsNow')
+    ..aOS(7, _omitFieldNames ? '' : 'evidenceForAlternative')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1169,12 +1284,18 @@ class UpdateThoughtRecordRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use UpdateThoughtRecordRequest() / UpdateThoughtRecordRequest.new instead')
   static UpdateThoughtRecordRequest create() => UpdateThoughtRecordRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      UpdateThoughtRecordRequest._();
   @$core.override
-  UpdateThoughtRecordRequest createEmptyInstance() => create();
+  UpdateThoughtRecordRequest createEmptyInstance() =>
+      UpdateThoughtRecordRequest._();
   @$core.pragma('dart2js:noInline')
   static UpdateThoughtRecordRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdateThoughtRecordRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<UpdateThoughtRecordRequest>(
+          UpdateThoughtRecordRequest.$_createMessage);
   static UpdateThoughtRecordRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1236,6 +1357,15 @@ class UpdateThoughtRecordRequest extends $pb.GeneratedMessage {
   $core.bool hasFeelingsNow() => $_has(5);
   @$pb.TagNumber(6)
   void clearFeelingsNow() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get evidenceForAlternative => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set evidenceForAlternative($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasEvidenceForAlternative() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearEvidenceForAlternative() => $_clearField(7);
 }
 
 /// ThoughtJudgement is the outcome of examining one thought during the
@@ -1246,11 +1376,13 @@ class ThoughtJudgement extends $pb.GeneratedMessage {
     $core.int? thoughtId,
     BiasNames? biases,
     $core.bool? isFactual,
+    $core.int? beliefAfter,
   }) {
-    final result = create();
+    final result = ThoughtJudgement._();
     if (thoughtId != null) result.thoughtId = thoughtId;
     if (biases != null) result.biases = biases;
     if (isFactual != null) result.isFactual = isFactual;
+    if (beliefAfter != null) result.beliefAfter = beliefAfter;
     return result;
   }
 
@@ -1258,19 +1390,20 @@ class ThoughtJudgement extends $pb.GeneratedMessage {
 
   factory ThoughtJudgement.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      ThoughtJudgement()..mergeFromBuffer(data, registry);
   factory ThoughtJudgement.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      ThoughtJudgement()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ThoughtJudgement',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: ThoughtJudgement.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'thoughtId', fieldType: $pb.PbFieldType.OU3)
     ..aOM<BiasNames>(2, _omitFieldNames ? '' : 'biases',
-        subBuilder: BiasNames.create)
+        subBuilder: BiasNames.$_createMessage)
     ..aOB(3, _omitFieldNames ? '' : 'isFactual')
+    ..aI(4, _omitFieldNames ? '' : 'beliefAfter')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1284,12 +1417,15 @@ class ThoughtJudgement extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use ThoughtJudgement() / ThoughtJudgement.new instead')
   static ThoughtJudgement create() => ThoughtJudgement._();
+  static $pb.GeneratedMessage $_createMessage() => ThoughtJudgement._();
   @$core.override
-  ThoughtJudgement createEmptyInstance() => create();
+  ThoughtJudgement createEmptyInstance() => ThoughtJudgement._();
   @$core.pragma('dart2js:noInline')
-  static ThoughtJudgement getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ThoughtJudgement>(create);
+  static ThoughtJudgement getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ThoughtJudgement>(
+          ThoughtJudgement.$_createMessage);
   static ThoughtJudgement? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1316,8 +1452,10 @@ class ThoughtJudgement extends $pb.GeneratedMessage {
   @$pb.TagNumber(2)
   BiasNames ensureBiases() => $_ensure(1);
 
-  /// is_factual records that the thought was judged an accurate reading.
-  /// Marking a thought factual while it still carries a bias is rejected.
+  /// is_factual records whether the thought was judged an accurate reading.
+  /// Leaving it unset keeps the existing judgement, so a judgement can carry
+  /// only a belief rating. Marking a thought factual while it still carries a
+  /// bias is rejected.
   @$pb.TagNumber(3)
   $core.bool get isFactual => $_getBF(2);
   @$pb.TagNumber(3)
@@ -1326,6 +1464,17 @@ class ThoughtJudgement extends $pb.GeneratedMessage {
   $core.bool hasIsFactual() => $_has(2);
   @$pb.TagNumber(3)
   void clearIsFactual() => $_clearField(3);
+
+  /// belief_after is how much the thought is still believed, 0-100. Leaving
+  /// it unset keeps the existing rating.
+  @$pb.TagNumber(4)
+  $core.int get beliefAfter => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set beliefAfter($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasBeliefAfter() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearBeliefAfter() => $_clearField(4);
 }
 
 /// FeelingRerating is the post-challenge rating of one feeling.
@@ -1334,7 +1483,7 @@ class FeelingRerating extends $pb.GeneratedMessage {
     $core.int? feelingId,
     $core.int? intensityAfter,
   }) {
-    final result = create();
+    final result = FeelingRerating._();
     if (feelingId != null) result.feelingId = feelingId;
     if (intensityAfter != null) result.intensityAfter = intensityAfter;
     return result;
@@ -1344,15 +1493,15 @@ class FeelingRerating extends $pb.GeneratedMessage {
 
   factory FeelingRerating.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      FeelingRerating()..mergeFromBuffer(data, registry);
   factory FeelingRerating.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      FeelingRerating()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'FeelingRerating',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: FeelingRerating.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'feelingId', fieldType: $pb.PbFieldType.OU3)
     ..aI(2, _omitFieldNames ? '' : 'intensityAfter')
     ..hasRequiredFields = false;
@@ -1368,12 +1517,15 @@ class FeelingRerating extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use FeelingRerating() / FeelingRerating.new instead')
   static FeelingRerating create() => FeelingRerating._();
+  static $pb.GeneratedMessage $_createMessage() => FeelingRerating._();
   @$core.override
-  FeelingRerating createEmptyInstance() => create();
+  FeelingRerating createEmptyInstance() => FeelingRerating._();
   @$core.pragma('dart2js:noInline')
-  static FeelingRerating getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<FeelingRerating>(create);
+  static FeelingRerating getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<FeelingRerating>(
+          FeelingRerating.$_createMessage);
   static FeelingRerating? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1402,14 +1554,17 @@ class ChallengeThoughtRecordRequest extends $pb.GeneratedMessage {
     $core.String? feelingsNow,
     $core.Iterable<FeelingRerating>? feelingReratings,
     $core.Iterable<ThoughtJudgement>? thoughts,
+    $core.String? evidenceForAlternative,
   }) {
-    final result = create();
+    final result = ChallengeThoughtRecordRequest._();
     if (id != null) result.id = id;
     if (alternativeView != null) result.alternativeView = alternativeView;
     if (feelingsNow != null) result.feelingsNow = feelingsNow;
     if (feelingReratings != null)
       result.feelingReratings.addAll(feelingReratings);
     if (thoughts != null) result.thoughts.addAll(thoughts);
+    if (evidenceForAlternative != null)
+      result.evidenceForAlternative = evidenceForAlternative;
     return result;
   }
 
@@ -1417,22 +1572,23 @@ class ChallengeThoughtRecordRequest extends $pb.GeneratedMessage {
 
   factory ChallengeThoughtRecordRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      ChallengeThoughtRecordRequest()..mergeFromBuffer(data, registry);
   factory ChallengeThoughtRecordRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      ChallengeThoughtRecordRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ChallengeThoughtRecordRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: ChallengeThoughtRecordRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'alternativeView')
     ..aOS(3, _omitFieldNames ? '' : 'feelingsNow')
     ..pPM<FeelingRerating>(4, _omitFieldNames ? '' : 'feelingReratings',
-        subBuilder: FeelingRerating.create)
+        subBuilder: FeelingRerating.$_createMessage)
     ..pPM<ThoughtJudgement>(5, _omitFieldNames ? '' : 'thoughts',
-        subBuilder: ThoughtJudgement.create)
+        subBuilder: ThoughtJudgement.$_createMessage)
+    ..aOS(6, _omitFieldNames ? '' : 'evidenceForAlternative')
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1448,13 +1604,19 @@ class ChallengeThoughtRecordRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ChallengeThoughtRecordRequest() / ChallengeThoughtRecordRequest.new instead')
   static ChallengeThoughtRecordRequest create() =>
       ChallengeThoughtRecordRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      ChallengeThoughtRecordRequest._();
   @$core.override
-  ChallengeThoughtRecordRequest createEmptyInstance() => create();
+  ChallengeThoughtRecordRequest createEmptyInstance() =>
+      ChallengeThoughtRecordRequest._();
   @$core.pragma('dart2js:noInline')
   static ChallengeThoughtRecordRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ChallengeThoughtRecordRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<ChallengeThoughtRecordRequest>(
+          ChallengeThoughtRecordRequest.$_createMessage);
   static ChallengeThoughtRecordRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1489,13 +1651,22 @@ class ChallengeThoughtRecordRequest extends $pb.GeneratedMessage {
 
   @$pb.TagNumber(5)
   $pb.PbList<ThoughtJudgement> get thoughts => $_getList(4);
+
+  @$pb.TagNumber(6)
+  $core.String get evidenceForAlternative => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set evidenceForAlternative($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasEvidenceForAlternative() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearEvidenceForAlternative() => $_clearField(6);
 }
 
 class DeleteThoughtRecordRequest extends $pb.GeneratedMessage {
   factory DeleteThoughtRecordRequest({
     $core.int? id,
   }) {
-    final result = create();
+    final result = DeleteThoughtRecordRequest._();
     if (id != null) result.id = id;
     return result;
   }
@@ -1504,15 +1675,15 @@ class DeleteThoughtRecordRequest extends $pb.GeneratedMessage {
 
   factory DeleteThoughtRecordRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      DeleteThoughtRecordRequest()..mergeFromBuffer(data, registry);
   factory DeleteThoughtRecordRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      DeleteThoughtRecordRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'DeleteThoughtRecordRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: DeleteThoughtRecordRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
@@ -1529,12 +1700,18 @@ class DeleteThoughtRecordRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use DeleteThoughtRecordRequest() / DeleteThoughtRecordRequest.new instead')
   static DeleteThoughtRecordRequest create() => DeleteThoughtRecordRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      DeleteThoughtRecordRequest._();
   @$core.override
-  DeleteThoughtRecordRequest createEmptyInstance() => create();
+  DeleteThoughtRecordRequest createEmptyInstance() =>
+      DeleteThoughtRecordRequest._();
   @$core.pragma('dart2js:noInline')
   static DeleteThoughtRecordRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteThoughtRecordRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<DeleteThoughtRecordRequest>(
+          DeleteThoughtRecordRequest.$_createMessage);
   static DeleteThoughtRecordRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1552,7 +1729,7 @@ class AddThoughtRequest extends $pb.GeneratedMessage {
     $core.int? recordId,
     ThoughtInput? thought,
   }) {
-    final result = create();
+    final result = AddThoughtRequest._();
     if (recordId != null) result.recordId = recordId;
     if (thought != null) result.thought = thought;
     return result;
@@ -1562,18 +1739,18 @@ class AddThoughtRequest extends $pb.GeneratedMessage {
 
   factory AddThoughtRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      AddThoughtRequest()..mergeFromBuffer(data, registry);
   factory AddThoughtRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      AddThoughtRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'AddThoughtRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: AddThoughtRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'recordId', fieldType: $pb.PbFieldType.OU3)
     ..aOM<ThoughtInput>(2, _omitFieldNames ? '' : 'thought',
-        subBuilder: ThoughtInput.create)
+        subBuilder: ThoughtInput.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1587,12 +1764,15 @@ class AddThoughtRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use AddThoughtRequest() / AddThoughtRequest.new instead')
   static AddThoughtRequest create() => AddThoughtRequest._();
+  static $pb.GeneratedMessage $_createMessage() => AddThoughtRequest._();
   @$core.override
-  AddThoughtRequest createEmptyInstance() => create();
+  AddThoughtRequest createEmptyInstance() => AddThoughtRequest._();
   @$core.pragma('dart2js:noInline')
-  static AddThoughtRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AddThoughtRequest>(create);
+  static AddThoughtRequest getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AddThoughtRequest>(
+          AddThoughtRequest.$_createMessage);
   static AddThoughtRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1622,7 +1802,7 @@ class UpdateThoughtRequest extends $pb.GeneratedMessage {
     $core.String? body,
     BiasNames? biases,
   }) {
-    final result = create();
+    final result = UpdateThoughtRequest._();
     if (id != null) result.id = id;
     if (body != null) result.body = body;
     if (biases != null) result.biases = biases;
@@ -1633,19 +1813,19 @@ class UpdateThoughtRequest extends $pb.GeneratedMessage {
 
   factory UpdateThoughtRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      UpdateThoughtRequest()..mergeFromBuffer(data, registry);
   factory UpdateThoughtRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      UpdateThoughtRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'UpdateThoughtRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: UpdateThoughtRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'body')
     ..aOM<BiasNames>(3, _omitFieldNames ? '' : 'biases',
-        subBuilder: BiasNames.create)
+        subBuilder: BiasNames.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1659,12 +1839,16 @@ class UpdateThoughtRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use UpdateThoughtRequest() / UpdateThoughtRequest.new instead')
   static UpdateThoughtRequest create() => UpdateThoughtRequest._();
+  static $pb.GeneratedMessage $_createMessage() => UpdateThoughtRequest._();
   @$core.override
-  UpdateThoughtRequest createEmptyInstance() => create();
+  UpdateThoughtRequest createEmptyInstance() => UpdateThoughtRequest._();
   @$core.pragma('dart2js:noInline')
   static UpdateThoughtRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdateThoughtRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<UpdateThoughtRequest>(
+          UpdateThoughtRequest.$_createMessage);
   static UpdateThoughtRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1706,7 +1890,7 @@ class BiasNames extends $pb.GeneratedMessage {
   factory BiasNames({
     $core.Iterable<$core.String>? names,
   }) {
-    final result = create();
+    final result = BiasNames._();
     if (names != null) result.names.addAll(names);
     return result;
   }
@@ -1715,15 +1899,15 @@ class BiasNames extends $pb.GeneratedMessage {
 
   factory BiasNames.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      BiasNames()..mergeFromBuffer(data, registry);
   factory BiasNames.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      BiasNames()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'BiasNames',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: BiasNames.$_createMessage)
     ..pPS(1, _omitFieldNames ? '' : 'names')
     ..hasRequiredFields = false;
 
@@ -1737,12 +1921,14 @@ class BiasNames extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use BiasNames() / BiasNames.new instead')
   static BiasNames create() => BiasNames._();
+  static $pb.GeneratedMessage $_createMessage() => BiasNames._();
   @$core.override
-  BiasNames createEmptyInstance() => create();
+  BiasNames createEmptyInstance() => BiasNames._();
   @$core.pragma('dart2js:noInline')
-  static BiasNames getDefault() =>
-      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BiasNames>(create);
+  static BiasNames getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<BiasNames>(BiasNames.$_createMessage);
   static BiasNames? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1753,7 +1939,7 @@ class SetHotThoughtRequest extends $pb.GeneratedMessage {
   factory SetHotThoughtRequest({
     $core.int? id,
   }) {
-    final result = create();
+    final result = SetHotThoughtRequest._();
     if (id != null) result.id = id;
     return result;
   }
@@ -1762,15 +1948,15 @@ class SetHotThoughtRequest extends $pb.GeneratedMessage {
 
   factory SetHotThoughtRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      SetHotThoughtRequest()..mergeFromBuffer(data, registry);
   factory SetHotThoughtRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      SetHotThoughtRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'SetHotThoughtRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: SetHotThoughtRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
@@ -1785,12 +1971,16 @@ class SetHotThoughtRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use SetHotThoughtRequest() / SetHotThoughtRequest.new instead')
   static SetHotThoughtRequest create() => SetHotThoughtRequest._();
+  static $pb.GeneratedMessage $_createMessage() => SetHotThoughtRequest._();
   @$core.override
-  SetHotThoughtRequest createEmptyInstance() => create();
+  SetHotThoughtRequest createEmptyInstance() => SetHotThoughtRequest._();
   @$core.pragma('dart2js:noInline')
   static SetHotThoughtRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SetHotThoughtRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<SetHotThoughtRequest>(
+          SetHotThoughtRequest.$_createMessage);
   static SetHotThoughtRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1808,7 +1998,7 @@ class SetThoughtFactualRequest extends $pb.GeneratedMessage {
     $core.int? id,
     $core.bool? factual,
   }) {
-    final result = create();
+    final result = SetThoughtFactualRequest._();
     if (id != null) result.id = id;
     if (factual != null) result.factual = factual;
     return result;
@@ -1818,15 +2008,15 @@ class SetThoughtFactualRequest extends $pb.GeneratedMessage {
 
   factory SetThoughtFactualRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      SetThoughtFactualRequest()..mergeFromBuffer(data, registry);
   factory SetThoughtFactualRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      SetThoughtFactualRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'SetThoughtFactualRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: SetThoughtFactualRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOB(2, _omitFieldNames ? '' : 'factual')
     ..hasRequiredFields = false;
@@ -1843,12 +2033,17 @@ class SetThoughtFactualRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use SetThoughtFactualRequest() / SetThoughtFactualRequest.new instead')
   static SetThoughtFactualRequest create() => SetThoughtFactualRequest._();
+  static $pb.GeneratedMessage $_createMessage() => SetThoughtFactualRequest._();
   @$core.override
-  SetThoughtFactualRequest createEmptyInstance() => create();
+  SetThoughtFactualRequest createEmptyInstance() =>
+      SetThoughtFactualRequest._();
   @$core.pragma('dart2js:noInline')
   static SetThoughtFactualRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<SetThoughtFactualRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<SetThoughtFactualRequest>(
+          SetThoughtFactualRequest.$_createMessage);
   static SetThoughtFactualRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1870,11 +2065,85 @@ class SetThoughtFactualRequest extends $pb.GeneratedMessage {
   void clearFactual() => $_clearField(2);
 }
 
+class SetThoughtEvidenceRequest extends $pb.GeneratedMessage {
+  factory SetThoughtEvidenceRequest({
+    $core.int? id,
+    $core.String? evidence,
+  }) {
+    final result = SetThoughtEvidenceRequest._();
+    if (id != null) result.id = id;
+    if (evidence != null) result.evidence = evidence;
+    return result;
+  }
+
+  SetThoughtEvidenceRequest._();
+
+  factory SetThoughtEvidenceRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      SetThoughtEvidenceRequest()..mergeFromBuffer(data, registry);
+  factory SetThoughtEvidenceRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      SetThoughtEvidenceRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'SetThoughtEvidenceRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: SetThoughtEvidenceRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'evidence')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetThoughtEvidenceRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  SetThoughtEvidenceRequest copyWith(
+          void Function(SetThoughtEvidenceRequest) updates) =>
+      super.copyWith((message) => updates(message as SetThoughtEvidenceRequest))
+          as SetThoughtEvidenceRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use SetThoughtEvidenceRequest() / SetThoughtEvidenceRequest.new instead')
+  static SetThoughtEvidenceRequest create() => SetThoughtEvidenceRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      SetThoughtEvidenceRequest._();
+  @$core.override
+  SetThoughtEvidenceRequest createEmptyInstance() =>
+      SetThoughtEvidenceRequest._();
+  @$core.pragma('dart2js:noInline')
+  static SetThoughtEvidenceRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<SetThoughtEvidenceRequest>(
+          SetThoughtEvidenceRequest.$_createMessage);
+  static SetThoughtEvidenceRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  /// evidence replaces whatever the thought carried; empty blanks it.
+  @$pb.TagNumber(2)
+  $core.String get evidence => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set evidence($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEvidence() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEvidence() => $_clearField(2);
+}
+
 class DeleteThoughtRequest extends $pb.GeneratedMessage {
   factory DeleteThoughtRequest({
     $core.int? id,
   }) {
-    final result = create();
+    final result = DeleteThoughtRequest._();
     if (id != null) result.id = id;
     return result;
   }
@@ -1883,15 +2152,15 @@ class DeleteThoughtRequest extends $pb.GeneratedMessage {
 
   factory DeleteThoughtRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      DeleteThoughtRequest()..mergeFromBuffer(data, registry);
   factory DeleteThoughtRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      DeleteThoughtRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'DeleteThoughtRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: DeleteThoughtRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
@@ -1906,12 +2175,16 @@ class DeleteThoughtRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use DeleteThoughtRequest() / DeleteThoughtRequest.new instead')
   static DeleteThoughtRequest create() => DeleteThoughtRequest._();
+  static $pb.GeneratedMessage $_createMessage() => DeleteThoughtRequest._();
   @$core.override
-  DeleteThoughtRequest createEmptyInstance() => create();
+  DeleteThoughtRequest createEmptyInstance() => DeleteThoughtRequest._();
   @$core.pragma('dart2js:noInline')
   static DeleteThoughtRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteThoughtRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<DeleteThoughtRequest>(
+          DeleteThoughtRequest.$_createMessage);
   static DeleteThoughtRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1929,7 +2202,7 @@ class AddFeelingRequest extends $pb.GeneratedMessage {
     $core.int? recordId,
     FeelingInput? feeling,
   }) {
-    final result = create();
+    final result = AddFeelingRequest._();
     if (recordId != null) result.recordId = recordId;
     if (feeling != null) result.feeling = feeling;
     return result;
@@ -1939,18 +2212,18 @@ class AddFeelingRequest extends $pb.GeneratedMessage {
 
   factory AddFeelingRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      AddFeelingRequest()..mergeFromBuffer(data, registry);
   factory AddFeelingRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      AddFeelingRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'AddFeelingRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: AddFeelingRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'recordId', fieldType: $pb.PbFieldType.OU3)
     ..aOM<FeelingInput>(2, _omitFieldNames ? '' : 'feeling',
-        subBuilder: FeelingInput.create)
+        subBuilder: FeelingInput.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -1964,12 +2237,15 @@ class AddFeelingRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use AddFeelingRequest() / AddFeelingRequest.new instead')
   static AddFeelingRequest create() => AddFeelingRequest._();
+  static $pb.GeneratedMessage $_createMessage() => AddFeelingRequest._();
   @$core.override
-  AddFeelingRequest createEmptyInstance() => create();
+  AddFeelingRequest createEmptyInstance() => AddFeelingRequest._();
   @$core.pragma('dart2js:noInline')
-  static AddFeelingRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AddFeelingRequest>(create);
+  static AddFeelingRequest getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<AddFeelingRequest>(
+          AddFeelingRequest.$_createMessage);
   static AddFeelingRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -1998,7 +2274,7 @@ class AddMapFeelingRequest extends $pb.GeneratedMessage {
     $core.int? mapId,
     FeelingInput? feeling,
   }) {
-    final result = create();
+    final result = AddMapFeelingRequest._();
     if (mapId != null) result.mapId = mapId;
     if (feeling != null) result.feeling = feeling;
     return result;
@@ -2008,18 +2284,18 @@ class AddMapFeelingRequest extends $pb.GeneratedMessage {
 
   factory AddMapFeelingRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      AddMapFeelingRequest()..mergeFromBuffer(data, registry);
   factory AddMapFeelingRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      AddMapFeelingRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'AddMapFeelingRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: AddMapFeelingRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'mapId', fieldType: $pb.PbFieldType.OU3)
     ..aOM<FeelingInput>(2, _omitFieldNames ? '' : 'feeling',
-        subBuilder: FeelingInput.create)
+        subBuilder: FeelingInput.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2033,12 +2309,16 @@ class AddMapFeelingRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use AddMapFeelingRequest() / AddMapFeelingRequest.new instead')
   static AddMapFeelingRequest create() => AddMapFeelingRequest._();
+  static $pb.GeneratedMessage $_createMessage() => AddMapFeelingRequest._();
   @$core.override
-  AddMapFeelingRequest createEmptyInstance() => create();
+  AddMapFeelingRequest createEmptyInstance() => AddMapFeelingRequest._();
   @$core.pragma('dart2js:noInline')
   static AddMapFeelingRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<AddMapFeelingRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<AddMapFeelingRequest>(
+          AddMapFeelingRequest.$_createMessage);
   static AddMapFeelingRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2066,7 +2346,7 @@ class DeleteFeelingRequest extends $pb.GeneratedMessage {
   factory DeleteFeelingRequest({
     $core.int? id,
   }) {
-    final result = create();
+    final result = DeleteFeelingRequest._();
     if (id != null) result.id = id;
     return result;
   }
@@ -2075,15 +2355,15 @@ class DeleteFeelingRequest extends $pb.GeneratedMessage {
 
   factory DeleteFeelingRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      DeleteFeelingRequest()..mergeFromBuffer(data, registry);
   factory DeleteFeelingRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      DeleteFeelingRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'DeleteFeelingRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: DeleteFeelingRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
@@ -2098,12 +2378,16 @@ class DeleteFeelingRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use DeleteFeelingRequest() / DeleteFeelingRequest.new instead')
   static DeleteFeelingRequest create() => DeleteFeelingRequest._();
+  static $pb.GeneratedMessage $_createMessage() => DeleteFeelingRequest._();
   @$core.override
-  DeleteFeelingRequest createEmptyInstance() => create();
+  DeleteFeelingRequest createEmptyInstance() => DeleteFeelingRequest._();
   @$core.pragma('dart2js:noInline')
   static DeleteFeelingRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteFeelingRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<DeleteFeelingRequest>(
+          DeleteFeelingRequest.$_createMessage);
   static DeleteFeelingRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2121,7 +2405,7 @@ class ListMapsOfWorryRequest extends $pb.GeneratedMessage {
     $2.Timestamp? since,
     $core.String? search,
   }) {
-    final result = create();
+    final result = ListMapsOfWorryRequest._();
     if (since != null) result.since = since;
     if (search != null) result.search = search;
     return result;
@@ -2131,17 +2415,17 @@ class ListMapsOfWorryRequest extends $pb.GeneratedMessage {
 
   factory ListMapsOfWorryRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      ListMapsOfWorryRequest()..mergeFromBuffer(data, registry);
   factory ListMapsOfWorryRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      ListMapsOfWorryRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ListMapsOfWorryRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: ListMapsOfWorryRequest.$_createMessage)
     ..aOM<$2.Timestamp>(1, _omitFieldNames ? '' : 'since',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..aOS(2, _omitFieldNames ? '' : 'search')
     ..hasRequiredFields = false;
 
@@ -2157,12 +2441,16 @@ class ListMapsOfWorryRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ListMapsOfWorryRequest() / ListMapsOfWorryRequest.new instead')
   static ListMapsOfWorryRequest create() => ListMapsOfWorryRequest._();
+  static $pb.GeneratedMessage $_createMessage() => ListMapsOfWorryRequest._();
   @$core.override
-  ListMapsOfWorryRequest createEmptyInstance() => create();
+  ListMapsOfWorryRequest createEmptyInstance() => ListMapsOfWorryRequest._();
   @$core.pragma('dart2js:noInline')
   static ListMapsOfWorryRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListMapsOfWorryRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<ListMapsOfWorryRequest>(
+          ListMapsOfWorryRequest.$_createMessage);
   static ListMapsOfWorryRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2190,7 +2478,7 @@ class ListMapsOfWorryResponse extends $pb.GeneratedMessage {
   factory ListMapsOfWorryResponse({
     $core.Iterable<MapOfWorry>? maps,
   }) {
-    final result = create();
+    final result = ListMapsOfWorryResponse._();
     if (maps != null) result.maps.addAll(maps);
     return result;
   }
@@ -2199,17 +2487,17 @@ class ListMapsOfWorryResponse extends $pb.GeneratedMessage {
 
   factory ListMapsOfWorryResponse.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      ListMapsOfWorryResponse()..mergeFromBuffer(data, registry);
   factory ListMapsOfWorryResponse.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      ListMapsOfWorryResponse()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ListMapsOfWorryResponse',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: ListMapsOfWorryResponse.$_createMessage)
     ..pPM<MapOfWorry>(1, _omitFieldNames ? '' : 'maps',
-        subBuilder: MapOfWorry.create)
+        subBuilder: MapOfWorry.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2224,12 +2512,16 @@ class ListMapsOfWorryResponse extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ListMapsOfWorryResponse() / ListMapsOfWorryResponse.new instead')
   static ListMapsOfWorryResponse create() => ListMapsOfWorryResponse._();
+  static $pb.GeneratedMessage $_createMessage() => ListMapsOfWorryResponse._();
   @$core.override
-  ListMapsOfWorryResponse createEmptyInstance() => create();
+  ListMapsOfWorryResponse createEmptyInstance() => ListMapsOfWorryResponse._();
   @$core.pragma('dart2js:noInline')
   static ListMapsOfWorryResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListMapsOfWorryResponse>(create);
+      $pb.GeneratedMessage.$_defaultFor<ListMapsOfWorryResponse>(
+          ListMapsOfWorryResponse.$_createMessage);
   static ListMapsOfWorryResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2247,7 +2539,7 @@ class CreateMapOfWorryRequest extends $pb.GeneratedMessage {
     $core.int? derivedFromId,
     $core.Iterable<FeelingInput>? feelings,
   }) {
-    final result = create();
+    final result = CreateMapOfWorryRequest._();
     if (event != null) result.event = event;
     if (occurredAt != null) result.occurredAt = occurredAt;
     if (thoughts != null) result.thoughts = thoughts;
@@ -2266,18 +2558,18 @@ class CreateMapOfWorryRequest extends $pb.GeneratedMessage {
 
   factory CreateMapOfWorryRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      CreateMapOfWorryRequest()..mergeFromBuffer(data, registry);
   factory CreateMapOfWorryRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      CreateMapOfWorryRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'CreateMapOfWorryRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: CreateMapOfWorryRequest.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'event')
     ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'occurredAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..aOS(3, _omitFieldNames ? '' : 'thoughts')
     ..aOS(4, _omitFieldNames ? '' : 'whatTheseThoughtsMean')
     ..aOS(5, _omitFieldNames ? '' : 'physicalSensations')
@@ -2285,7 +2577,7 @@ class CreateMapOfWorryRequest extends $pb.GeneratedMessage {
     ..aI(7, _omitFieldNames ? '' : 'derivedFromId',
         fieldType: $pb.PbFieldType.OU3)
     ..pPM<FeelingInput>(8, _omitFieldNames ? '' : 'feelings',
-        subBuilder: FeelingInput.create)
+        subBuilder: FeelingInput.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2300,12 +2592,16 @@ class CreateMapOfWorryRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use CreateMapOfWorryRequest() / CreateMapOfWorryRequest.new instead')
   static CreateMapOfWorryRequest create() => CreateMapOfWorryRequest._();
+  static $pb.GeneratedMessage $_createMessage() => CreateMapOfWorryRequest._();
   @$core.override
-  CreateMapOfWorryRequest createEmptyInstance() => create();
+  CreateMapOfWorryRequest createEmptyInstance() => CreateMapOfWorryRequest._();
   @$core.pragma('dart2js:noInline')
   static CreateMapOfWorryRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateMapOfWorryRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<CreateMapOfWorryRequest>(
+          CreateMapOfWorryRequest.$_createMessage);
   static CreateMapOfWorryRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2381,7 +2677,7 @@ class GetMapOfWorryRequest extends $pb.GeneratedMessage {
   factory GetMapOfWorryRequest({
     $core.int? id,
   }) {
-    final result = create();
+    final result = GetMapOfWorryRequest._();
     if (id != null) result.id = id;
     return result;
   }
@@ -2390,15 +2686,15 @@ class GetMapOfWorryRequest extends $pb.GeneratedMessage {
 
   factory GetMapOfWorryRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      GetMapOfWorryRequest()..mergeFromBuffer(data, registry);
   factory GetMapOfWorryRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      GetMapOfWorryRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'GetMapOfWorryRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: GetMapOfWorryRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
@@ -2413,12 +2709,16 @@ class GetMapOfWorryRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use GetMapOfWorryRequest() / GetMapOfWorryRequest.new instead')
   static GetMapOfWorryRequest create() => GetMapOfWorryRequest._();
+  static $pb.GeneratedMessage $_createMessage() => GetMapOfWorryRequest._();
   @$core.override
-  GetMapOfWorryRequest createEmptyInstance() => create();
+  GetMapOfWorryRequest createEmptyInstance() => GetMapOfWorryRequest._();
   @$core.pragma('dart2js:noInline')
   static GetMapOfWorryRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMapOfWorryRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<GetMapOfWorryRequest>(
+          GetMapOfWorryRequest.$_createMessage);
   static GetMapOfWorryRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2439,7 +2739,7 @@ class GetMapOfWorryResponse extends $pb.GeneratedMessage {
     MapOfWorry? derivedFrom,
     $core.Iterable<MapOfWorry>? alternatives,
   }) {
-    final result = create();
+    final result = GetMapOfWorryResponse._();
     if (map != null) result.map = map;
     if (derivedFrom != null) result.derivedFrom = derivedFrom;
     if (alternatives != null) result.alternatives.addAll(alternatives);
@@ -2450,21 +2750,21 @@ class GetMapOfWorryResponse extends $pb.GeneratedMessage {
 
   factory GetMapOfWorryResponse.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      GetMapOfWorryResponse()..mergeFromBuffer(data, registry);
   factory GetMapOfWorryResponse.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      GetMapOfWorryResponse()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'GetMapOfWorryResponse',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: GetMapOfWorryResponse.$_createMessage)
     ..aOM<MapOfWorry>(1, _omitFieldNames ? '' : 'map',
-        subBuilder: MapOfWorry.create)
+        subBuilder: MapOfWorry.$_createMessage)
     ..aOM<MapOfWorry>(2, _omitFieldNames ? '' : 'derivedFrom',
-        subBuilder: MapOfWorry.create)
+        subBuilder: MapOfWorry.$_createMessage)
     ..pPM<MapOfWorry>(3, _omitFieldNames ? '' : 'alternatives',
-        subBuilder: MapOfWorry.create)
+        subBuilder: MapOfWorry.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2479,12 +2779,16 @@ class GetMapOfWorryResponse extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use GetMapOfWorryResponse() / GetMapOfWorryResponse.new instead')
   static GetMapOfWorryResponse create() => GetMapOfWorryResponse._();
+  static $pb.GeneratedMessage $_createMessage() => GetMapOfWorryResponse._();
   @$core.override
-  GetMapOfWorryResponse createEmptyInstance() => create();
+  GetMapOfWorryResponse createEmptyInstance() => GetMapOfWorryResponse._();
   @$core.pragma('dart2js:noInline')
   static GetMapOfWorryResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<GetMapOfWorryResponse>(create);
+      $pb.GeneratedMessage.$_defaultFor<GetMapOfWorryResponse>(
+          GetMapOfWorryResponse.$_createMessage);
   static GetMapOfWorryResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2526,7 +2830,7 @@ class UpdateMapOfWorryRequest extends $pb.GeneratedMessage {
     $core.String? physicalSensations,
     $core.String? resultantBehaviour,
   }) {
-    final result = create();
+    final result = UpdateMapOfWorryRequest._();
     if (id != null) result.id = id;
     if (event != null) result.event = event;
     if (occurredAt != null) result.occurredAt = occurredAt;
@@ -2545,19 +2849,19 @@ class UpdateMapOfWorryRequest extends $pb.GeneratedMessage {
 
   factory UpdateMapOfWorryRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      UpdateMapOfWorryRequest()..mergeFromBuffer(data, registry);
   factory UpdateMapOfWorryRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      UpdateMapOfWorryRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'UpdateMapOfWorryRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: UpdateMapOfWorryRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'event')
     ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'occurredAt',
-        subBuilder: $2.Timestamp.create)
+        subBuilder: $2.Timestamp.$_createMessage)
     ..aOB(4, _omitFieldNames ? '' : 'clearOccurredAt')
     ..aOS(5, _omitFieldNames ? '' : 'thoughts')
     ..aOS(6, _omitFieldNames ? '' : 'whatTheseThoughtsMean')
@@ -2577,12 +2881,16 @@ class UpdateMapOfWorryRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use UpdateMapOfWorryRequest() / UpdateMapOfWorryRequest.new instead')
   static UpdateMapOfWorryRequest create() => UpdateMapOfWorryRequest._();
+  static $pb.GeneratedMessage $_createMessage() => UpdateMapOfWorryRequest._();
   @$core.override
-  UpdateMapOfWorryRequest createEmptyInstance() => create();
+  UpdateMapOfWorryRequest createEmptyInstance() => UpdateMapOfWorryRequest._();
   @$core.pragma('dart2js:noInline')
   static UpdateMapOfWorryRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<UpdateMapOfWorryRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<UpdateMapOfWorryRequest>(
+          UpdateMapOfWorryRequest.$_createMessage);
   static UpdateMapOfWorryRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2664,7 +2972,7 @@ class DeleteMapOfWorryRequest extends $pb.GeneratedMessage {
   factory DeleteMapOfWorryRequest({
     $core.int? id,
   }) {
-    final result = create();
+    final result = DeleteMapOfWorryRequest._();
     if (id != null) result.id = id;
     return result;
   }
@@ -2673,15 +2981,15 @@ class DeleteMapOfWorryRequest extends $pb.GeneratedMessage {
 
   factory DeleteMapOfWorryRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      DeleteMapOfWorryRequest()..mergeFromBuffer(data, registry);
   factory DeleteMapOfWorryRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      DeleteMapOfWorryRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'DeleteMapOfWorryRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: DeleteMapOfWorryRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
@@ -2697,12 +3005,16 @@ class DeleteMapOfWorryRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use DeleteMapOfWorryRequest() / DeleteMapOfWorryRequest.new instead')
   static DeleteMapOfWorryRequest create() => DeleteMapOfWorryRequest._();
+  static $pb.GeneratedMessage $_createMessage() => DeleteMapOfWorryRequest._();
   @$core.override
-  DeleteMapOfWorryRequest createEmptyInstance() => create();
+  DeleteMapOfWorryRequest createEmptyInstance() => DeleteMapOfWorryRequest._();
   @$core.pragma('dart2js:noInline')
   static DeleteMapOfWorryRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteMapOfWorryRequest>(create);
+      $pb.GeneratedMessage.$_defaultFor<DeleteMapOfWorryRequest>(
+          DeleteMapOfWorryRequest.$_createMessage);
   static DeleteMapOfWorryRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2716,21 +3028,21 @@ class DeleteMapOfWorryRequest extends $pb.GeneratedMessage {
 }
 
 class ListBiasesRequest extends $pb.GeneratedMessage {
-  factory ListBiasesRequest() => create();
+  factory ListBiasesRequest() => ListBiasesRequest._();
 
   ListBiasesRequest._();
 
   factory ListBiasesRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      ListBiasesRequest()..mergeFromBuffer(data, registry);
   factory ListBiasesRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      ListBiasesRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ListBiasesRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: ListBiasesRequest.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2744,12 +3056,15 @@ class ListBiasesRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use ListBiasesRequest() / ListBiasesRequest.new instead')
   static ListBiasesRequest create() => ListBiasesRequest._();
+  static $pb.GeneratedMessage $_createMessage() => ListBiasesRequest._();
   @$core.override
-  ListBiasesRequest createEmptyInstance() => create();
+  ListBiasesRequest createEmptyInstance() => ListBiasesRequest._();
   @$core.pragma('dart2js:noInline')
-  static ListBiasesRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListBiasesRequest>(create);
+  static ListBiasesRequest getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<ListBiasesRequest>(
+          ListBiasesRequest.$_createMessage);
   static ListBiasesRequest? _defaultInstance;
 }
 
@@ -2757,7 +3072,7 @@ class ListBiasesResponse extends $pb.GeneratedMessage {
   factory ListBiasesResponse({
     $core.Iterable<CognitiveBias>? biases,
   }) {
-    final result = create();
+    final result = ListBiasesResponse._();
     if (biases != null) result.biases.addAll(biases);
     return result;
   }
@@ -2766,17 +3081,17 @@ class ListBiasesResponse extends $pb.GeneratedMessage {
 
   factory ListBiasesResponse.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      ListBiasesResponse()..mergeFromBuffer(data, registry);
   factory ListBiasesResponse.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      ListBiasesResponse()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'ListBiasesResponse',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: ListBiasesResponse.$_createMessage)
     ..pPM<CognitiveBias>(1, _omitFieldNames ? '' : 'biases',
-        subBuilder: CognitiveBias.create)
+        subBuilder: CognitiveBias.$_createMessage)
     ..hasRequiredFields = false;
 
   @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
@@ -2790,12 +3105,15 @@ class ListBiasesResponse extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use ListBiasesResponse() / ListBiasesResponse.new instead')
   static ListBiasesResponse create() => ListBiasesResponse._();
+  static $pb.GeneratedMessage $_createMessage() => ListBiasesResponse._();
   @$core.override
-  ListBiasesResponse createEmptyInstance() => create();
+  ListBiasesResponse createEmptyInstance() => ListBiasesResponse._();
   @$core.pragma('dart2js:noInline')
   static ListBiasesResponse getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<ListBiasesResponse>(create);
+      $pb.GeneratedMessage.$_defaultFor<ListBiasesResponse>(
+          ListBiasesResponse.$_createMessage);
   static ListBiasesResponse? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2806,7 +3124,7 @@ class CreateBiasRequest extends $pb.GeneratedMessage {
   factory CreateBiasRequest({
     $core.String? name,
   }) {
-    final result = create();
+    final result = CreateBiasRequest._();
     if (name != null) result.name = name;
     return result;
   }
@@ -2815,15 +3133,15 @@ class CreateBiasRequest extends $pb.GeneratedMessage {
 
   factory CreateBiasRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      CreateBiasRequest()..mergeFromBuffer(data, registry);
   factory CreateBiasRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      CreateBiasRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'CreateBiasRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: CreateBiasRequest.$_createMessage)
     ..aOS(1, _omitFieldNames ? '' : 'name')
     ..hasRequiredFields = false;
 
@@ -2838,12 +3156,15 @@ class CreateBiasRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use CreateBiasRequest() / CreateBiasRequest.new instead')
   static CreateBiasRequest create() => CreateBiasRequest._();
+  static $pb.GeneratedMessage $_createMessage() => CreateBiasRequest._();
   @$core.override
-  CreateBiasRequest createEmptyInstance() => create();
+  CreateBiasRequest createEmptyInstance() => CreateBiasRequest._();
   @$core.pragma('dart2js:noInline')
-  static CreateBiasRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<CreateBiasRequest>(create);
+  static CreateBiasRequest getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<CreateBiasRequest>(
+          CreateBiasRequest.$_createMessage);
   static CreateBiasRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2861,7 +3182,7 @@ class RenameBiasRequest extends $pb.GeneratedMessage {
     $core.int? id,
     $core.String? name,
   }) {
-    final result = create();
+    final result = RenameBiasRequest._();
     if (id != null) result.id = id;
     if (name != null) result.name = name;
     return result;
@@ -2871,15 +3192,15 @@ class RenameBiasRequest extends $pb.GeneratedMessage {
 
   factory RenameBiasRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      RenameBiasRequest()..mergeFromBuffer(data, registry);
   factory RenameBiasRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      RenameBiasRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'RenameBiasRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: RenameBiasRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..aOS(2, _omitFieldNames ? '' : 'name')
     ..hasRequiredFields = false;
@@ -2895,12 +3216,15 @@ class RenameBiasRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use RenameBiasRequest() / RenameBiasRequest.new instead')
   static RenameBiasRequest create() => RenameBiasRequest._();
+  static $pb.GeneratedMessage $_createMessage() => RenameBiasRequest._();
   @$core.override
-  RenameBiasRequest createEmptyInstance() => create();
+  RenameBiasRequest createEmptyInstance() => RenameBiasRequest._();
   @$core.pragma('dart2js:noInline')
-  static RenameBiasRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<RenameBiasRequest>(create);
+  static RenameBiasRequest getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<RenameBiasRequest>(
+          RenameBiasRequest.$_createMessage);
   static RenameBiasRequest? _defaultInstance;
 
   @$pb.TagNumber(1)
@@ -2926,7 +3250,7 @@ class DeleteBiasRequest extends $pb.GeneratedMessage {
   factory DeleteBiasRequest({
     $core.int? id,
   }) {
-    final result = create();
+    final result = DeleteBiasRequest._();
     if (id != null) result.id = id;
     return result;
   }
@@ -2935,15 +3259,15 @@ class DeleteBiasRequest extends $pb.GeneratedMessage {
 
   factory DeleteBiasRequest.fromBuffer($core.List<$core.int> data,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromBuffer(data, registry);
+      DeleteBiasRequest()..mergeFromBuffer(data, registry);
   factory DeleteBiasRequest.fromJson($core.String json,
           [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
-      create()..mergeFromJson(json, registry);
+      DeleteBiasRequest()..mergeFromJson(json, registry);
 
   static final $pb.BuilderInfo _i = $pb.BuilderInfo(
       _omitMessageNames ? '' : 'DeleteBiasRequest',
       package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
-      createEmptyInstance: create)
+      createEmptyInstance: DeleteBiasRequest.$_createMessage)
     ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
     ..hasRequiredFields = false;
 
@@ -2958,12 +3282,15 @@ class DeleteBiasRequest extends $pb.GeneratedMessage {
   $pb.BuilderInfo get info_ => _i;
 
   @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use DeleteBiasRequest() / DeleteBiasRequest.new instead')
   static DeleteBiasRequest create() => DeleteBiasRequest._();
+  static $pb.GeneratedMessage $_createMessage() => DeleteBiasRequest._();
   @$core.override
-  DeleteBiasRequest createEmptyInstance() => create();
+  DeleteBiasRequest createEmptyInstance() => DeleteBiasRequest._();
   @$core.pragma('dart2js:noInline')
-  static DeleteBiasRequest getDefault() => _defaultInstance ??=
-      $pb.GeneratedMessage.$_defaultFor<DeleteBiasRequest>(create);
+  static DeleteBiasRequest getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DeleteBiasRequest>(
+          DeleteBiasRequest.$_createMessage);
   static DeleteBiasRequest? _defaultInstance;
 
   @$pb.TagNumber(1)

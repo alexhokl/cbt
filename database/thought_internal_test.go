@@ -182,6 +182,10 @@ func TestThoughtOperationsAreScopedToTheUser(t *testing.T) {
 			_, err := SetHotThought(db, otherUserID, thoughtID)
 			return err
 		}},
+		{"set evidence", func() error {
+			_, err := SetThoughtEvidence(db, otherUserID, thoughtID, "theirs")
+			return err
+		}},
 		{"delete", func() error { return DeleteThought(db, otherUserID, thoughtID) }},
 	}
 
@@ -279,5 +283,88 @@ func TestNewThoughtIsNeitherFactualNorBiased(t *testing.T) {
 	}
 	if len(record.Thoughts[0].Biases) != 0 {
 		t.Errorf("expected a new thought to carry no biases but got %d", len(record.Thoughts[0].Biases))
+	}
+}
+
+func TestThoughtEvidenceIsStoredWhenTheThoughtIsWritten(t *testing.T) {
+	db := setupTestDB(t)
+
+	record, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:    "the last train was cancelled",
+		Thoughts: []ThoughtInput{{Body: "I will be late for everything today", Evidence: " the next train is full "}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the record: %v", err)
+	}
+	if record.Thoughts[0].Evidence != "the next train is full" {
+		t.Errorf("unexpected evidence %q", record.Thoughts[0].Evidence)
+	}
+
+	added, err := AddThought(db, testUserID, record.ID, ThoughtInput{Body: "the meeting will start without me", Evidence: "it starts at nine"})
+	if err != nil {
+		t.Fatalf("failed to add the thought: %v", err)
+	}
+	if added.Thoughts[1].Evidence != "it starts at nine" {
+		t.Errorf("unexpected evidence %q", added.Thoughts[1].Evidence)
+	}
+}
+
+func TestSetThoughtEvidenceLeavesTheRecordUnchallenged(t *testing.T) {
+	db := setupTestDB(t)
+
+	record, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:    "the last train was cancelled",
+		Thoughts: []ThoughtInput{{Body: "I will be late for everything today"}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the record: %v", err)
+	}
+	thoughtID := record.Thoughts[0].ID
+
+	// Evidence is often gathered some time after the thought was written.
+	// Doing so is not working the record through, so it stays in the queue.
+	updated, err := SetThoughtEvidence(db, testUserID, thoughtID, " two of the last five trains ran late ")
+	if err != nil {
+		t.Fatalf("failed to set the evidence: %v", err)
+	}
+	if updated.Thoughts[0].Evidence != "two of the last five trains ran late" {
+		t.Errorf("unexpected evidence %q", updated.Thoughts[0].Evidence)
+	}
+	if updated.ChallengedAt != nil {
+		t.Error("expected the record to stay unchallenged")
+	}
+
+	blanked, err := SetThoughtEvidence(db, testUserID, thoughtID, "")
+	if err != nil {
+		t.Fatalf("failed to blank the evidence: %v", err)
+	}
+	if blanked.Thoughts[0].Evidence != "" {
+		t.Errorf("expected the evidence to be blanked but got %q", blanked.Thoughts[0].Evidence)
+	}
+}
+
+func TestListThoughtRecordsSearchesThoughtEvidence(t *testing.T) {
+	db := setupTestDB(t)
+
+	match, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:    "an unremarkable event",
+		Thoughts: []ThoughtInput{{Body: "a thought", Evidence: "the platform display went blank"}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the matching record: %v", err)
+	}
+	if _, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:    "something else entirely",
+		Thoughts: []ThoughtInput{{Body: "another thought"}},
+	}); err != nil {
+		t.Fatalf("failed to create the other record: %v", err)
+	}
+
+	records, err := ListThoughtRecords(db, testUserID, ThoughtRecordFilter{Search: "platform"})
+	if err != nil {
+		t.Fatalf("failed to search the thought records: %v", err)
+	}
+	if len(records) != 1 || records[0].ID != match.ID {
+		t.Fatalf("expected only the matching record but got %d records", len(records))
 	}
 }

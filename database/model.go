@@ -56,14 +56,15 @@ func (CognitiveBias) TableName() string {
 	return "cognitive_biases"
 }
 
-// ThoughtRecord is the six column thought record: event, negative thought(s),
-// negative feeling(s), cognitive bias, "is there any other way I can look at
-// this?", and "how do I feel now?".
+// ThoughtRecord is the thought record: event, negative thought(s), negative
+// feeling(s), cognitive bias, "is there any other way I can look at this?",
+// "what evidence do you have to support this alternative view?", and "how much
+// do you still believe your initial thoughts? how do you feel now?".
 //
 // The exercise is deliberately split across two sittings. Event, thoughts and
-// feelings are captured during distress; AlternativeView, the biases on each
-// thought, and the re-rating of each feeling are filled in later, ideally the
-// same evening. ChallengedAt records when the second sitting
+// feelings are captured during distress; AlternativeView, the evidence for it,
+// the biases on each thought, and the re-rating of each thought and feeling
+// are filled in later, ideally the same evening. ChallengedAt records when the second sitting
 // happened and is what ListThoughtRecords filters on, so the unchallenged
 // records form the day's work queue.
 //
@@ -82,6 +83,10 @@ type ThoughtRecord struct {
 	// AlternativeView answers "is there any other way I can look at this?".
 	// The point of the exercise is an alternative thought, not a positive one.
 	AlternativeView string `gorm:""`
+	// EvidenceForAlternative answers "what evidence do you have to support
+	// this alternative view?". It is stored verbatim apart from surrounding
+	// whitespace.
+	EvidenceForAlternative string `gorm:""`
 	// FeelingsNow answers "how do I feel now?" in prose. The numeric side of
 	// the same question lives in Feeling.IntensityAfter.
 	FeelingsNow string `gorm:""`
@@ -105,6 +110,10 @@ type NegativeThought struct {
 	// Body is the thought as the user phrased it, stored verbatim apart from
 	// surrounding whitespace. Duplicates are allowed.
 	Body string `gorm:"not null"`
+	// Evidence answers "what evidence do you have that supports this
+	// thought?". It is optional, may be written with the thought or added
+	// later, and is stored verbatim apart from surrounding whitespace.
+	Evidence string `gorm:""`
 	// IsHot marks the strongest thought of the record, the one worth
 	// challenging first. At most one thought per record carries it; SetHotThought
 	// clears the flag on its siblings in the same transaction.
@@ -125,6 +134,11 @@ type NegativeThought struct {
 	// The fourth combination contradicts itself and is rejected with
 	// ErrThoughtFactualWithBias.
 	IsFactual bool `gorm:"not null;default:false"`
+	// BeliefAfter is the 0-100 answer to "how much do you still believe this
+	// thought?", given during the challenge, or nil until it has been asked.
+	// There is deliberately no rating from the first sitting to compare it
+	// against.
+	BeliefAfter *int
 	// ParentID links a thought to the thought whose meaning it is, forming the
 	// chain produced by the downward arrow technique (keep asking "and what
 	// would that mean?" until the core fear surfaces). The column

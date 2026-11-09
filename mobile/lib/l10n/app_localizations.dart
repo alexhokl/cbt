@@ -220,6 +220,12 @@ abstract class AppLocalizations {
   /// **'Another way to look at this'**
   String get fieldAlternativeView;
 
+  /// Label for the evidence supporting the alternative view.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence for it'**
+  String get fieldEvidence;
+
   /// Label for the feelings-now column.
   ///
   /// In en, this message translates to:
@@ -280,6 +286,24 @@ abstract class AppLocalizations {
   /// **'Not rated'**
   String get feelingUnrated;
 
+  /// Prompt for the evidence supporting a negative thought.
+  ///
+  /// In en, this message translates to:
+  /// **'What evidence supports this thought?'**
+  String get thoughtEvidence;
+
+  /// The evidence supporting a thought, shown beneath it.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence: {evidence}'**
+  String thoughtEvidenceLabel(String evidence);
+
+  /// Title of the dialog editing the evidence for a thought.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence for this thought'**
+  String get editThoughtEvidence;
+
   /// Toggle marking a thought as the strongest.
   ///
   /// In en, this message translates to:
@@ -333,6 +357,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Is there any other way you can look at this?'**
   String get challengeStepAlternative;
+
+  /// Prompt for the evidence supporting the alternative view.
+  ///
+  /// In en, this message translates to:
+  /// **'What evidence do you have to support this alternative view?'**
+  String get challengeStepEvidence;
+
+  /// Prompt for rating how much each thought is still believed.
+  ///
+  /// In en, this message translates to:
+  /// **'How much do you still believe your initial thoughts?'**
+  String get challengeStepBelief;
+
+  /// How much a thought is still believed after the challenge.
+  ///
+  /// In en, this message translates to:
+  /// **'Still believe {rating}%'**
+  String thoughtBelief(int rating);
 
   /// Prompt for re-rating the feelings.
   ///

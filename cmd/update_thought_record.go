@@ -14,6 +14,7 @@ type updateThoughtRecordOptions struct {
 	At              string
 	ClearAt         bool
 	AlternativeView string
+	Evidence        string
 	FeelingsNow     string
 }
 
@@ -44,6 +45,7 @@ func init() {
 	flags.StringVar(&updateThoughtRecordOpts.At, "at", "", "When the event happened (YYYY-MM-DD, \"yesterday\", \"3h ago\")")
 	flags.BoolVar(&updateThoughtRecordOpts.ClearAt, "clear-at", false, "Forget when the event happened")
 	flags.StringVar(&updateThoughtRecordOpts.AlternativeView, "alternative", "", "Is there any other way you can look at this?")
+	flags.StringVar(&updateThoughtRecordOpts.Evidence, "evidence", "", "What evidence do you have to support this alternative view?")
 	flags.StringVar(&updateThoughtRecordOpts.FeelingsNow, "feelings-now", "", "How do you feel now?")
 
 	updateThoughtRecordCmd.MarkFlagsMutuallyExclusive("at", "clear-at")
@@ -94,6 +96,9 @@ func buildUpdateThoughtRecordRequest(args []string, opts updateThoughtRecordOpti
 	}
 	if flags.Changed("alternative") {
 		req.AlternativeView = &opts.AlternativeView
+	}
+	if flags.Changed("evidence") {
+		req.EvidenceForAlternative = &opts.Evidence
 	}
 	if flags.Changed("feelings-now") {
 		req.FeelingsNow = &opts.FeelingsNow

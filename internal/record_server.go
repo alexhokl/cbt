@@ -84,12 +84,13 @@ func (s *RecordServer) CreateThoughtRecord(ctx context.Context, req *proto.Creat
 	}
 
 	record, err := database.CreateThoughtRecord(s.DB.WithContext(ctx), userID, database.CreateThoughtRecordInput{
-		Event:           req.GetEvent(),
-		OccurredAt:      fromProtoTimestamp(req.GetOccurredAt()),
-		AlternativeView: req.GetAlternativeView(),
-		FeelingsNow:     req.GetFeelingsNow(),
-		Thoughts:        toThoughtInputs(req.GetThoughts()),
-		Feelings:        toFeelingInputs(req.GetFeelings()),
+		Event:                  req.GetEvent(),
+		OccurredAt:             fromProtoTimestamp(req.GetOccurredAt()),
+		AlternativeView:        req.GetAlternativeView(),
+		EvidenceForAlternative: req.GetEvidenceForAlternative(),
+		FeelingsNow:            req.GetFeelingsNow(),
+		Thoughts:               toThoughtInputs(req.GetThoughts()),
+		Feelings:               toFeelingInputs(req.GetFeelings()),
 	})
 	if err != nil {
 		return nil, mapDatabaseError(err)
@@ -150,11 +151,12 @@ func (s *RecordServer) UpdateThoughtRecord(ctx context.Context, req *proto.Updat
 	}
 
 	record, err := database.UpdateThoughtRecord(s.DB.WithContext(ctx), userID, uint(req.GetId()), database.UpdateThoughtRecordInput{
-		Event:           req.Event,
-		OccurredAt:      fromProtoTimestamp(req.GetOccurredAt()),
-		ClearOccurredAt: req.GetClearOccurredAt(),
-		AlternativeView: req.AlternativeView,
-		FeelingsNow:     req.FeelingsNow,
+		Event:                  req.Event,
+		OccurredAt:             fromProtoTimestamp(req.GetOccurredAt()),
+		ClearOccurredAt:        req.GetClearOccurredAt(),
+		AlternativeView:        req.AlternativeView,
+		EvidenceForAlternative: req.EvidenceForAlternative,
+		FeelingsNow:            req.FeelingsNow,
 	})
 	if err != nil {
 		return nil, mapDatabaseError(err)
@@ -189,7 +191,11 @@ func (s *RecordServer) ChallengeThoughtRecord(ctx context.Context, req *proto.Ch
 	// "detach them all", which proto3 cannot express on a repeated field.
 	judgements := make(map[uint]database.ThoughtJudgement, len(req.GetThoughts()))
 	for _, judgement := range req.GetThoughts() {
-		converted := database.ThoughtJudgement{IsFactual: judgement.GetIsFactual()}
+		converted := database.ThoughtJudgement{IsFactual: judgement.IsFactual}
+		if judgement.BeliefAfter != nil {
+			belief := int(judgement.GetBeliefAfter())
+			converted.BeliefAfter = &belief
+		}
 		if judgement.Biases != nil {
 			names := judgement.GetBiases().GetNames()
 			if names == nil {
@@ -202,6 +208,7 @@ func (s *RecordServer) ChallengeThoughtRecord(ctx context.Context, req *proto.Ch
 
 	record, err := database.ChallengeThoughtRecord(s.DB.WithContext(ctx), userID, uint(req.GetId()), database.ChallengeInput{
 		AlternativeView:         req.GetAlternativeView(),
+		EvidenceForAlternative:  req.GetEvidenceForAlternative(),
 		FeelingsNow:             req.GetFeelingsNow(),
 		FeelingIntensitiesAfter: reratings,
 		Thoughts:                judgements,
@@ -275,6 +282,7 @@ func mapDatabaseError(err error) error {
 		errors.Is(err, database.ErrThoughtBodyEmpty),
 		errors.Is(err, database.ErrFeelingNameEmpty),
 		errors.Is(err, database.ErrFeelingIntensityRange),
+		errors.Is(err, database.ErrThoughtBeliefRange),
 		errors.Is(err, database.ErrBiasNameEmpty),
 		errors.Is(err, database.ErrMultipleHotThoughts),
 		errors.Is(err, database.ErrMapDerivedFromSelf):

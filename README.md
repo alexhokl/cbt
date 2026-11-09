@@ -7,14 +7,14 @@ entry, score it, or tell you what it means.
 
 ## The two exercises
 
-**Thought record** — the six column record:
+**Thought record**:
 
-| Event | Negative thought(s) | Negative feeling(s) | Cognitive bias | Is there any other way I can look at this? | How do I feel now? |
-|---|---|---|---|---|---|
+| Event | Negative thought(s) | Negative feeling(s) | Cognitive bias | Is there any other way I can look at this? | What evidence do you have to support this alternative view? | How much do you still believe your initial thoughts? How do you feel now? |
+|---|---|---|---|---|---|---|
 
 It is written in two sittings. The event, the thoughts and the feelings are
-captured at the time; the alternative view, the biases and the re-rating come
-later, usually the same evening. `cbt challenge` records that second part, and
+captured at the time; the alternative view and the evidence for it, the biases,
+and the re-rating of each thought and feeling come later, usually the same evening. `cbt challenge` records that second part, and
 `cbt list thought-records --unchallenged` is the queue of records still waiting
 for it.
 
@@ -36,21 +36,28 @@ cbt serve --database ~/.cbt.db
 cbt create thought-record "a meeting was moved without telling me" \
   --at "3h ago" \
   --hot-thought "they do not think my input matters" --bias mind-reading \
+  --hot-thought-evidence "nobody asked me about the new time" \
   --feeling anxious=80 --feeling annoyed=45
+
+# evidence for a thought can be added or changed at any time, without
+# marking the record as worked through
+cbt update thought 1 --evidence "the last two invites came from the same calendar"
 
 # later, work through it
 cbt get thought-record 1
 cbt challenge 1 \
   --alternative "the invite may simply have failed to send" \
-  --rerate 1=20 --feelings-now "steadier"
+  --evidence "the calendar shows the invite as unsent" \
+  --believe 1=30 --rerate 1=20 --feelings-now "steadier"
 
 # what is still waiting
 cbt list thought-records --unchallenged
 ```
 
 Feelings are rated 0-100 and re-rated during the challenge, because seeing
-"anxious 80% → 20%" is what tells you whether the alternative view landed. The
-rating is always optional: writing down that you felt ashamed is worth
+"anxious 80% → 20%" is what tells you whether the alternative view landed.
+`--believe` records how much you still believe each thought, also 0-100. Every
+rating is optional: writing down that you felt ashamed is worth
 something even when you are in no state to put a number on it.
 
 The nine standard cognitive biases are seeded for you and cannot be renamed

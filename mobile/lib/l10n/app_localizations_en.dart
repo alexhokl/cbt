@@ -76,6 +76,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fieldAlternativeView => 'Another way to look at this';
 
   @override
+  String get fieldEvidence => 'Evidence for it';
+
+  @override
   String get fieldFeelingsNow => 'How I feel now';
 
   @override
@@ -108,6 +111,17 @@ class AppLocalizationsEn extends AppLocalizations {
   String get feelingUnrated => 'Not rated';
 
   @override
+  String get thoughtEvidence => 'What evidence supports this thought?';
+
+  @override
+  String thoughtEvidenceLabel(String evidence) {
+    return 'Evidence: $evidence';
+  }
+
+  @override
+  String get editThoughtEvidence => 'Evidence for this thought';
+
+  @override
   String get markStrongest => 'Strongest thought';
 
   @override
@@ -137,6 +151,19 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get challengeStepAlternative =>
       'Is there any other way you can look at this?';
+
+  @override
+  String get challengeStepEvidence =>
+      'What evidence do you have to support this alternative view?';
+
+  @override
+  String get challengeStepBelief =>
+      'How much do you still believe your initial thoughts?';
+
+  @override
+  String thoughtBelief(int rating) {
+    return 'Still believe $rating%';
+  }
 
   @override
   String get challengeStepRerate => 'How strongly do you feel these now?';

@@ -11,8 +11,10 @@ import (
 
 type challengeOptions struct {
 	AlternativeView string
+	Evidence        string
 	FeelingsNow     string
 	Reratings       []string
+	Beliefs         []string
 	ThoughtBiases   []string
 	Factual         []string
 	NotFactual      []string
@@ -27,14 +29,16 @@ var challengeCmd = &cobra.Command{
 	Long: `Record the second sitting of a thought record.
 
 A thought record is written in two parts. The event, the thoughts and the
-feelings are captured in the moment; the alternative view, the cognitive biases
-and the re-rating of each feeling come later, usually the same evening. This
-command records that second part and takes the record out of the queue that
+feelings are captured in the moment; the alternative view and the evidence for
+it, the cognitive biases, how much each thought is still believed and the
+re-rating of each feeling come later, usually the same evening. This command
+records that second part and takes the record out of the queue that
 "cbt list thought-records --unchallenged" shows.
 
 Run "cbt get thought-record <id>" first to see the thought and feeling ids.`,
-	Example: `  cbt challenge 3 --alternative "the invite may simply have failed to send"
-  cbt challenge 3 --bias 7=catastrophising --rerate 4=20 --feelings-now "calmer"
+	Example: `  cbt challenge 3 --alternative "the invite may simply have failed to send" \
+    --evidence "the calendar shows the invite as unsent"
+  cbt challenge 3 --bias 7=catastrophising --believe 7=30 --rerate 4=20 --feelings-now "calmer"
   cbt challenge 3 --bias 7= --factual 7`,
 	Args:        cobra.ExactArgs(1),
 	Annotations: map[string]string{annotationRequiresService: "true"},
@@ -46,6 +50,8 @@ func init() {
 
 	flags := challengeCmd.Flags()
 	flags.StringVar(&challengeOpts.AlternativeView, "alternative", "", "Is there any other way you can look at this?")
+	flags.StringVar(&challengeOpts.Evidence, "evidence", "", "What evidence do you have to support this alternative view?")
+	flags.StringArrayVar(&challengeOpts.Beliefs, "believe", nil, "How much you still believe a thought, as thought-id=rating (repeatable)")
 	flags.StringVar(&challengeOpts.FeelingsNow, "feelings-now", "", "How do you feel now?")
 	flags.StringArrayVar(&challengeOpts.Reratings, "rerate", nil, "Re-rate a feeling, as feeling-id=rating (repeatable)")
 	flags.StringArrayVar(&challengeOpts.ThoughtBiases, "bias", nil, "Name the biases in a thought, as thought-id=name[,name] (repeatable); thought-id= on its own detaches them")
@@ -81,9 +87,10 @@ func buildChallengeRequest(args []string, opts challengeOptions) (*proto.Challen
 	}
 
 	req := &proto.ChallengeThoughtRecordRequest{
-		Id:              id,
-		AlternativeView: opts.AlternativeView,
-		FeelingsNow:     opts.FeelingsNow,
+		Id:                     id,
+		AlternativeView:        opts.AlternativeView,
+		EvidenceForAlternative: opts.Evidence,
+		FeelingsNow:            opts.FeelingsNow,
 	}
 
 	for _, value := range opts.Reratings {
@@ -103,9 +110,11 @@ func buildChallengeRequest(args []string, opts challengeOptions) (*proto.Challen
 	return req, nil
 }
 
-// buildThoughtJudgements folds the --bias, --factual and --not-factual flags
-// into one judgement per thought, so the request cannot carry two statements
-// about the same thought that disagree.
+// buildThoughtJudgements folds the --bias, --believe, --factual and
+// --not-factual flags into one judgement per thought, so the request cannot
+// carry two statements about the same thought that disagree. Whether a thought
+// is factual is only sent when one of the factual flags names it, so a
+// judgement carrying only a bias or a belief leaves that judgement alone.
 func buildThoughtJudgements(opts challengeOptions) ([]*proto.ThoughtJudgement, error) {
 	order := make([]uint32, 0, len(opts.ThoughtBiases))
 	judgements := make(map[uint32]*proto.ThoughtJudgement, len(opts.ThoughtBiases))
@@ -128,6 +137,14 @@ func buildThoughtJudgements(opts challengeOptions) ([]*proto.ThoughtJudgement, e
 		get(id).Biases = &proto.BiasNames{Names: names}
 	}
 
+	for _, value := range opts.Beliefs {
+		id, belief, err := parseBelief(value)
+		if err != nil {
+			return nil, err
+		}
+		get(id).BeliefAfter = &belief
+	}
+
 	factual := make(map[uint32]struct{}, len(opts.Factual))
 	for _, value := range opts.Factual {
 		id, err := parseRecordID(strings.TrimSpace(value))
@@ -135,7 +152,8 @@ func buildThoughtJudgements(opts challengeOptions) ([]*proto.ThoughtJudgement, e
 			return nil, fmt.Errorf("invalid --factual %q: %w", value, err)
 		}
 		factual[id] = struct{}{}
-		get(id).IsFactual = true
+		isFactual := true
+		get(id).IsFactual = &isFactual
 	}
 
 	for _, value := range opts.NotFactual {
@@ -149,7 +167,8 @@ func buildThoughtJudgements(opts challengeOptions) ([]*proto.ThoughtJudgement, e
 		if _, ok := factual[id]; ok {
 			return nil, fmt.Errorf("thought %d is given to both --factual and --not-factual", id)
 		}
-		get(id).IsFactual = false
+		isFactual := false
+		get(id).IsFactual = &isFactual
 	}
 
 	result := make([]*proto.ThoughtJudgement, 0, len(order))
@@ -182,6 +201,28 @@ func parseRerating(value string) (*proto.FeelingRerating, error) {
 		FeelingId:      feelingID,
 		IntensityAfter: int32(intensity), // #nosec G109
 	}, nil
+}
+
+// parseBelief turns "thought-id=rating" into a thought identifier and how much
+// the thought is still believed.
+func parseBelief(value string) (uint32, int32, error) {
+	rawID, rawRating, ok := strings.Cut(value, "=")
+	if !ok {
+		return 0, 0, fmt.Errorf("invalid belief %q: expected thought-id=rating, such as 7=30", value)
+	}
+
+	thoughtID, err := parseRecordID(strings.TrimSpace(rawID))
+	if err != nil {
+		return 0, 0, fmt.Errorf("invalid belief %q: %w", value, err)
+	}
+
+	belief, err := strconv.Atoi(strings.TrimSpace(strings.TrimSuffix(rawRating, "%")))
+	if err != nil || belief < 0 || belief > 100 {
+		return 0, 0, fmt.Errorf("invalid belief %q: expected a rating between 0 and 100", value)
+	}
+
+	// Range checked immediately above, so the conversion is safe.
+	return thoughtID, int32(belief), nil // #nosec G109
 }
 
 // parseThoughtBias turns "thought-id=name[,name]" into a thought identifier and

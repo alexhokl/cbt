@@ -132,7 +132,7 @@ func TestWriteThoughtRecordDetailOmitsEmptyColumns(t *testing.T) {
 	}
 	// A record in progress should read as what has been written so far, not as
 	// a form with blanks in it.
-	for _, label := range []string{"another way to look at this", "how I feel now", "thoughts:", "feelings:"} {
+	for _, label := range []string{"another way to look at this", "evidence for it", "how I feel now", "thoughts:", "feelings:"} {
 		if strings.Contains(rendered, label) {
 			t.Errorf("expected the empty column %q to be omitted but got:\n%s", label, rendered)
 		}
@@ -143,19 +143,22 @@ func TestWriteThoughtRecordDetailShowsTheChallengeWork(t *testing.T) {
 	var out bytes.Buffer
 
 	record := &proto.ThoughtRecord{
-		Id:              3,
-		Event:           "a meeting was moved without telling me",
-		AlternativeView: "the invite may simply have failed to send",
-		FeelingsNow:     "calmer",
-		ChallengedAt:    timestamppb.New(referenceNow),
-		CreatedAt:       timestamppb.New(referenceNow),
-		UpdatedAt:       timestamppb.New(referenceNow),
+		Id:                     3,
+		Event:                  "a meeting was moved without telling me",
+		AlternativeView:        "the invite may simply have failed to send",
+		EvidenceForAlternative: "the calendar shows the invite as unsent",
+		FeelingsNow:            "calmer",
+		ChallengedAt:           timestamppb.New(referenceNow),
+		CreatedAt:              timestamppb.New(referenceNow),
+		UpdatedAt:              timestamppb.New(referenceNow),
 		Thoughts: []*proto.NegativeThought{
 			{
-				Id:     7,
-				Body:   "they do not think my input matters",
-				IsHot:  true,
-				Biases: []*proto.CognitiveBias{{Id: 5, Name: "catastrophising"}},
+				Id:          7,
+				Body:        "they do not think my input matters",
+				IsHot:       true,
+				Biases:      []*proto.CognitiveBias{{Id: 5, Name: "catastrophising"}},
+				BeliefAfter: int32Ptr(30),
+				Evidence:    "the room was booked by someone else",
 			},
 			{Id: 8, Body: "I will be left out of the next one"},
 		},
@@ -184,6 +187,22 @@ func TestWriteThoughtRecordDetailShowsTheChallengeWork(t *testing.T) {
 	}
 	if !strings.Contains(rendered, "challenged 2026-09-27") {
 		t.Errorf("expected the challenge date but got:\n%s", rendered)
+	}
+	if !strings.Contains(rendered, "the calendar shows the invite as unsent") {
+		t.Errorf("expected the evidence to be shown but got:\n%s", rendered)
+	}
+	if !strings.Contains(rendered, "(still believe 30%)") {
+		t.Errorf("expected the belief to be shown against its thought but got:\n%s", rendered)
+	}
+	if !strings.Contains(rendered, "evidence: the room was booked by someone else") {
+		t.Errorf("expected the evidence to be shown under its thought but got:\n%s", rendered)
+	}
+	// Only the thought with evidence shows the label.
+	if strings.Count(rendered, "evidence: ") != 1 {
+		t.Errorf("expected exactly one thought to show evidence but got:\n%s", rendered)
+	}
+	if strings.Count(rendered, "still believe") != 1 {
+		t.Errorf("expected only the re-rated thought to show a belief but got:\n%s", rendered)
 	}
 }
 

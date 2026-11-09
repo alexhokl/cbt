@@ -19,9 +19,10 @@ class FeelingDraft {
 
 /// A thought being entered, before it is sent.
 class ThoughtDraft {
-  ThoughtDraft({this.body = '', this.isHot = false});
+  ThoughtDraft({this.body = '', this.evidence = '', this.isHot = false});
 
   String body;
+  String evidence;
   bool isHot;
 }
 
@@ -122,6 +123,7 @@ class _EditRecordPageState extends State<EditRecordPage> {
           request.thoughts.add(
             ThoughtInput()
               ..body = thought.body
+              ..evidence = thought.evidence
               ..isHot = thought.isHot,
           );
         }
@@ -233,6 +235,19 @@ class _EditRecordPageState extends State<EditRecordPage> {
               maxLines: 5,
               decoration: InputDecoration(
                 hintText: l10n.thoughtHint,
+                border: const OutlineInputBorder(),
+              ),
+            ),
+            const SizedBox(height: 8),
+            // Optional, and often only known later; the detail page is where
+            // it is added after the record has been saved.
+            TextField(
+              key: Key('thoughtEvidence-$index'),
+              onChanged: (value) => draft.evidence = value,
+              minLines: 1,
+              maxLines: 5,
+              decoration: InputDecoration(
+                hintText: l10n.thoughtEvidence,
                 border: const OutlineInputBorder(),
               ),
             ),

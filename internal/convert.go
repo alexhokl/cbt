@@ -22,16 +22,18 @@ func toProtoID(id uint) (uint32, error) {
 	return uint32(id), nil
 }
 
-// toProtoIntensity narrows an optional rating to the 32 bit width used on the
-// wire. Ratings are constrained to 0-100 by both the operations and a trigger,
-// so no range check is repeated here.
+// toProtoIntensity narrows an optional rating (a feeling's intensity or how
+// much a thought is still believed) to the 32 bit width used on the wire.
+// Ratings are constrained to 0-100 by both the operations and a trigger, so no
+// range check is repeated here.
 func toProtoIntensity(intensity *int) *int32 {
 	if intensity == nil {
 		return nil
 	}
-	// The value cannot overflow: an intensity is a percentage, held to 0-100
-	// by validateIntensity in the operations and by the feelings_intensity_range
-	// trigger in the schema, so anything reaching here is already in range.
+	// The value cannot overflow: a rating is a percentage, held to 0-100 by
+	// validateIntensity and validateBelief in the operations and by the
+	// feelings_intensity_range and thoughts_belief_range triggers in the
+	// schema, so anything reaching here is already in range.
 	narrowed := int32(*intensity) // #nosec G115
 	return &narrowed
 }
@@ -108,11 +110,13 @@ func toProtoThought(thought database.NegativeThought) (*proto.NegativeThought, e
 	}
 
 	converted := &proto.NegativeThought{
-		Id:        id,
-		Body:      thought.Body,
-		IsHot:     thought.IsHot,
-		IsFactual: thought.IsFactual,
-		Biases:    biases,
+		Id:          id,
+		Body:        thought.Body,
+		Evidence:    thought.Evidence,
+		IsHot:       thought.IsHot,
+		IsFactual:   thought.IsFactual,
+		BeliefAfter: toProtoIntensity(thought.BeliefAfter),
+		Biases:      biases,
 	}
 
 	if thought.ParentID != nil {
@@ -182,16 +186,17 @@ func toProtoThoughtRecord(record *database.ThoughtRecord) (*proto.ThoughtRecord,
 	}
 
 	return &proto.ThoughtRecord{
-		Id:              id,
-		Event:           record.Event,
-		OccurredAt:      toProtoTimestamp(record.OccurredAt),
-		AlternativeView: record.AlternativeView,
-		FeelingsNow:     record.FeelingsNow,
-		ChallengedAt:    toProtoTimestamp(record.ChallengedAt),
-		Thoughts:        thoughts,
-		Feelings:        feelings,
-		CreatedAt:       timestamppb.New(record.CreatedAt),
-		UpdatedAt:       timestamppb.New(record.UpdatedAt),
+		Id:                     id,
+		Event:                  record.Event,
+		OccurredAt:             toProtoTimestamp(record.OccurredAt),
+		AlternativeView:        record.AlternativeView,
+		EvidenceForAlternative: record.EvidenceForAlternative,
+		FeelingsNow:            record.FeelingsNow,
+		ChallengedAt:           toProtoTimestamp(record.ChallengedAt),
+		Thoughts:               thoughts,
+		Feelings:               feelings,
+		CreatedAt:              timestamppb.New(record.CreatedAt),
+		UpdatedAt:              timestamppb.New(record.UpdatedAt),
 	}, nil
 }
 
@@ -284,9 +289,10 @@ func toThoughtInputs(inputs []*proto.ThoughtInput) []database.ThoughtInput {
 	converted := make([]database.ThoughtInput, 0, len(inputs))
 	for _, input := range inputs {
 		converted = append(converted, database.ThoughtInput{
-			Body:   input.GetBody(),
-			IsHot:  input.GetIsHot(),
-			Biases: input.GetBiases(),
+			Body:     input.GetBody(),
+			Evidence: input.GetEvidence(),
+			IsHot:    input.GetIsHot(),
+			Biases:   input.GetBiases(),
 		})
 	}
 

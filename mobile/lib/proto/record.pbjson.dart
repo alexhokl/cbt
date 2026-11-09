@@ -55,9 +55,20 @@ const NegativeThought$json = {
       '17': true
     },
     {'1': 'is_factual', '3': 6, '4': 1, '5': 8, '10': 'isFactual'},
+    {
+      '1': 'belief_after',
+      '3': 7,
+      '4': 1,
+      '5': 5,
+      '9': 1,
+      '10': 'beliefAfter',
+      '17': true
+    },
+    {'1': 'evidence', '3': 8, '4': 1, '5': 9, '10': 'evidence'},
   ],
   '8': [
     {'1': '_parent_id'},
+    {'1': '_belief_after'},
   ],
 };
 
@@ -66,7 +77,9 @@ final $typed_data.Uint8List negativeThoughtDescriptor = $convert.base64Decode(
     'Cg9OZWdhdGl2ZVRob3VnaHQSDgoCaWQYASABKA1SAmlkEhIKBGJvZHkYAiABKAlSBGJvZHkSFQ'
     'oGaXNfaG90GAMgASgIUgVpc0hvdBItCgZiaWFzZXMYBCADKAsyFS5yZWNvcmQuQ29nbml0aXZl'
     'Qmlhc1IGYmlhc2VzEiAKCXBhcmVudF9pZBgFIAEoDUgAUghwYXJlbnRJZIgBARIdCgppc19mYW'
-    'N0dWFsGAYgASgIUglpc0ZhY3R1YWxCDAoKX3BhcmVudF9pZA==');
+    'N0dWFsGAYgASgIUglpc0ZhY3R1YWwSJgoMYmVsaWVmX2FmdGVyGAcgASgFSAFSC2JlbGllZkFm'
+    'dGVyiAEBEhoKCGV2aWRlbmNlGAggASgJUghldmlkZW5jZUIMCgpfcGFyZW50X2lkQg8KDV9iZW'
+    'xpZWZfYWZ0ZXI=');
 
 @$core.Deprecated('Use feelingDescriptor instead')
 const Feeling$json = {
@@ -166,6 +179,13 @@ const ThoughtRecord$json = {
       '6': '.google.protobuf.Timestamp',
       '10': 'updatedAt'
     },
+    {
+      '1': 'evidence_for_alternative',
+      '3': 11,
+      '4': 1,
+      '5': 9,
+      '10': 'evidenceForAlternative'
+    },
   ],
   '8': [
     {'1': '_occurred_at'},
@@ -183,8 +203,9 @@ final $typed_data.Uint8List thoughtRecordDescriptor = $convert.base64Decode(
     'RzGAcgAygLMhcucmVjb3JkLk5lZ2F0aXZlVGhvdWdodFIIdGhvdWdodHMSKwoIZmVlbGluZ3MY'
     'CCADKAsyDy5yZWNvcmQuRmVlbGluZ1IIZmVlbGluZ3MSOQoKY3JlYXRlZF9hdBgJIAEoCzIaLm'
     'dvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCWNyZWF0ZWRBdBI5Cgp1cGRhdGVkX2F0GAogASgL'
-    'MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJdXBkYXRlZEF0Qg4KDF9vY2N1cnJlZF9hdE'
-    'IQCg5fY2hhbGxlbmdlZF9hdA==');
+    'MhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJdXBkYXRlZEF0EjgKGGV2aWRlbmNlX2Zvcl'
+    '9hbHRlcm5hdGl2ZRgLIAEoCVIWZXZpZGVuY2VGb3JBbHRlcm5hdGl2ZUIOCgxfb2NjdXJyZWRf'
+    'YXRCEAoOX2NoYWxsZW5nZWRfYXQ=');
 
 @$core.Deprecated('Use mapOfWorryDescriptor instead')
 const MapOfWorry$json = {
@@ -309,13 +330,14 @@ const ThoughtInput$json = {
     {'1': 'body', '3': 1, '4': 1, '5': 9, '10': 'body'},
     {'1': 'is_hot', '3': 2, '4': 1, '5': 8, '10': 'isHot'},
     {'1': 'biases', '3': 3, '4': 3, '5': 9, '10': 'biases'},
+    {'1': 'evidence', '3': 4, '4': 1, '5': 9, '10': 'evidence'},
   ],
 };
 
 /// Descriptor for `ThoughtInput`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List thoughtInputDescriptor = $convert.base64Decode(
     'CgxUaG91Z2h0SW5wdXQSEgoEYm9keRgBIAEoCVIEYm9keRIVCgZpc19ob3QYAiABKAhSBWlzSG'
-    '90EhYKBmJpYXNlcxgDIAMoCVIGYmlhc2Vz');
+    '90EhYKBmJpYXNlcxgDIAMoCVIGYmlhc2VzEhoKCGV2aWRlbmNlGAQgASgJUghldmlkZW5jZQ==');
 
 @$core.Deprecated('Use listThoughtRecordsRequestDescriptor instead')
 const ListThoughtRecordsRequest$json = {
@@ -409,6 +431,13 @@ const CreateThoughtRecordRequest$json = {
       '6': '.record.FeelingInput',
       '10': 'feelings'
     },
+    {
+      '1': 'evidence_for_alternative',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '10': 'evidenceForAlternative'
+    },
   ],
   '8': [
     {'1': '_occurred_at'},
@@ -422,7 +451,8 @@ final $typed_data.Uint8List createThoughtRecordRequestDescriptor = $convert.base
     'QXSIAQESKQoQYWx0ZXJuYXRpdmVfdmlldxgDIAEoCVIPYWx0ZXJuYXRpdmVWaWV3EiEKDGZlZW'
     'xpbmdzX25vdxgEIAEoCVILZmVlbGluZ3NOb3cSMAoIdGhvdWdodHMYBSADKAsyFC5yZWNvcmQu'
     'VGhvdWdodElucHV0Ugh0aG91Z2h0cxIwCghmZWVsaW5ncxgGIAMoCzIULnJlY29yZC5GZWVsaW'
-    '5nSW5wdXRSCGZlZWxpbmdzQg4KDF9vY2N1cnJlZF9hdA==');
+    '5nSW5wdXRSCGZlZWxpbmdzEjgKGGV2aWRlbmNlX2Zvcl9hbHRlcm5hdGl2ZRgHIAEoCVIWZXZp'
+    'ZGVuY2VGb3JBbHRlcm5hdGl2ZUIOCgxfb2NjdXJyZWRfYXQ=');
 
 @$core.Deprecated('Use getThoughtRecordRequestDescriptor instead')
 const GetThoughtRecordRequest$json = {
@@ -471,12 +501,22 @@ const UpdateThoughtRecordRequest$json = {
       '10': 'feelingsNow',
       '17': true
     },
+    {
+      '1': 'evidence_for_alternative',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '9': 4,
+      '10': 'evidenceForAlternative',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_event'},
     {'1': '_occurred_at'},
     {'1': '_alternative_view'},
     {'1': '_feelings_now'},
+    {'1': '_evidence_for_alternative'},
   ],
 };
 
@@ -486,8 +526,10 @@ final $typed_data.Uint8List updateThoughtRecordRequestDescriptor = $convert.base
     'ABKAlIAFIFZXZlbnSIAQESQAoLb2NjdXJyZWRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYu'
     'VGltZXN0YW1wSAFSCm9jY3VycmVkQXSIAQESKgoRY2xlYXJfb2NjdXJyZWRfYXQYBCABKAhSD2'
     'NsZWFyT2NjdXJyZWRBdBIuChBhbHRlcm5hdGl2ZV92aWV3GAUgASgJSAJSD2FsdGVybmF0aXZl'
-    'Vmlld4gBARImCgxmZWVsaW5nc19ub3cYBiABKAlIA1ILZmVlbGluZ3NOb3eIAQFCCAoGX2V2ZW'
-    '50Qg4KDF9vY2N1cnJlZF9hdEITChFfYWx0ZXJuYXRpdmVfdmlld0IPCg1fZmVlbGluZ3Nfbm93');
+    'Vmlld4gBARImCgxmZWVsaW5nc19ub3cYBiABKAlIA1ILZmVlbGluZ3NOb3eIAQESPQoYZXZpZG'
+    'VuY2VfZm9yX2FsdGVybmF0aXZlGAcgASgJSARSFmV2aWRlbmNlRm9yQWx0ZXJuYXRpdmWIAQFC'
+    'CAoGX2V2ZW50Qg4KDF9vY2N1cnJlZF9hdEITChFfYWx0ZXJuYXRpdmVfdmlld0IPCg1fZmVlbG'
+    'luZ3Nfbm93QhsKGV9ldmlkZW5jZV9mb3JfYWx0ZXJuYXRpdmU=');
 
 @$core.Deprecated('Use thoughtJudgementDescriptor instead')
 const ThoughtJudgement$json = {
@@ -504,18 +546,38 @@ const ThoughtJudgement$json = {
       '10': 'biases',
       '17': true
     },
-    {'1': 'is_factual', '3': 3, '4': 1, '5': 8, '10': 'isFactual'},
+    {
+      '1': 'is_factual',
+      '3': 3,
+      '4': 1,
+      '5': 8,
+      '9': 1,
+      '10': 'isFactual',
+      '17': true
+    },
+    {
+      '1': 'belief_after',
+      '3': 4,
+      '4': 1,
+      '5': 5,
+      '9': 2,
+      '10': 'beliefAfter',
+      '17': true
+    },
   ],
   '8': [
     {'1': '_biases'},
+    {'1': '_is_factual'},
+    {'1': '_belief_after'},
   ],
 };
 
 /// Descriptor for `ThoughtJudgement`. Decode as a `google.protobuf.DescriptorProto`.
 final $typed_data.Uint8List thoughtJudgementDescriptor = $convert.base64Decode(
     'ChBUaG91Z2h0SnVkZ2VtZW50Eh0KCnRob3VnaHRfaWQYASABKA1SCXRob3VnaHRJZBIuCgZiaW'
-    'FzZXMYAiABKAsyES5yZWNvcmQuQmlhc05hbWVzSABSBmJpYXNlc4gBARIdCgppc19mYWN0dWFs'
-    'GAMgASgIUglpc0ZhY3R1YWxCCQoHX2JpYXNlcw==');
+    'FzZXMYAiABKAsyES5yZWNvcmQuQmlhc05hbWVzSABSBmJpYXNlc4gBARIiCgppc19mYWN0dWFs'
+    'GAMgASgISAFSCWlzRmFjdHVhbIgBARImCgxiZWxpZWZfYWZ0ZXIYBCABKAVIAlILYmVsaWVmQW'
+    'Z0ZXKIAQFCCQoHX2JpYXNlc0INCgtfaXNfZmFjdHVhbEIPCg1fYmVsaWVmX2FmdGVy');
 
 @$core.Deprecated('Use feelingReratingDescriptor instead')
 const FeelingRerating$json = {
@@ -554,6 +616,13 @@ const ChallengeThoughtRecordRequest$json = {
       '6': '.record.ThoughtJudgement',
       '10': 'thoughts'
     },
+    {
+      '1': 'evidence_for_alternative',
+      '3': 6,
+      '4': 1,
+      '5': 9,
+      '10': 'evidenceForAlternative'
+    },
   ],
 };
 
@@ -563,7 +632,8 @@ final $typed_data.Uint8List challengeThoughtRecordRequestDescriptor = $convert.b
     'JuYXRpdmVfdmlldxgCIAEoCVIPYWx0ZXJuYXRpdmVWaWV3EiEKDGZlZWxpbmdzX25vdxgDIAEo'
     'CVILZmVlbGluZ3NOb3cSRAoRZmVlbGluZ19yZXJhdGluZ3MYBCADKAsyFy5yZWNvcmQuRmVlbG'
     'luZ1JlcmF0aW5nUhBmZWVsaW5nUmVyYXRpbmdzEjQKCHRob3VnaHRzGAUgAygLMhgucmVjb3Jk'
-    'LlRob3VnaHRKdWRnZW1lbnRSCHRob3VnaHRz');
+    'LlRob3VnaHRKdWRnZW1lbnRSCHRob3VnaHRzEjgKGGV2aWRlbmNlX2Zvcl9hbHRlcm5hdGl2ZR'
+    'gGIAEoCVIWZXZpZGVuY2VGb3JBbHRlcm5hdGl2ZQ==');
 
 @$core.Deprecated('Use deleteThoughtRecordRequestDescriptor instead')
 const DeleteThoughtRecordRequest$json = {
@@ -665,6 +735,21 @@ final $typed_data.Uint8List setThoughtFactualRequestDescriptor =
     $convert.base64Decode(
         'ChhTZXRUaG91Z2h0RmFjdHVhbFJlcXVlc3QSDgoCaWQYASABKA1SAmlkEhgKB2ZhY3R1YWwYAi'
         'ABKAhSB2ZhY3R1YWw=');
+
+@$core.Deprecated('Use setThoughtEvidenceRequestDescriptor instead')
+const SetThoughtEvidenceRequest$json = {
+  '1': 'SetThoughtEvidenceRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {'1': 'evidence', '3': 2, '4': 1, '5': 9, '10': 'evidence'},
+  ],
+};
+
+/// Descriptor for `SetThoughtEvidenceRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List setThoughtEvidenceRequestDescriptor =
+    $convert.base64Decode(
+        'ChlTZXRUaG91Z2h0RXZpZGVuY2VSZXF1ZXN0Eg4KAmlkGAEgASgNUgJpZBIaCghldmlkZW5jZR'
+        'gCIAEoCVIIZXZpZGVuY2U=');
 
 @$core.Deprecated('Use deleteThoughtRequestDescriptor instead')
 const DeleteThoughtRequest$json = {

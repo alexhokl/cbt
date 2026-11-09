@@ -215,16 +215,18 @@ func TestChallengeThoughtRecordRoundTrips(t *testing.T) {
 	}
 
 	challenged, err := server.ChallengeThoughtRecord(ctx, &proto.ChallengeThoughtRecordRequest{
-		Id:              created.GetId(),
-		AlternativeView: "there is another reading of this",
-		FeelingsNow:     "steadier",
+		Id:                     created.GetId(),
+		AlternativeView:        "there is another reading of this",
+		EvidenceForAlternative: "it has happened before for an ordinary reason",
+		FeelingsNow:            "steadier",
 		FeelingReratings: []*proto.FeelingRerating{
 			{FeelingId: created.GetFeelings()[0].GetId(), IntensityAfter: 25},
 		},
 		Thoughts: []*proto.ThoughtJudgement{
 			{
-				ThoughtId: created.GetThoughts()[0].GetId(),
-				Biases:    &proto.BiasNames{Names: []string{"mind-reading"}},
+				ThoughtId:   created.GetThoughts()[0].GetId(),
+				Biases:      &proto.BiasNames{Names: []string{"mind-reading"}},
+				BeliefAfter: proto2Int32(30),
 			},
 		},
 	})
@@ -240,6 +242,35 @@ func TestChallengeThoughtRecordRoundTrips(t *testing.T) {
 	}
 	if len(challenged.GetThoughts()[0].GetBiases()) != 1 {
 		t.Errorf("expected 1 bias but got %d", len(challenged.GetThoughts()[0].GetBiases()))
+	}
+	if challenged.GetEvidenceForAlternative() != "it has happened before for an ordinary reason" {
+		t.Errorf("unexpected evidence %q", challenged.GetEvidenceForAlternative())
+	}
+	if challenged.GetThoughts()[0].BeliefAfter == nil || challenged.GetThoughts()[0].GetBeliefAfter() != 30 {
+		t.Errorf("expected the thought to be re-rated to 30 but got %v", challenged.GetThoughts()[0].BeliefAfter)
+	}
+}
+
+func TestChallengeThoughtRecordReportsBeliefOutOfRangeAsInvalidArgument(t *testing.T) {
+	server := newTestServer(t)
+	ctx := authenticatedContext()
+
+	created, err := server.CreateThoughtRecord(ctx, &proto.CreateThoughtRecordRequest{
+		Event:    "an event",
+		Thoughts: []*proto.ThoughtInput{{Body: "a thought"}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the record: %v", err)
+	}
+
+	_, err = server.ChallengeThoughtRecord(ctx, &proto.ChallengeThoughtRecordRequest{
+		Id: created.GetId(),
+		Thoughts: []*proto.ThoughtJudgement{
+			{ThoughtId: created.GetThoughts()[0].GetId(), BeliefAfter: proto2Int32(150)},
+		},
+	})
+	if got := status.Code(err); got != codes.InvalidArgument {
+		t.Errorf("expected InvalidArgument but got %v", got)
 	}
 }
 
@@ -307,6 +338,41 @@ func TestUpdateThoughtLeavesBiasesAloneWhenTheWrapperIsAbsent(t *testing.T) {
 			t.Errorf("expected the biases to be cleared but got %d", len(updated.GetThoughts()[0].GetBiases()))
 		}
 	})
+}
+
+func TestSetThoughtEvidenceRoundTrips(t *testing.T) {
+	server := newTestServer(t)
+	ctx := authenticatedContext()
+
+	created, err := server.CreateThoughtRecord(ctx, &proto.CreateThoughtRecordRequest{
+		Event:    "an event",
+		Thoughts: []*proto.ThoughtInput{{Body: "a thought", Evidence: "an early piece of evidence"}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the record: %v", err)
+	}
+	if created.GetThoughts()[0].GetEvidence() != "an early piece of evidence" {
+		t.Errorf("unexpected evidence %q", created.GetThoughts()[0].GetEvidence())
+	}
+
+	updated, err := server.SetThoughtEvidence(ctx, &proto.SetThoughtEvidenceRequest{
+		Id:       created.GetThoughts()[0].GetId(),
+		Evidence: "a later piece of evidence",
+	})
+	if err != nil {
+		t.Fatalf("failed to set the evidence: %v", err)
+	}
+	if updated.GetThoughts()[0].GetEvidence() != "a later piece of evidence" {
+		t.Errorf("unexpected evidence %q", updated.GetThoughts()[0].GetEvidence())
+	}
+	if updated.ChallengedAt != nil {
+		t.Error("expected the record to stay unchallenged")
+	}
+
+	_, err = server.SetThoughtEvidence(ctx, &proto.SetThoughtEvidenceRequest{Id: 9999, Evidence: "anything"})
+	if got := statusCode(err); got != codes.NotFound {
+		t.Errorf("expected NotFound but got %v", got)
+	}
 }
 
 func TestDeleteThoughtReturnsTheUpdatedRecord(t *testing.T) {
@@ -555,6 +621,7 @@ func TestFactualWithABiasIsReportedAsFailedPrecondition(t *testing.T) {
 		t.Fatalf("failed to create the record: %v", err)
 	}
 	thoughtID := created.GetThoughts()[0].GetId()
+	factual := true
 
 	tests := []struct {
 		name string
@@ -567,7 +634,7 @@ func TestFactualWithABiasIsReportedAsFailedPrecondition(t *testing.T) {
 		{"via a challenge", func() error {
 			_, err := server.ChallengeThoughtRecord(ctx, &proto.ChallengeThoughtRecordRequest{
 				Id:       created.GetId(),
-				Thoughts: []*proto.ThoughtJudgement{{ThoughtId: thoughtID, IsFactual: true}},
+				Thoughts: []*proto.ThoughtJudgement{{ThoughtId: thoughtID, IsFactual: &factual}},
 			})
 			return err
 		}},

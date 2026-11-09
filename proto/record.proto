@@ -26,8 +26,9 @@ service RecordService {
   // UpdateThoughtRecord changes the free text columns of a record. Fields left
   // unset keep their current value.
   rpc UpdateThoughtRecord(UpdateThoughtRecordRequest) returns (ThoughtRecord);
-  // ChallengeThoughtRecord records the second sitting: the alternative view,
-  // the re-rating of each feeling, and the biases identified in each thought.
+  // ChallengeThoughtRecord records the second sitting: the alternative view
+  // and the evidence for it, the re-rating of each feeling, and the biases
+  // identified in each thought and how much it is still believed.
   // It stamps challenged_at so the record leaves the unchallenged queue.
   rpc ChallengeThoughtRecord(ChallengeThoughtRecordRequest) returns (ThoughtRecord);
   // DeleteThoughtRecord removes a record along with its thoughts and feelings.
@@ -44,6 +45,9 @@ service RecordService {
   // SetThoughtFactual records whether a thought was judged an accurate reading
   // of the situation. Marking one factual while it carries a bias is rejected.
   rpc SetThoughtFactual(SetThoughtFactualRequest) returns (ThoughtRecord);
+  // SetThoughtEvidence records what supports a thought. It can be called at
+  // any time and does not mark the record as challenged.
+  rpc SetThoughtEvidence(SetThoughtEvidenceRequest) returns (ThoughtRecord);
   // DeleteThought removes a thought from its record.
   rpc DeleteThought(DeleteThoughtRequest) returns (ThoughtRecord);
 
@@ -108,6 +112,11 @@ message NegativeThought {
   // inferred from carrying no biases, because that is the state every thought
   // starts in. A thought that is factual never carries a bias.
   bool is_factual = 6;
+  // belief_after is how much the thought is still believed, 0-100, given
+  // during the challenge. It is absent until the thought has been re-rated.
+  optional int32 belief_after = 7;
+  // evidence answers "what evidence do you have that supports this thought?".
+  string evidence = 8;
 }
 
 // Feeling is a single emotion rated on a 0-100 scale.
@@ -121,9 +130,10 @@ message Feeling {
   optional int32 intensity_after = 4;
 }
 
-// ThoughtRecord is the six column thought record: event, negative thought(s),
-// negative feeling(s), cognitive bias, "is there any other way I can look at
-// this?", and "how do I feel now?".
+// ThoughtRecord is the thought record: event, negative thought(s), negative
+// feeling(s), cognitive bias, "is there any other way I can look at this?",
+// "what evidence do you have to support this alternative view?", and "how much
+// do you still believe your initial thoughts? how do you feel now?".
 message ThoughtRecord {
   uint32 id = 1;
   string event = 2;
@@ -139,6 +149,9 @@ message ThoughtRecord {
   repeated Feeling feelings = 8;
   google.protobuf.Timestamp created_at = 9;
   google.protobuf.Timestamp updated_at = 10;
+  // evidence_for_alternative answers "what evidence do you have to support
+  // this alternative view?".
+  string evidence_for_alternative = 11;
 }
 
 // MapOfWorry traces a single event through to the behaviour it produced.
@@ -172,6 +185,8 @@ message ThoughtInput {
   // biases must already exist. A bias is a vocabulary term rather than a free
   // tag, so an unrecognised name is reported as a typo rather than coined.
   repeated string biases = 3;
+  // evidence is what supports the thought. It is optional.
+  string evidence = 4;
 }
 
 message ListThoughtRecordsRequest {
@@ -181,7 +196,8 @@ message ListThoughtRecordsRequest {
   // since restricts the listing to records whose event occurred on or after
   // this instant.
   optional google.protobuf.Timestamp since = 2;
-  // search matches the event, the alternative view and the thought bodies.
+  // search matches the event, the alternative view, the evidence for it, and
+  // the thought bodies and the evidence for them.
   string search = 3;
 }
 
@@ -196,6 +212,7 @@ message CreateThoughtRecordRequest {
   string feelings_now = 4;
   repeated ThoughtInput thoughts = 5;
   repeated FeelingInput feelings = 6;
+  string evidence_for_alternative = 7;
 }
 
 message GetThoughtRecordRequest {
@@ -213,6 +230,7 @@ message UpdateThoughtRecordRequest {
   bool clear_occurred_at = 4;
   optional string alternative_view = 5;
   optional string feelings_now = 6;
+  optional string evidence_for_alternative = 7;
 }
 
 // ThoughtJudgement is the outcome of examining one thought during the
@@ -225,9 +243,14 @@ message ThoughtJudgement {
   // the existing biases, so a judgement can record only that a thought is
   // factual; setting it to an empty list detaches them all.
   optional BiasNames biases = 2;
-  // is_factual records that the thought was judged an accurate reading.
-  // Marking a thought factual while it still carries a bias is rejected.
-  bool is_factual = 3;
+  // is_factual records whether the thought was judged an accurate reading.
+  // Leaving it unset keeps the existing judgement, so a judgement can carry
+  // only a belief rating. Marking a thought factual while it still carries a
+  // bias is rejected.
+  optional bool is_factual = 3;
+  // belief_after is how much the thought is still believed, 0-100. Leaving
+  // it unset keeps the existing rating.
+  optional int32 belief_after = 4;
 }
 
 // FeelingRerating is the post-challenge rating of one feeling.
@@ -242,6 +265,7 @@ message ChallengeThoughtRecordRequest {
   string feelings_now = 3;
   repeated FeelingRerating feeling_reratings = 4;
   repeated ThoughtJudgement thoughts = 5;
+  string evidence_for_alternative = 6;
 }
 
 message DeleteThoughtRecordRequest {
@@ -275,6 +299,12 @@ message SetHotThoughtRequest {
 message SetThoughtFactualRequest {
   uint32 id = 1;
   bool factual = 2;
+}
+
+message SetThoughtEvidenceRequest {
+  uint32 id = 1;
+  // evidence replaces whatever the thought carried; empty blanks it.
+  string evidence = 2;
 }
 
 message DeleteThoughtRequest {

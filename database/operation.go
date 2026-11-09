@@ -98,6 +98,13 @@ func schemaTriggers() []schemaTrigger {
 			condition: "NEW.is_hot = 1 AND EXISTS (SELECT 1 FROM negative_thoughts WHERE thought_record_id = NEW.thought_record_id AND is_hot = 1 AND deleted_at IS NULL AND id <> NEW.id)",
 			message:   "a thought record must not carry more than one hot thought",
 		},
+		{
+			// Belief is a percentage, like a feeling's intensity.
+			name:      "thoughts_belief_range",
+			table:     "negative_thoughts",
+			condition: "NEW.belief_after IS NOT NULL AND (NEW.belief_after < 0 OR NEW.belief_after > 100)",
+			message:   "belief in a thought must be between 0 and 100",
+		},
 	}
 
 	triggers := make([]schemaTrigger, 0, len(invariants)*2+1)

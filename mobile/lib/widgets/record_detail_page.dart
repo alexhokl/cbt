@@ -9,9 +9,13 @@ import 'challenge_page.dart';
 import 'edit_record_page.dart';
 import 'settings_page.dart';
 
-/// RecordDetailPage shows a thought record in full: the six columns, the
-/// thoughts with the biases named in each, and the feelings with their before
-/// and after ratings.
+/// RecordDetailPage shows a thought record in full: its columns, the thoughts
+/// with the evidence for and biases named in each, and the feelings with their
+/// before and after ratings.
+///
+/// Tapping a thought edits the evidence for it. Evidence is often gathered
+/// some time after the thought was written, and adding it does not count as
+/// working the record through.
 class RecordDetailPage extends StatefulWidget {
   const RecordDetailPage({
     super.key,
@@ -81,6 +85,29 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
       await service.deleteThoughtRecord(widget.recordId);
       if (!mounted) return;
       Navigator.of(context).pop();
+    } on RecordException catch (error) {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(error.message)));
+    }
+  }
+
+  Future<void> _editEvidence(NegativeThought thought) async {
+    final l10n = AppLocalizations.of(context)!;
+    final evidence = await showDialog<String>(
+      context: context,
+      builder: (_) => _EvidenceDialog(initial: thought.evidence, l10n: l10n),
+    );
+
+    if (evidence == null || !mounted) {
+      return;
+    }
+
+    try {
+      final service = await _service();
+      final record = await service.setThoughtEvidence(thought.id, evidence);
+      if (!mounted) return;
+      setState(() => _record = record);
     } on RecordException catch (error) {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
@@ -192,6 +219,10 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
           label: l10n.fieldAlternativeView,
           value: record.alternativeView,
         ),
+        RecordField(
+          label: l10n.fieldEvidence,
+          value: record.evidenceForAlternative,
+        ),
         RecordField(label: l10n.fieldFeelingsNow, value: record.feelingsNow),
       ],
     );
@@ -211,11 +242,31 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
             ? const Icon(Icons.local_fire_department_outlined)
             : const Icon(Icons.circle_outlined),
         title: Text(thought.body),
-        // A thought is never both distorted and accurate, so at most one of
-        // these ever shows. Nothing shows while neither has been decided,
+        // The evidence, when there is any, followed by the judgement. A
+        // thought is never both distorted and accurate, so at most one
+        // judgement ever shows. Nothing shows while neither has been decided,
         // rather than a blank that would read as an answer.
-        subtitle: _thoughtJudgement(thought, l10n),
+        subtitle: _thoughtSubtitle(thought, l10n),
+        onTap: () => _editEvidence(thought),
+        trailing: thought.hasBeliefAfter()
+            ? Text(l10n.thoughtBelief(thought.beliefAfter))
+            : null,
       ),
+    );
+  }
+
+  Widget? _thoughtSubtitle(NegativeThought thought, AppLocalizations l10n) {
+    final judgement = _thoughtJudgement(thought, l10n);
+    if (thought.evidence.isEmpty) {
+      return judgement;
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(l10n.thoughtEvidenceLabel(thought.evidence)),
+        ?judgement,
+      ],
     );
   }
 
@@ -264,6 +315,60 @@ class _RecordDetailPageState extends State<RecordDetailPage> {
       dense: true,
       title: Text(feeling.name),
       trailing: Text(buffer.toString()),
+    );
+  }
+}
+
+/// _EvidenceDialog edits the evidence for one thought. It owns its controller
+/// so the controller outlives the dialog's closing animation, and pops the new
+/// text on save or nothing on cancel.
+class _EvidenceDialog extends StatefulWidget {
+  const _EvidenceDialog({required this.initial, required this.l10n});
+
+  final String initial;
+  final AppLocalizations l10n;
+
+  @override
+  State<_EvidenceDialog> createState() => _EvidenceDialogState();
+}
+
+class _EvidenceDialogState extends State<_EvidenceDialog> {
+  late final TextEditingController _controller =
+      TextEditingController(text: widget.initial);
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = widget.l10n;
+
+    return AlertDialog(
+      title: Text(l10n.editThoughtEvidence),
+      content: TextField(
+        key: const Key('thoughtEvidence'),
+        controller: _controller,
+        autofocus: true,
+        minLines: 3,
+        maxLines: 8,
+        decoration: InputDecoration(
+          hintText: l10n.thoughtEvidence,
+          border: const OutlineInputBorder(),
+        ),
+      ),
+      actions: [
+        TextButton(
+          onPressed: () => Navigator.of(context).pop(),
+          child: Text(l10n.cancel),
+        ),
+        FilledButton(
+          onPressed: () => Navigator.of(context).pop(_controller.text),
+          child: Text(l10n.save),
+        ),
+      ],
     );
   }
 }

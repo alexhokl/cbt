@@ -75,8 +75,9 @@ class RecordServiceClient extends $grpc.Client {
     return $createUnaryCall(_$updateThoughtRecord, request, options: options);
   }
 
-  /// ChallengeThoughtRecord records the second sitting: the alternative view,
-  /// the re-rating of each feeling, and the biases identified in each thought.
+  /// ChallengeThoughtRecord records the second sitting: the alternative view
+  /// and the evidence for it, the re-rating of each feeling, and the biases
+  /// identified in each thought and how much it is still believed.
   /// It stamps challenged_at so the record leaves the unchallenged queue.
   $grpc.ResponseFuture<$0.ThoughtRecord> challengeThoughtRecord(
     $0.ChallengeThoughtRecordRequest request, {
@@ -127,6 +128,15 @@ class RecordServiceClient extends $grpc.Client {
     $grpc.CallOptions? options,
   }) {
     return $createUnaryCall(_$setThoughtFactual, request, options: options);
+  }
+
+  /// SetThoughtEvidence records what supports a thought. It can be called at
+  /// any time and does not mark the record as challenged.
+  $grpc.ResponseFuture<$0.ThoughtRecord> setThoughtEvidence(
+    $0.SetThoughtEvidenceRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$setThoughtEvidence, request, options: options);
   }
 
   /// DeleteThought removes a thought from its record.
@@ -288,6 +298,11 @@ class RecordServiceClient extends $grpc.Client {
           '/record.RecordService/SetThoughtFactual',
           ($0.SetThoughtFactualRequest value) => value.writeToBuffer(),
           $0.ThoughtRecord.fromBuffer);
+  static final _$setThoughtEvidence =
+      $grpc.ClientMethod<$0.SetThoughtEvidenceRequest, $0.ThoughtRecord>(
+          '/record.RecordService/SetThoughtEvidence',
+          ($0.SetThoughtEvidenceRequest value) => value.writeToBuffer(),
+          $0.ThoughtRecord.fromBuffer);
   static final _$deleteThought =
       $grpc.ClientMethod<$0.DeleteThoughtRequest, $0.ThoughtRecord>(
           '/record.RecordService/DeleteThought',
@@ -444,6 +459,15 @@ abstract class RecordServiceBase extends $grpc.Service {
             false,
             ($core.List<$core.int> value) =>
                 $0.SetThoughtFactualRequest.fromBuffer(value),
+            ($0.ThoughtRecord value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.SetThoughtEvidenceRequest, $0.ThoughtRecord>(
+            'SetThoughtEvidence',
+            setThoughtEvidence_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.SetThoughtEvidenceRequest.fromBuffer(value),
             ($0.ThoughtRecord value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.DeleteThoughtRequest, $0.ThoughtRecord>(
         'DeleteThought',
@@ -631,6 +655,15 @@ abstract class RecordServiceBase extends $grpc.Service {
 
   $async.Future<$0.ThoughtRecord> setThoughtFactual(
       $grpc.ServiceCall call, $0.SetThoughtFactualRequest request);
+
+  $async.Future<$0.ThoughtRecord> setThoughtEvidence_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.SetThoughtEvidenceRequest> $request) async {
+    return setThoughtEvidence($call, await $request);
+  }
+
+  $async.Future<$0.ThoughtRecord> setThoughtEvidence(
+      $grpc.ServiceCall call, $0.SetThoughtEvidenceRequest request);
 
   $async.Future<$0.ThoughtRecord> deleteThought_Pre($grpc.ServiceCall $call,
       $async.Future<$0.DeleteThoughtRequest> $request) async {

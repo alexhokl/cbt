@@ -21,11 +21,16 @@ var (
 	// bias. A thought cannot be both accurate and distorted, and the
 	// combination is far more likely a mistyped identifier than an intent.
 	ErrThoughtFactualWithBias = errors.New("a thought judged factual must not carry a cognitive bias")
+	// ErrThoughtBeliefRange is returned when how much a thought is still
+	// believed falls outside 0-100.
+	ErrThoughtBeliefRange = errors.New("belief in a thought must be between 0 and 100")
 )
 
 // ThoughtInput is a negative automatic thought as supplied by the caller.
 type ThoughtInput struct {
 	Body string
+	// Evidence is what supports the thought. It is optional.
+	Evidence string
 	// IsHot marks this as the strongest thought of the record, the one
 	// conventionally circled on paper and challenged first.
 	IsHot bool
@@ -59,6 +64,7 @@ func createThoughts(tx *gorm.DB, userID uint, recordID uint, inputs []ThoughtInp
 
 		thought := NegativeThought{
 			Body:            body,
+			Evidence:        strings.TrimSpace(input.Evidence),
 			IsHot:           input.IsHot,
 			ThoughtRecordID: recordID,
 			UserID:          userID,
@@ -226,6 +232,31 @@ func SetThoughtFactual(db *gorm.DB, userID uint, id uint, factual bool) (*Though
 	return &record, nil
 }
 
+// SetThoughtEvidence records what supports a thought. It can be called at any
+// time after the thought was written, and deliberately leaves the record's
+// challenge state alone: gathering evidence is not working the record through.
+// An empty value blanks the evidence.
+func SetThoughtEvidence(db *gorm.DB, userID uint, id uint, evidence string) (*ThoughtRecord, error) {
+	var record ThoughtRecord
+	err := db.Transaction(func(tx *gorm.DB) error {
+		var thought NegativeThought
+		if err := findThought(tx, userID, id, &thought); err != nil {
+			return err
+		}
+
+		if err := tx.Model(&thought).Update("evidence", strings.TrimSpace(evidence)).Error; err != nil {
+			return fmt.Errorf("failed to record the evidence for the thought: %w", err)
+		}
+
+		return loadThoughtRecord(tx, userID, thought.ThoughtRecordID, &record)
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	return &record, nil
+}
+
 // clearHotThoughts unmarks every hot thought of a record. It runs before a new
 // one is marked so the single hot thought invariant holds at every statement
 // boundary the trigger can observe.
@@ -254,5 +285,17 @@ func findThought(tx *gorm.DB, userID uint, id uint, thought *NegativeThought) er
 		return fmt.Errorf("failed to query the thought: %w", err)
 	}
 
+	return nil
+}
+
+// validateBelief rejects a belief rating outside 0-100. Nil means the thought
+// was not rated, which is always allowed.
+func validateBelief(belief *int) error {
+	if belief == nil {
+		return nil
+	}
+	if *belief < 0 || *belief > 100 {
+		return fmt.Errorf("%w: %d", ErrThoughtBeliefRange, *belief)
+	}
 	return nil
 }

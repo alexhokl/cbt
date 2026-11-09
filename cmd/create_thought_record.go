@@ -15,15 +15,17 @@ type createThoughtRecordOptions struct {
 	At              string
 	Thoughts        []string
 	HotThought      string
+	HotEvidence     string
 	Biases          []string
 	Feelings        []string
 	AlternativeView string
+	Evidence        string
 	FeelingsNow     string
 }
 
 var createThoughtRecordOpts createThoughtRecordOptions
 
-// createThoughtRecordCmd creates a six column thought record.
+// createThoughtRecordCmd creates a thought record.
 var createThoughtRecordCmd = &cobra.Command{
 	Use:     "thought-record [event]",
 	Aliases: []string{"record", "tr"},
@@ -48,9 +50,11 @@ func init() {
 	flags.StringVar(&createThoughtRecordOpts.At, "at", "", "When the event happened (YYYY-MM-DD, \"yesterday\", \"3h ago\")")
 	flags.StringArrayVar(&createThoughtRecordOpts.Thoughts, "thought", nil, "A negative thought about the event (repeatable)")
 	flags.StringVar(&createThoughtRecordOpts.HotThought, "hot-thought", "", "The strongest thought, the one worth challenging first")
+	flags.StringVar(&createThoughtRecordOpts.HotEvidence, "hot-thought-evidence", "", "What evidence supports the strongest thought?")
 	flags.StringArrayVar(&createThoughtRecordOpts.Biases, "bias", nil, "A cognitive bias in the strongest thought, by name (repeatable)")
 	flags.StringArrayVar(&createThoughtRecordOpts.Feelings, "feeling", nil, "A feeling and its 0-100 rating, as name=rating (repeatable)")
 	flags.StringVar(&createThoughtRecordOpts.AlternativeView, "alternative", "", "Another way to look at this, if you already have one")
+	flags.StringVar(&createThoughtRecordOpts.Evidence, "evidence", "", "What evidence do you have to support this alternative view?")
 	flags.StringVar(&createThoughtRecordOpts.FeelingsNow, "feelings-now", "", "How you feel now, if you already know")
 }
 
@@ -77,10 +81,12 @@ func runCreateThoughtRecord(cmd *cobra.Command, args []string) error {
 // buildCreateThoughtRecordRequest assembles the wire request from the parsed
 // flags.
 //
-// The --bias flag attaches to the strongest thought rather than to the record,
-// because a bias belongs to a thought: two thoughts about the same event
-// routinely carry different distortions. Naming biases without a strongest
-// thought is therefore rejected rather than silently dropped.
+// The --bias and --hot-thought-evidence flags attach to the strongest thought
+// rather than to the record, because both belong to a thought: two thoughts
+// about the same event routinely carry different distortions and different
+// evidence. Giving either without a strongest thought is therefore rejected
+// rather than silently dropped. Evidence for the other thoughts is added
+// afterwards with "cbt update thought".
 func buildCreateThoughtRecordRequest(args []string, opts createThoughtRecordOptions, now time.Time) (*proto.CreateThoughtRecordRequest, error) {
 	occurredAt, err := parseEventTime(opts.At, now)
 	if err != nil {
@@ -90,11 +96,15 @@ func buildCreateThoughtRecordRequest(args []string, opts createThoughtRecordOpti
 	if len(opts.Biases) > 0 && strings.TrimSpace(opts.HotThought) == "" {
 		return nil, fmt.Errorf("--bias applies to the strongest thought, so --hot-thought is required alongside it")
 	}
+	if strings.TrimSpace(opts.HotEvidence) != "" && strings.TrimSpace(opts.HotThought) == "" {
+		return nil, fmt.Errorf("--hot-thought-evidence applies to the strongest thought, so --hot-thought is required alongside it")
+	}
 
 	req := &proto.CreateThoughtRecordRequest{
-		Event:           args[0],
-		AlternativeView: opts.AlternativeView,
-		FeelingsNow:     opts.FeelingsNow,
+		Event:                  args[0],
+		AlternativeView:        opts.AlternativeView,
+		EvidenceForAlternative: opts.Evidence,
+		FeelingsNow:            opts.FeelingsNow,
 	}
 	if occurredAt != nil {
 		req.OccurredAt = timestamppb.New(*occurredAt)
@@ -102,9 +112,10 @@ func buildCreateThoughtRecordRequest(args []string, opts createThoughtRecordOpti
 
 	if hot := strings.TrimSpace(opts.HotThought); hot != "" {
 		req.Thoughts = append(req.Thoughts, &proto.ThoughtInput{
-			Body:   hot,
-			IsHot:  true,
-			Biases: opts.Biases,
+			Body:     hot,
+			Evidence: opts.HotEvidence,
+			IsHot:    true,
+			Biases:   opts.Biases,
 		})
 	}
 	for _, body := range opts.Thoughts {

@@ -173,6 +173,27 @@ func TestThoughtsTriggerRejectsASecondHotThought(t *testing.T) {
 	}
 }
 
+func TestThoughtsTriggerRejectsABeliefOutOfRange(t *testing.T) {
+	db := setupTestDB(t)
+
+	record, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:    "an event",
+		Thoughts: []ThoughtInput{{Body: "a thought"}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the record: %v", err)
+	}
+
+	// The challenge validates the rating first; writing directly skips that
+	// and must be refused.
+	err = db.Model(&NegativeThought{}).
+		Where("id = ?", record.Thoughts[0].ID).
+		Update("belief_after", 150).Error
+	if err == nil {
+		t.Error("expected an out of range belief to be rejected")
+	}
+}
+
 func TestMapsTriggerRejectsSelfDerivation(t *testing.T) {
 	db := setupTestDB(t)
 

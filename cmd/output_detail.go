@@ -72,6 +72,9 @@ func writeThoughtRecordDetail(out io.Writer, record *proto.ThoughtRecord) error 
 	if err := writeField(out, "another way to look at this", record.GetAlternativeView()); err != nil {
 		return err
 	}
+	if err := writeField(out, "evidence for it", record.GetEvidenceForAlternative()); err != nil {
+		return err
+	}
 	if err := writeField(out, "how I feel now", record.GetFeelingsNow()); err != nil {
 		return err
 	}
@@ -192,6 +195,10 @@ func writeThought(out io.Writer, thought *proto.NegativeThought) error {
 	}
 
 	line := fmt.Sprintf("%s [%d] %s", marker, thought.GetId(), wrap(thought.GetBody(), detailWrapWidth, labelIndent+"      "))
+	if evidence := thought.GetEvidence(); evidence != "" {
+		// Continuation lines align under the text rather than the label.
+		line += fmt.Sprintf("\n%s      evidence: %s", labelIndent, wrap(evidence, detailWrapWidth-len("evidence: "), labelIndent+"                "))
+	}
 	// A thought is never both distorted and accurate, so at most one of these
 	// ever appears.
 	switch {
@@ -203,6 +210,9 @@ func writeThought(out io.Writer, thought *proto.NegativeThought) error {
 		line += fmt.Sprintf("\n%s      (%s)", labelIndent, strings.Join(names, ", "))
 	case thought.GetIsFactual():
 		line += fmt.Sprintf("\n%s      (factual)", labelIndent)
+	}
+	if thought.BeliefAfter != nil {
+		line += fmt.Sprintf("\n%s      (still believe %d%%)", labelIndent, thought.GetBeliefAfter())
 	}
 
 	if _, err := fmt.Fprintf(out, "%s%s\n", labelIndent, line); err != nil {

@@ -74,6 +74,67 @@ func TestBuildCreateThoughtRecordRequestRejectsBiasesWithoutAHotThought(t *testi
 	}
 }
 
+func TestBuildCreateThoughtRecordRequestPutsTheEvidenceOnTheHotThought(t *testing.T) {
+	opts := createThoughtRecordOptions{
+		HotThought:  "I will be late for everything today",
+		HotEvidence: "the next train is full",
+		Thoughts:    []string{"the meeting will start without me"},
+	}
+
+	req, err := buildCreateThoughtRecordRequest([]string{"the last train was cancelled"}, opts, referenceNow)
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+
+	if req.GetThoughts()[0].GetEvidence() != "the next train is full" {
+		t.Errorf("expected the evidence on the strongest thought but got %q", req.GetThoughts()[0].GetEvidence())
+	}
+	if req.GetThoughts()[1].GetEvidence() != "" {
+		t.Errorf("expected no evidence on the other thought but got %q", req.GetThoughts()[1].GetEvidence())
+	}
+}
+
+func TestBuildCreateThoughtRecordRequestRejectsEvidenceWithoutAHotThought(t *testing.T) {
+	opts := createThoughtRecordOptions{HotEvidence: "the next train is full"}
+
+	if _, err := buildCreateThoughtRecordRequest([]string{"an event"}, opts, referenceNow); err == nil {
+		t.Error("expected --hot-thought-evidence without --hot-thought to be rejected")
+	}
+}
+
+func TestBuildUpdateThoughtRequest(t *testing.T) {
+	tests := []struct {
+		name     string
+		opts     updateThoughtOptions
+		changed  map[string]bool
+		wantErr  bool
+		evidence string
+	}{
+		// A bare command would otherwise blank the evidence by accident.
+		{"no flag is rejected", updateThoughtOptions{}, map[string]bool{}, true, ""},
+		{"evidence is sent", updateThoughtOptions{Evidence: "two of the last five trains ran late"}, map[string]bool{"evidence": true}, false, "two of the last five trains ran late"},
+		{"an explicit blank is sent", updateThoughtOptions{Evidence: ""}, map[string]bool{"evidence": true}, false, ""},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			req, err := buildUpdateThoughtRequest([]string{"7"}, test.opts, stubFlags{changed: test.changed})
+			if test.wantErr {
+				if err == nil {
+					t.Error("expected an error")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatalf("failed to build the request: %v", err)
+			}
+			if req.GetId() != 7 || req.GetEvidence() != test.evidence {
+				t.Errorf("unexpected request %v", req)
+			}
+		})
+	}
+}
+
 func TestParseFeelingsAcceptsRatedAndUnratedFeelings(t *testing.T) {
 	feelings, err := parseFeelings([]string{"anxious=80", "ashamed", "angry=40%"})
 	if err != nil {
@@ -170,6 +231,23 @@ func TestBuildUpdateThoughtRecordRequestSendsOnlyTypedFlags(t *testing.T) {
 	}
 	if req.FeelingsNow != nil {
 		t.Error("expected an untyped feelings-now to be left absent")
+	}
+	if req.EvidenceForAlternative != nil {
+		t.Error("expected untyped evidence to be left absent")
+	}
+}
+
+func TestBuildUpdateThoughtRecordRequestSendsTypedEvidence(t *testing.T) {
+	opts := updateThoughtRecordOptions{Evidence: "the timetable lists a signal fault"}
+	flags := stubFlags{changed: map[string]bool{"evidence": true}}
+
+	req, err := buildUpdateThoughtRecordRequest([]string{"3"}, opts, flags, referenceNow)
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+
+	if req.EvidenceForAlternative == nil || req.GetEvidenceForAlternative() != "the timetable lists a signal fault" {
+		t.Errorf("expected the evidence to be sent but got %v", req.EvidenceForAlternative)
 	}
 }
 
@@ -399,6 +477,57 @@ func TestBuildChallengeRequestMarksThoughtsFactual(t *testing.T) {
 	}
 	if byID[8] {
 		t.Error("expected thought 8 not to be marked factual")
+	}
+	for _, judgement := range req.GetThoughts() {
+		if judgement.IsFactual == nil {
+			t.Errorf("expected thought %d to carry an explicit factual judgement", judgement.GetThoughtId())
+		}
+	}
+}
+
+func TestBuildChallengeRequestRatesBeliefWithoutTouchingFactual(t *testing.T) {
+	req, err := buildChallengeRequest([]string{"3"}, challengeOptions{
+		Evidence:      "the calendar shows the invite as unsent",
+		ThoughtBiases: []string{"7=mind-reading"},
+		Beliefs:       []string{"7=30%", "8=0"},
+	})
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+
+	if req.GetEvidenceForAlternative() != "the calendar shows the invite as unsent" {
+		t.Errorf("unexpected evidence %q", req.GetEvidenceForAlternative())
+	}
+	if len(req.GetThoughts()) != 2 {
+		t.Fatalf("expected 2 judgements but got %d", len(req.GetThoughts()))
+	}
+
+	beliefs := map[uint32]int32{}
+	for _, judgement := range req.GetThoughts() {
+		if judgement.BeliefAfter == nil {
+			t.Fatalf("expected thought %d to carry a belief", judgement.GetThoughtId())
+		}
+		beliefs[judgement.GetThoughtId()] = judgement.GetBeliefAfter()
+		// Saying how much a thought is still believed says nothing about
+		// whether it was accurate, so an earlier factual judgement is kept.
+		if judgement.IsFactual != nil {
+			t.Errorf("expected no factual instruction for thought %d", judgement.GetThoughtId())
+		}
+	}
+	if beliefs[7] != 30 || beliefs[8] != 0 {
+		t.Errorf("unexpected beliefs %v", beliefs)
+	}
+}
+
+func TestParseBeliefRejectsMalformedValues(t *testing.T) {
+	tests := []string{"7", "7=", "7=abc", "7=101", "7=-1", "x=30", "0=30"}
+
+	for _, value := range tests {
+		t.Run(value, func(t *testing.T) {
+			if _, _, err := parseBelief(value); err == nil {
+				t.Errorf("expected %q to be rejected", value)
+			}
+		})
 	}
 }
 

@@ -193,9 +193,13 @@ func TestChallengeThoughtRecordStampsAndFills(t *testing.T) {
 
 	challenged, err := ChallengeThoughtRecord(db, testUserID, record.ID, ChallengeInput{
 		AlternativeView:         "the invite may simply have failed to send",
+		EvidenceForAlternative:  " the calendar shows the invite as unsent ",
 		FeelingsNow:             "calmer",
 		FeelingIntensitiesAfter: map[uint]int{record.Feelings[0].ID: 20},
-		Thoughts:                map[uint]ThoughtJudgement{record.Thoughts[0].ID: {Biases: []string{"catastrophising"}}},
+		Thoughts: map[uint]ThoughtJudgement{record.Thoughts[0].ID: {
+			Biases:      []string{"catastrophising"},
+			BeliefAfter: intPtr(30),
+		}},
 	})
 	if err != nil {
 		t.Fatalf("failed to challenge the thought record: %v", err)
@@ -207,8 +211,14 @@ func TestChallengeThoughtRecordStampsAndFills(t *testing.T) {
 	if challenged.AlternativeView != "the invite may simply have failed to send" {
 		t.Errorf("unexpected alternative view %q", challenged.AlternativeView)
 	}
+	if challenged.EvidenceForAlternative != "the calendar shows the invite as unsent" {
+		t.Errorf("unexpected evidence %q", challenged.EvidenceForAlternative)
+	}
 	if challenged.FeelingsNow != "calmer" {
 		t.Errorf("unexpected feelings now %q", challenged.FeelingsNow)
+	}
+	if belief := challenged.Thoughts[0].BeliefAfter; belief == nil || *belief != 30 {
+		t.Errorf("expected the thought to be re-rated to 30 but got %v", belief)
 	}
 
 	// The re-rating is the point of the exercise: it is how the user sees
@@ -607,6 +617,7 @@ func TestChallengeThoughtRecordKeepsBiasesWhenTheListIsNil(t *testing.T) {
 
 func TestChallengeThoughtRecordMarksAThoughtFactual(t *testing.T) {
 	db := setupTestDB(t)
+	factual := true
 
 	record, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
 		Event:    "the last train was cancelled",
@@ -619,7 +630,7 @@ func TestChallengeThoughtRecordMarksAThoughtFactual(t *testing.T) {
 	// Accepting that a thought was accurate is a real outcome of the exercise,
 	// not an absence of one, so it is recorded rather than left implicit.
 	challenged, err := ChallengeThoughtRecord(db, testUserID, record.ID, ChallengeInput{
-		Thoughts: map[uint]ThoughtJudgement{record.Thoughts[0].ID: {IsFactual: true}},
+		Thoughts: map[uint]ThoughtJudgement{record.Thoughts[0].ID: {IsFactual: &factual}},
 	})
 	if err != nil {
 		t.Fatalf("failed to challenge the record: %v", err)
@@ -632,6 +643,7 @@ func TestChallengeThoughtRecordMarksAThoughtFactual(t *testing.T) {
 
 func TestChallengeThoughtRecordRejectsFactualWithABias(t *testing.T) {
 	db := setupTestDB(t)
+	factual := true
 
 	record, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
 		Event:    "a meeting was moved without telling me",
@@ -648,13 +660,13 @@ func TestChallengeThoughtRecordRejectsFactualWithABias(t *testing.T) {
 		{
 			// The contradiction is stated within the one request.
 			"named in the same judgement",
-			ThoughtJudgement{Biases: []string{"mind-reading"}, IsFactual: true},
+			ThoughtJudgement{Biases: []string{"mind-reading"}, IsFactual: &factual},
 		},
 		{
 			// The bias was attached by an earlier sitting and is not mentioned
 			// here, so the check has to look at the stored state too.
 			"attached earlier and left alone",
-			ThoughtJudgement{IsFactual: true},
+			ThoughtJudgement{IsFactual: &factual},
 		},
 	}
 
@@ -667,5 +679,183 @@ func TestChallengeThoughtRecordRejectsFactualWithABias(t *testing.T) {
 				t.Errorf("expected ErrThoughtFactualWithBias but got %v", err)
 			}
 		})
+	}
+}
+
+func TestChallengeThoughtRecordRejectsABeliefOutOfRange(t *testing.T) {
+	db := setupTestDB(t)
+
+	record, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:    "an event",
+		Thoughts: []ThoughtInput{{Body: "a thought"}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the record: %v", err)
+	}
+
+	for _, belief := range []int{-1, 101} {
+		_, err := ChallengeThoughtRecord(db, testUserID, record.ID, ChallengeInput{
+			Thoughts: map[uint]ThoughtJudgement{record.Thoughts[0].ID: {BeliefAfter: intPtr(belief)}},
+		})
+		if !errors.Is(err, ErrThoughtBeliefRange) {
+			t.Errorf("expected ErrThoughtBeliefRange for %d but got %v", belief, err)
+		}
+	}
+}
+
+func TestChallengeThoughtRecordLeavesAnUnsetJudgementAlone(t *testing.T) {
+	db := setupTestDB(t)
+	factual := true
+
+	record, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:    "the last train was cancelled",
+		Thoughts: []ThoughtInput{{Body: "I will not get home before midnight"}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the record: %v", err)
+	}
+	thoughtID := record.Thoughts[0].ID
+
+	if _, err := ChallengeThoughtRecord(db, testUserID, record.ID, ChallengeInput{
+		Thoughts: map[uint]ThoughtJudgement{thoughtID: {IsFactual: &factual, BeliefAfter: intPtr(90)}},
+	}); err != nil {
+		t.Fatalf("failed to challenge the record: %v", err)
+	}
+
+	// A later sitting that only re-rates the belief must not un-mark the
+	// thought as factual, and one that says nothing about the belief must not
+	// forget it.
+	rerated, err := ChallengeThoughtRecord(db, testUserID, record.ID, ChallengeInput{
+		Thoughts: map[uint]ThoughtJudgement{thoughtID: {BeliefAfter: intPtr(60)}},
+	})
+	if err != nil {
+		t.Fatalf("failed to re-rate the belief: %v", err)
+	}
+	if !rerated.Thoughts[0].IsFactual {
+		t.Error("expected the thought to stay factual")
+	}
+	if belief := rerated.Thoughts[0].BeliefAfter; belief == nil || *belief != 60 {
+		t.Errorf("expected the belief to be 60 but got %v", belief)
+	}
+
+	untouched, err := ChallengeThoughtRecord(db, testUserID, record.ID, ChallengeInput{
+		Thoughts: map[uint]ThoughtJudgement{thoughtID: {}},
+	})
+	if err != nil {
+		t.Fatalf("failed to challenge the record again: %v", err)
+	}
+	if belief := untouched.Thoughts[0].BeliefAfter; belief == nil || *belief != 60 {
+		t.Errorf("expected the belief to survive but got %v", belief)
+	}
+}
+
+func TestChallengeThoughtRecordRejectsABiasOnAThoughtJudgedFactualEarlier(t *testing.T) {
+	db := setupTestDB(t)
+	factual := true
+
+	record, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:    "the last train was cancelled",
+		Thoughts: []ThoughtInput{{Body: "I will not get home before midnight"}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the record: %v", err)
+	}
+	thoughtID := record.Thoughts[0].ID
+
+	if _, err := ChallengeThoughtRecord(db, testUserID, record.ID, ChallengeInput{
+		Thoughts: map[uint]ThoughtJudgement{thoughtID: {IsFactual: &factual}},
+	}); err != nil {
+		t.Fatalf("failed to mark the thought factual: %v", err)
+	}
+
+	_, err = ChallengeThoughtRecord(db, testUserID, record.ID, ChallengeInput{
+		Thoughts: map[uint]ThoughtJudgement{thoughtID: {Biases: []string{"catastrophising"}}},
+	})
+	if !errors.Is(err, ErrThoughtFactualWithBias) {
+		t.Errorf("expected ErrThoughtFactualWithBias but got %v", err)
+	}
+}
+
+func TestChallengeThoughtRecordCannotRateAnotherUsersThought(t *testing.T) {
+	db := setupTestDB(t)
+
+	record, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:    "an event",
+		Thoughts: []ThoughtInput{{Body: "a thought"}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the record: %v", err)
+	}
+
+	_, err = ChallengeThoughtRecord(db, otherUserID, record.ID, ChallengeInput{
+		EvidenceForAlternative: "some evidence",
+		Thoughts:               map[uint]ThoughtJudgement{record.Thoughts[0].ID: {BeliefAfter: intPtr(10)}},
+	})
+	if !errors.Is(err, ErrThoughtRecordNotFound) {
+		t.Errorf("expected ErrThoughtRecordNotFound but got %v", err)
+	}
+
+	unchanged, err := GetThoughtRecord(db, testUserID, record.ID)
+	if err != nil {
+		t.Fatalf("failed to read the record back: %v", err)
+	}
+	if unchanged.EvidenceForAlternative != "" || unchanged.Thoughts[0].BeliefAfter != nil {
+		t.Error("expected the record to be left untouched")
+	}
+}
+
+func TestUpdateThoughtRecordSetsAndBlanksTheEvidence(t *testing.T) {
+	db := setupTestDB(t)
+
+	record, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:                  "an event",
+		EvidenceForAlternative: "an early piece of evidence",
+	})
+	if err != nil {
+		t.Fatalf("failed to create the record: %v", err)
+	}
+	if record.EvidenceForAlternative != "an early piece of evidence" {
+		t.Errorf("unexpected evidence %q", record.EvidenceForAlternative)
+	}
+
+	evidence := "a better piece of evidence"
+	updated, err := UpdateThoughtRecord(db, testUserID, record.ID, UpdateThoughtRecordInput{EvidenceForAlternative: &evidence})
+	if err != nil {
+		t.Fatalf("failed to update the record: %v", err)
+	}
+	if updated.EvidenceForAlternative != "a better piece of evidence" {
+		t.Errorf("unexpected evidence %q", updated.EvidenceForAlternative)
+	}
+
+	blank := ""
+	blanked, err := UpdateThoughtRecord(db, testUserID, record.ID, UpdateThoughtRecordInput{EvidenceForAlternative: &blank})
+	if err != nil {
+		t.Fatalf("failed to blank the evidence: %v", err)
+	}
+	if blanked.EvidenceForAlternative != "" {
+		t.Errorf("expected the evidence to be blanked but got %q", blanked.EvidenceForAlternative)
+	}
+}
+
+func TestListThoughtRecordsSearchesTheEvidence(t *testing.T) {
+	db := setupTestDB(t)
+
+	match, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{
+		Event:                  "an unremarkable event",
+		EvidenceForAlternative: "the timetable lists a signal fault",
+	})
+	if err != nil {
+		t.Fatalf("failed to create the matching record: %v", err)
+	}
+	if _, err := CreateThoughtRecord(db, testUserID, CreateThoughtRecordInput{Event: "something else entirely"}); err != nil {
+		t.Fatalf("failed to create the other record: %v", err)
+	}
+
+	records, err := ListThoughtRecords(db, testUserID, ThoughtRecordFilter{Search: "signal"})
+	if err != nil {
+		t.Fatalf("failed to search the thought records: %v", err)
+	}
+	if len(records) != 1 || records[0].ID != match.ID {
+		t.Fatalf("expected only the matching record but got %d records", len(records))
 	}
 }

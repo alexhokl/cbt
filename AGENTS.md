@@ -7,9 +7,10 @@ records. Read this before changing anything.
 
 `cbt` records two standard cognitive behavioural therapy exercises:
 
-- the **six column thought record** — event, negative thought(s), negative
-  feeling(s), cognitive bias, "is there any other way I can look at this?",
-  "how do I feel now?"
+- the **thought record** — event, negative thought(s), negative feeling(s),
+  cognitive bias, "is there any other way I can look at this?", "what
+  evidence do you have to support this alternative view?", "how much do you
+  still believe your initial thoughts? how do you feel now?"
 - the **map of worry** — event, thoughts, what these thoughts mean, physical
   sensations, feelings, resultant behaviour
 
@@ -30,9 +31,10 @@ improvement.
 
 2. **No record content in telemetry.** Spans, metrics and log records carry
    identifiers, counts and outcomes only. Never attach an event, a thought, a
-   feeling name, an intensity, a bias name, or an alternative view to a span
-   attribute, a metric label, or a log field. The natural instinct when adding
-   a span is to attach `record.id` *and* `record.event`; attach only the first.
+   feeling name, an intensity, a belief rating, a bias name, the evidence for
+   a thought, an alternative view, or the evidence for it to a span attribute,
+   a metric label, or a log field. The natural instinct when adding a span is to attach `record.id`
+   *and* `record.event`; attach only the first.
    Existing call sites in `internal/` show the pattern.
 
 3. **The builtin bias vocabulary is fixed.** The nine names in
@@ -42,9 +44,9 @@ improvement.
    them editable, and do not reword them.
 
 4. **Test fixtures and documentation examples are invented.** Never copy an
-   event, thought, feeling, bias attribution or alternative view out of a real
-   record, or out of anyone's personal notes, into a test, an `Example:` block
-   or the README. Fixtures must be mundane, non-clinical and about nobody. The
+   event, thought, feeling, bias attribution, alternative view or evidence out
+   of a real record, or out of anyone's personal notes, into a test, an
+   `Example:` block or the README. Fixtures must be mundane, non-clinical and about nobody. The
    existing ones — a moved meeting, a cancelled train, a report full of
    comments — are the register to stay in.
 
