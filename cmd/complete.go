@@ -47,6 +47,7 @@ func init() {
 	flags.StringVar(&completeOpts.BuildOn, "build-on", "", "How can you build on this?")
 	flags.StringArrayVar(&completeOpts.Reratings, "rerate", nil, "How a predicted feeling actually felt, as feeling-id=rating (repeatable)")
 	flags.StringArrayVar(&completeOpts.Feelings, "feeling", nil, "A feeling you felt but did not predict, as name=rating (repeatable)")
+	cobra.CheckErr(completeCmd.RegisterFlagCompletionFunc("feeling", completeFeeling))
 }
 
 func runComplete(cmd *cobra.Command, args []string) error {

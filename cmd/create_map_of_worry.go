@@ -56,6 +56,7 @@ func init() {
 	flags.StringVar(&createMapOfWorryOpts.PhysicalSensations, "sensations", "", "Physical sensations felt")
 	flags.StringVar(&createMapOfWorryOpts.Behaviour, "behaviour", "", "What you did, or avoided doing, as a result")
 	flags.StringArrayVar(&createMapOfWorryOpts.Feelings, "feeling", nil, "A feeling and its 0-100 rating, as name=rating (repeatable)")
+	cobra.CheckErr(createMapOfWorryCmd.RegisterFlagCompletionFunc("feeling", completeFeeling))
 	flags.Uint32Var(&createMapOfWorryOpts.AlternativeTo, "alternative-to", 0, "ID of the map this one reworks")
 }
 

@@ -88,6 +88,12 @@ Feelings are rated 0-100 and re-rated during the challenge, because seeing
 rating is optional: writing down that you felt ashamed is worth
 something even when you are in no state to put a number on it.
 
+Naming a feeling precisely is hard in the moment, so a list of feeling words
+is suggested as you type: in the app's feeling field, and as shell completion
+for `--feeling`. Each word is shown with its group (happy, angry, anxious or
+depressed) and a short description, but only the word is recorded. The list is
+a suggestion, not a vocabulary: any other name is accepted as typed.
+
 The nine standard cognitive biases are seeded for you and cannot be renamed
 or deleted, so a record written a year ago still reads the same way.
 `cbt create bias` adds your own alongside them.

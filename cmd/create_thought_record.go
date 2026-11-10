@@ -53,6 +53,7 @@ func init() {
 	flags.StringVar(&createThoughtRecordOpts.HotEvidence, "hot-thought-evidence", "", "What evidence supports the strongest thought?")
 	flags.StringArrayVar(&createThoughtRecordOpts.Biases, "bias", nil, "A cognitive bias in the strongest thought, by name (repeatable)")
 	flags.StringArrayVar(&createThoughtRecordOpts.Feelings, "feeling", nil, "A feeling and its 0-100 rating, as name=rating (repeatable)")
+	cobra.CheckErr(createThoughtRecordCmd.RegisterFlagCompletionFunc("feeling", completeFeeling))
 	flags.StringVar(&createThoughtRecordOpts.AlternativeView, "alternative", "", "Another way to look at this, if you already have one")
 	flags.StringVar(&createThoughtRecordOpts.Evidence, "evidence", "", "What evidence do you have to support this alternative view?")
 	flags.StringVar(&createThoughtRecordOpts.FeelingsNow, "feelings-now", "", "How you feel now, if you already know")

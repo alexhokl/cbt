@@ -44,6 +44,7 @@ func init() {
 	flags.StringVar(&createBehaviouralExperimentOpts.At, "at", "", "When the experiment was carried out (YYYY-MM-DD, \"yesterday\", \"3h ago\")")
 	flags.StringVar(&createBehaviouralExperimentOpts.Prediction, "prediction", "", "What do you predict will happen and how will you feel?")
 	flags.StringArrayVar(&createBehaviouralExperimentOpts.Feelings, "feeling", nil, "A feeling you predict and its 0-100 rating, as name=rating (repeatable)")
+	cobra.CheckErr(createBehaviouralExperimentCmd.RegisterFlagCompletionFunc("feeling", completeFeeling))
 }
 
 func runCreateBehaviouralExperiment(cmd *cobra.Command, args []string) error {

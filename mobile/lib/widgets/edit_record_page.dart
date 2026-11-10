@@ -5,6 +5,7 @@ import 'package:protobuf/well_known_types/google/protobuf/timestamp.pb.dart';
 import '../l10n/app_localizations.dart';
 import '../proto/record.pb.dart';
 import '../services/record_service.dart';
+import 'feeling_suggestions.dart';
 import 'settings_page.dart';
 
 /// A feeling being entered, before it is sent. It is a small mutable holder
@@ -323,12 +324,30 @@ class FeelingDraftEditor extends StatelessWidget {
             Row(
               children: [
                 Expanded(
-                  child: TextField(
-                    onChanged: (value) => draft.name = value,
-                    decoration: InputDecoration(
-                      hintText: l10n.feelingNameHint,
-                      border: const OutlineInputBorder(),
-                    ),
+                  // Suggestions help find a precise word; any other name is
+                  // still accepted as typed.
+                  child: Autocomplete<FeelingSuggestion>(
+                    initialValue: TextEditingValue(text: draft.name),
+                    optionsBuilder: (value) =>
+                        matchFeelingSuggestions(value.text),
+                    displayStringForOption: (suggestion) => suggestion.name,
+                    onSelected: (suggestion) {
+                      draft.name = suggestion.name;
+                      onChanged();
+                    },
+                    fieldViewBuilder:
+                        (context, controller, focusNode, onFieldSubmitted) =>
+                            TextField(
+                              controller: controller,
+                              focusNode: focusNode,
+                              onChanged: (value) => draft.name = value,
+                              onSubmitted: (_) => onFieldSubmitted(),
+                              decoration: InputDecoration(
+                                hintText: l10n.feelingNameHint,
+                                border: const OutlineInputBorder(),
+                              ),
+                            ),
+                    optionsViewBuilder: _suggestionList,
                   ),
                 ),
                 IconButton(
@@ -368,6 +387,34 @@ class FeelingDraftEditor extends StatelessWidget {
               ],
             ),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _suggestionList(
+    BuildContext context,
+    AutocompleteOnSelected<FeelingSuggestion> onSelected,
+    Iterable<FeelingSuggestion> options,
+  ) {
+    return Align(
+      alignment: Alignment.topLeft,
+      child: Material(
+        elevation: 4,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxHeight: 280, maxWidth: 400),
+          child: ListView(
+            padding: EdgeInsets.zero,
+            shrinkWrap: true,
+            children: [
+              for (final suggestion in options)
+                ListTile(
+                  title: Text(suggestion.name),
+                  subtitle: Text(suggestion.label),
+                  onTap: () => onSelected(suggestion),
+                ),
+            ],
+          ),
         ),
       ),
     );

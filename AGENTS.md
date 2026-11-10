@@ -55,6 +55,25 @@ improvement.
    existing ones — a moved meeting, a cancelled train, a report full of
    comments — are the register to stay in.
 
+## Feeling suggestions
+
+The feeling name field (mobile) and `--feeling` completion (CLI) suggest 24
+feeling words, each with its group and a description shown as
+`group: description`. They differ from the bias vocabulary on purpose:
+
+- **Suggested, not enforced.** Any other name is accepted, and nothing is
+  seeded or stored in `database/`. Do not validate feeling names against the
+  list.
+- **Only the word is recorded.** The group and description help the user
+  choose and are never sent. The group words themselves (happy, angry,
+  anxious, depressed) are too generic to record and are not offered.
+- **A word list offered before writing, not a reading of the entry.** Do not
+  turn it into suggestions derived from what the user wrote (rule 1).
+- **Kept in two places**, `cmd/feeling_suggestion.go` and
+  `mobile/lib/widgets/feeling_suggestions.dart`, in the same order. Change
+  both together; each file's tests check for uniqueness, normalised names and
+  the absence of the group words.
+
 ## Storage and privacy
 
 The SQLite database is **not encrypted at rest**, deliberately. SQLCipher would
