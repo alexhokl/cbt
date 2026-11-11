@@ -285,6 +285,73 @@ class RecordServiceClient extends $grpc.Client {
     return $createUnaryCall(_$addExperimentFeeling, request, options: options);
   }
 
+  /// ListPositiveDataLogs returns the user's positive data logs, the most
+  /// recently added to first.
+  $grpc.ResponseFuture<$0.ListPositiveDataLogsResponse> listPositiveDataLogs(
+    $0.ListPositiveDataLogsRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listPositiveDataLogs, request, options: options);
+  }
+
+  /// CreatePositiveDataLog creates a log. Only the belief is required.
+  $grpc.ResponseFuture<$0.PositiveDataLog> createPositiveDataLog(
+    $0.CreatePositiveDataLogRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createPositiveDataLog, request, options: options);
+  }
+
+  /// GetPositiveDataLog returns a single log by identifier.
+  $grpc.ResponseFuture<$0.PositiveDataLog> getPositiveDataLog(
+    $0.GetPositiveDataLogRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getPositiveDataLog, request, options: options);
+  }
+
+  /// UpdatePositiveDataLog rewords the beliefs of a log. Ratings are not
+  /// changed here; RateBeliefs appends one.
+  $grpc.ResponseFuture<$0.PositiveDataLog> updatePositiveDataLog(
+    $0.UpdatePositiveDataLogRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$updatePositiveDataLog, request, options: options);
+  }
+
+  /// DeletePositiveDataLog removes a log along with its evidence and ratings.
+  $grpc.ResponseFuture<$1.Empty> deletePositiveDataLog(
+    $0.DeletePositiveDataLogRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$deletePositiveDataLog, request, options: options);
+  }
+
+  /// AddDataLogEvidence appends a row of evidence to a log.
+  $grpc.ResponseFuture<$0.PositiveDataLog> addDataLogEvidence(
+    $0.AddDataLogEvidenceRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$addDataLogEvidence, request, options: options);
+  }
+
+  /// DeleteDataLogEvidence removes a row of evidence and returns its log.
+  $grpc.ResponseFuture<$0.PositiveDataLog> deleteDataLogEvidence(
+    $0.DeleteDataLogEvidenceRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$deleteDataLogEvidence, request, options: options);
+  }
+
+  /// RateBeliefs appends a rating of both beliefs to a log, keeping the
+  /// earlier ones.
+  $grpc.ResponseFuture<$0.PositiveDataLog> rateBeliefs(
+    $0.RateBeliefsRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$rateBeliefs, request, options: options);
+  }
+
   /// ListBiases returns the user's cognitive bias vocabulary, ordered by name.
   $grpc.ResponseFuture<$0.ListBiasesResponse> listBiases(
     $0.ListBiasesRequest request, {
@@ -456,6 +523,46 @@ class RecordServiceClient extends $grpc.Client {
       '/record.RecordService/AddExperimentFeeling',
       ($0.AddExperimentFeelingRequest value) => value.writeToBuffer(),
       $0.BehaviouralExperiment.fromBuffer);
+  static final _$listPositiveDataLogs = $grpc.ClientMethod<
+          $0.ListPositiveDataLogsRequest, $0.ListPositiveDataLogsResponse>(
+      '/record.RecordService/ListPositiveDataLogs',
+      ($0.ListPositiveDataLogsRequest value) => value.writeToBuffer(),
+      $0.ListPositiveDataLogsResponse.fromBuffer);
+  static final _$createPositiveDataLog =
+      $grpc.ClientMethod<$0.CreatePositiveDataLogRequest, $0.PositiveDataLog>(
+          '/record.RecordService/CreatePositiveDataLog',
+          ($0.CreatePositiveDataLogRequest value) => value.writeToBuffer(),
+          $0.PositiveDataLog.fromBuffer);
+  static final _$getPositiveDataLog =
+      $grpc.ClientMethod<$0.GetPositiveDataLogRequest, $0.PositiveDataLog>(
+          '/record.RecordService/GetPositiveDataLog',
+          ($0.GetPositiveDataLogRequest value) => value.writeToBuffer(),
+          $0.PositiveDataLog.fromBuffer);
+  static final _$updatePositiveDataLog =
+      $grpc.ClientMethod<$0.UpdatePositiveDataLogRequest, $0.PositiveDataLog>(
+          '/record.RecordService/UpdatePositiveDataLog',
+          ($0.UpdatePositiveDataLogRequest value) => value.writeToBuffer(),
+          $0.PositiveDataLog.fromBuffer);
+  static final _$deletePositiveDataLog =
+      $grpc.ClientMethod<$0.DeletePositiveDataLogRequest, $1.Empty>(
+          '/record.RecordService/DeletePositiveDataLog',
+          ($0.DeletePositiveDataLogRequest value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
+  static final _$addDataLogEvidence =
+      $grpc.ClientMethod<$0.AddDataLogEvidenceRequest, $0.PositiveDataLog>(
+          '/record.RecordService/AddDataLogEvidence',
+          ($0.AddDataLogEvidenceRequest value) => value.writeToBuffer(),
+          $0.PositiveDataLog.fromBuffer);
+  static final _$deleteDataLogEvidence =
+      $grpc.ClientMethod<$0.DeleteDataLogEvidenceRequest, $0.PositiveDataLog>(
+          '/record.RecordService/DeleteDataLogEvidence',
+          ($0.DeleteDataLogEvidenceRequest value) => value.writeToBuffer(),
+          $0.PositiveDataLog.fromBuffer);
+  static final _$rateBeliefs =
+      $grpc.ClientMethod<$0.RateBeliefsRequest, $0.PositiveDataLog>(
+          '/record.RecordService/RateBeliefs',
+          ($0.RateBeliefsRequest value) => value.writeToBuffer(),
+          $0.PositiveDataLog.fromBuffer);
   static final _$listBiases =
       $grpc.ClientMethod<$0.ListBiasesRequest, $0.ListBiasesResponse>(
           '/record.RecordService/ListBiases',
@@ -714,6 +821,76 @@ abstract class RecordServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.AddExperimentFeelingRequest.fromBuffer(value),
         ($0.BehaviouralExperiment value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListPositiveDataLogsRequest,
+            $0.ListPositiveDataLogsResponse>(
+        'ListPositiveDataLogs',
+        listPositiveDataLogs_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.ListPositiveDataLogsRequest.fromBuffer(value),
+        ($0.ListPositiveDataLogsResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CreatePositiveDataLogRequest,
+            $0.PositiveDataLog>(
+        'CreatePositiveDataLog',
+        createPositiveDataLog_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.CreatePositiveDataLogRequest.fromBuffer(value),
+        ($0.PositiveDataLog value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.GetPositiveDataLogRequest, $0.PositiveDataLog>(
+            'GetPositiveDataLog',
+            getPositiveDataLog_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.GetPositiveDataLogRequest.fromBuffer(value),
+            ($0.PositiveDataLog value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UpdatePositiveDataLogRequest,
+            $0.PositiveDataLog>(
+        'UpdatePositiveDataLog',
+        updatePositiveDataLog_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.UpdatePositiveDataLogRequest.fromBuffer(value),
+        ($0.PositiveDataLog value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeletePositiveDataLogRequest, $1.Empty>(
+        'DeletePositiveDataLog',
+        deletePositiveDataLog_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.DeletePositiveDataLogRequest.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
+    $addMethod(
+        $grpc.ServiceMethod<$0.AddDataLogEvidenceRequest, $0.PositiveDataLog>(
+            'AddDataLogEvidence',
+            addDataLogEvidence_Pre,
+            false,
+            false,
+            ($core.List<$core.int> value) =>
+                $0.AddDataLogEvidenceRequest.fromBuffer(value),
+            ($0.PositiveDataLog value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteDataLogEvidenceRequest,
+            $0.PositiveDataLog>(
+        'DeleteDataLogEvidence',
+        deleteDataLogEvidence_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.DeleteDataLogEvidenceRequest.fromBuffer(value),
+        ($0.PositiveDataLog value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.RateBeliefsRequest, $0.PositiveDataLog>(
+        'RateBeliefs',
+        rateBeliefs_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.RateBeliefsRequest.fromBuffer(value),
+        ($0.PositiveDataLog value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListBiasesRequest, $0.ListBiasesResponse>(
         'ListBiases',
         listBiases_Pre,
@@ -974,6 +1151,76 @@ abstract class RecordServiceBase extends $grpc.Service {
 
   $async.Future<$0.BehaviouralExperiment> addExperimentFeeling(
       $grpc.ServiceCall call, $0.AddExperimentFeelingRequest request);
+
+  $async.Future<$0.ListPositiveDataLogsResponse> listPositiveDataLogs_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ListPositiveDataLogsRequest> $request) async {
+    return listPositiveDataLogs($call, await $request);
+  }
+
+  $async.Future<$0.ListPositiveDataLogsResponse> listPositiveDataLogs(
+      $grpc.ServiceCall call, $0.ListPositiveDataLogsRequest request);
+
+  $async.Future<$0.PositiveDataLog> createPositiveDataLog_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.CreatePositiveDataLogRequest> $request) async {
+    return createPositiveDataLog($call, await $request);
+  }
+
+  $async.Future<$0.PositiveDataLog> createPositiveDataLog(
+      $grpc.ServiceCall call, $0.CreatePositiveDataLogRequest request);
+
+  $async.Future<$0.PositiveDataLog> getPositiveDataLog_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.GetPositiveDataLogRequest> $request) async {
+    return getPositiveDataLog($call, await $request);
+  }
+
+  $async.Future<$0.PositiveDataLog> getPositiveDataLog(
+      $grpc.ServiceCall call, $0.GetPositiveDataLogRequest request);
+
+  $async.Future<$0.PositiveDataLog> updatePositiveDataLog_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.UpdatePositiveDataLogRequest> $request) async {
+    return updatePositiveDataLog($call, await $request);
+  }
+
+  $async.Future<$0.PositiveDataLog> updatePositiveDataLog(
+      $grpc.ServiceCall call, $0.UpdatePositiveDataLogRequest request);
+
+  $async.Future<$1.Empty> deletePositiveDataLog_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DeletePositiveDataLogRequest> $request) async {
+    return deletePositiveDataLog($call, await $request);
+  }
+
+  $async.Future<$1.Empty> deletePositiveDataLog(
+      $grpc.ServiceCall call, $0.DeletePositiveDataLogRequest request);
+
+  $async.Future<$0.PositiveDataLog> addDataLogEvidence_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.AddDataLogEvidenceRequest> $request) async {
+    return addDataLogEvidence($call, await $request);
+  }
+
+  $async.Future<$0.PositiveDataLog> addDataLogEvidence(
+      $grpc.ServiceCall call, $0.AddDataLogEvidenceRequest request);
+
+  $async.Future<$0.PositiveDataLog> deleteDataLogEvidence_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.DeleteDataLogEvidenceRequest> $request) async {
+    return deleteDataLogEvidence($call, await $request);
+  }
+
+  $async.Future<$0.PositiveDataLog> deleteDataLogEvidence(
+      $grpc.ServiceCall call, $0.DeleteDataLogEvidenceRequest request);
+
+  $async.Future<$0.PositiveDataLog> rateBeliefs_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.RateBeliefsRequest> $request) async {
+    return rateBeliefs($call, await $request);
+  }
+
+  $async.Future<$0.PositiveDataLog> rateBeliefs(
+      $grpc.ServiceCall call, $0.RateBeliefsRequest request);
 
   $async.Future<$0.ListBiasesResponse> listBiases_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListBiasesRequest> $request) async {

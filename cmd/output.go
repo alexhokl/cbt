@@ -153,6 +153,66 @@ func writeBehaviouralExperimentTable(out io.Writer, experiments []*proto.Behavio
 	return nil
 }
 
+// writePositiveDataLogTable renders positive data logs as a narrow aligned
+// table. Beside the belief it shows the first and latest rating of each
+// belief exactly as the user gave them, and how much evidence has been
+// written down.
+func writePositiveDataLogTable(out io.Writer, logs []*proto.PositiveDataLog) error {
+	if len(logs) == 0 {
+		if _, err := fmt.Fprintln(out, "  (none)"); err != nil {
+			return fmt.Errorf("failed to write output: %w", err)
+		}
+		return nil
+	}
+
+	writer := tabwriter.NewWriter(out, 0, 0, 2, ' ', 0)
+	if _, err := fmt.Fprintln(writer, "ID\tUPDATED\tBELIEF\tBELIEVE\tALT\tEVIDENCE"); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	for _, log := range logs {
+		if _, err := fmt.Fprintf(
+			writer,
+			"%d\t%s\t%s\t%s\t%s\t%d\n",
+			log.GetId(),
+			log.GetUpdatedAt().AsTime().Local().Format(time.DateOnly),
+			truncate(log.GetBelief(), eventColumnWidth),
+			ratingSpan(log.GetRatings(), (*proto.BeliefRating).GetBeliefPercent, func(r *proto.BeliefRating) bool { return r.BeliefPercent != nil }),
+			ratingSpan(log.GetRatings(), (*proto.BeliefRating).GetAlternativePercent, func(r *proto.BeliefRating) bool { return r.AlternativePercent != nil }),
+			len(log.GetEvidence()),
+		); err != nil {
+			return fmt.Errorf("failed to write output: %w", err)
+		}
+	}
+
+	if err := writer.Flush(); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	return nil
+}
+
+// ratingSpan renders the first and latest rating of one belief, such as
+// "70->55", or the single rating when there has been only one. Sittings that
+// left this belief unrated are skipped.
+func ratingSpan(ratings []*proto.BeliefRating, value func(*proto.BeliefRating) int32, rated func(*proto.BeliefRating) bool) string {
+	var given []int32
+	for _, rating := range ratings {
+		if rated(rating) {
+			given = append(given, value(rating))
+		}
+	}
+
+	switch len(given) {
+	case 0:
+		return "-"
+	case 1:
+		return fmt.Sprintf("%d", given[0])
+	default:
+		return fmt.Sprintf("%d->%d", given[0], given[len(given)-1])
+	}
+}
+
 // writeBiasTable renders the cognitive bias vocabulary.
 func writeBiasTable(out io.Writer, biases []*proto.CognitiveBias) error {
 	if len(biases) == 0 {
@@ -233,6 +293,23 @@ func writeBehaviouralExperimentLine(out io.Writer, experiment *proto.Behavioural
 	}
 
 	if _, err := fmt.Fprintf(out, "%s (%s)\n", truncate(experiment.GetPlan(), eventColumnWidth), strings.Join(details, ", ")); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	return nil
+}
+
+// writePositiveDataLogLine renders a single log as a one line confirmation.
+func writePositiveDataLogLine(out io.Writer, log *proto.PositiveDataLog) error {
+	details := []string{fmt.Sprintf("id %d", log.GetId())}
+	if len(log.GetEvidence()) > 0 {
+		details = append(details, fmt.Sprintf("evidence %d", len(log.GetEvidence())))
+	}
+	if len(log.GetRatings()) > 0 {
+		details = append(details, fmt.Sprintf("ratings %d", len(log.GetRatings())))
+	}
+
+	if _, err := fmt.Fprintf(out, "%s (%s)\n", truncate(log.GetBelief(), eventColumnWidth), strings.Join(details, ", ")); err != nil {
 		return fmt.Errorf("failed to write output: %w", err)
 	}
 

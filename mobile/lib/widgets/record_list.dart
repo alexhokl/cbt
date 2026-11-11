@@ -5,6 +5,8 @@ import '../l10n/app_localizations.dart';
 import '../proto/record.pb.dart';
 import '../services/record_service.dart';
 import 'challenge_page.dart';
+import 'data_log_detail_page.dart';
+import 'edit_data_log_page.dart';
 import 'edit_experiment_page.dart';
 import 'edit_map_page.dart';
 import 'edit_record_page.dart';
@@ -15,7 +17,7 @@ import 'settings_page.dart';
 
 /// Which listing is showing. The unchallenged tab is the day's work queue,
 /// which is the reason the list is tabbed at all rather than one flat feed.
-enum RecordView { toChallenge, challenged, maps, experiments }
+enum RecordView { toChallenge, challenged, maps, experiments, dataLogs }
 
 class RecordList extends StatefulWidget {
   const RecordList({super.key, this.service});
@@ -33,6 +35,7 @@ class RecordListState extends State<RecordList> {
   List<ThoughtRecord> _records = <ThoughtRecord>[];
   List<MapOfWorry> _maps = <MapOfWorry>[];
   List<BehaviouralExperiment> _experiments = <BehaviouralExperiment>[];
+  List<PositiveDataLog> _dataLogs = <PositiveDataLog>[];
   bool _loading = true;
   String? _error;
 
@@ -76,6 +79,15 @@ class RecordListState extends State<RecordList> {
         });
         return;
       }
+      if (_view == RecordView.dataLogs) {
+        final dataLogs = await service.listPositiveDataLogs();
+        if (!mounted) return;
+        setState(() {
+          _dataLogs = dataLogs;
+          _loading = false;
+        });
+        return;
+      }
 
       final records = await service.listThoughtRecords(
         challenged: _view == RecordView.challenged,
@@ -98,6 +110,7 @@ class RecordListState extends State<RecordList> {
     final Widget page = switch (_view) {
       RecordView.maps => EditMapPage(service: widget.service),
       RecordView.experiments => EditExperimentPage(service: widget.service),
+      RecordView.dataLogs => EditDataLogPage(service: widget.service),
       _ => EditRecordPage(service: widget.service),
     };
     await Navigator.of(
@@ -134,7 +147,7 @@ class RecordListState extends State<RecordList> {
       ),
       body: Column(
         children: [
-          // Four segments do not fit every phone width, so the row scrolls
+          // Five segments do not fit every phone width, so the row scrolls
           // rather than squeezing the labels.
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -156,6 +169,10 @@ class RecordListState extends State<RecordList> {
                 ButtonSegment(
                   value: RecordView.experiments,
                   label: Text(l10n.tabExperiments),
+                ),
+                ButtonSegment(
+                  value: RecordView.dataLogs,
+                  label: Text(l10n.tabDataLogs),
                 ),
               ],
               selected: <RecordView>{_view},
@@ -215,6 +232,19 @@ class RecordListState extends State<RecordList> {
           itemCount: _experiments.length,
           itemBuilder: (context, index) =>
               _experimentTile(_experiments[index], l10n),
+        ),
+      );
+    }
+
+    if (_view == RecordView.dataLogs) {
+      if (_dataLogs.isEmpty) {
+        return _emptyState(l10n.emptyDataLogs);
+      }
+      return RefreshIndicator(
+        onRefresh: load,
+        child: ListView.builder(
+          itemCount: _dataLogs.length,
+          itemBuilder: (context, index) => _dataLogTile(_dataLogs[index], l10n),
         ),
       );
     }
@@ -343,6 +373,28 @@ class RecordListState extends State<RecordList> {
               experimentId: experiment.id,
               service: widget.service,
             ),
+          ),
+        );
+        await load();
+      },
+    );
+  }
+
+  Widget _dataLogTile(PositiveDataLog log, AppLocalizations l10n) {
+    return ListTile(
+      title: Text(log.belief, maxLines: 2, overflow: TextOverflow.ellipsis),
+      subtitle: Text(
+        [
+          if (log.ratings.isNotEmpty) beliefRatingLabel(log.ratings.last, l10n),
+          l10n.evidenceCount(log.evidence.length),
+        ].join('  ·  '),
+      ),
+      leading: const Icon(Icons.playlist_add_check),
+      onTap: () async {
+        await Navigator.of(context).push<void>(
+          MaterialPageRoute(
+            builder: (_) =>
+                DataLogDetailPage(logId: log.id, service: widget.service),
           ),
         );
         await load();

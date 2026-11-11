@@ -98,6 +98,22 @@ func TestHandlersRejectAnUnauthenticatedContext(t *testing.T) {
 			_, err := server.CompleteBehaviouralExperiment(ctx, &proto.CompleteBehaviouralExperimentRequest{Id: 1})
 			return err
 		}},
+		{"ListPositiveDataLogs", func() error {
+			_, err := server.ListPositiveDataLogs(ctx, &proto.ListPositiveDataLogsRequest{})
+			return err
+		}},
+		{"CreatePositiveDataLog", func() error {
+			_, err := server.CreatePositiveDataLog(ctx, &proto.CreatePositiveDataLogRequest{Belief: "a belief"})
+			return err
+		}},
+		{"AddDataLogEvidence", func() error {
+			_, err := server.AddDataLogEvidence(ctx, &proto.AddDataLogEvidenceRequest{LogId: 1})
+			return err
+		}},
+		{"RateBeliefs", func() error {
+			_, err := server.RateBeliefs(ctx, &proto.RateBeliefsRequest{LogId: 1})
+			return err
+		}},
 		{"ListBiases", func() error {
 			_, err := server.ListBiases(ctx, &proto.ListBiasesRequest{})
 			return err
@@ -763,6 +779,120 @@ func TestBehaviouralExperimentErrorsAreMapped(t *testing.T) {
 				Id:               created.GetId(),
 				FeelingReratings: []*proto.FeelingRerating{{FeelingId: created.GetFeelings()[0].GetId(), IntensityAfter: 150}},
 			})
+			return err
+		}, codes.InvalidArgument},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if got := statusCode(test.run()); got != test.expected {
+				t.Errorf("expected %v but got %v", test.expected, got)
+			}
+		})
+	}
+}
+
+func TestPositiveDataLogRoundTrips(t *testing.T) {
+	server := newTestServer(t)
+	ctx := authenticatedContext()
+
+	created, err := server.CreatePositiveDataLog(ctx, &proto.CreatePositiveDataLogRequest{
+		Belief:             "I am always late",
+		AlternativeBelief:  "I am on time for most things",
+		BeliefPercent:      proto2Int32(70),
+		AlternativePercent: proto2Int32(30),
+		Evidence:           []*proto.DataLogEvidenceInput{{Body: "arrived early for the dentist"}},
+	})
+	if err != nil {
+		t.Fatalf("failed to create the log: %v", err)
+	}
+	if len(created.GetRatings()) != 1 || len(created.GetEvidence()) != 1 {
+		t.Fatalf("expected one rating and one row of evidence but got %d and %d", len(created.GetRatings()), len(created.GetEvidence()))
+	}
+
+	if _, err := server.AddDataLogEvidence(ctx, &proto.AddDataLogEvidenceRequest{
+		LogId:    created.GetId(),
+		Evidence: &proto.DataLogEvidenceInput{Body: "caught the first train on Monday"},
+	}); err != nil {
+		t.Fatalf("failed to add the evidence: %v", err)
+	}
+	if _, err := server.RateBeliefs(ctx, &proto.RateBeliefsRequest{
+		LogId:         created.GetId(),
+		BeliefPercent: proto2Int32(50),
+	}); err != nil {
+		t.Fatalf("failed to rate the beliefs: %v", err)
+	}
+
+	got, err := server.GetPositiveDataLog(ctx, &proto.GetPositiveDataLogRequest{Id: created.GetId()})
+	if err != nil {
+		t.Fatalf("failed to get the log: %v", err)
+	}
+	if len(got.GetEvidence()) != 2 {
+		t.Errorf("expected two rows of evidence but got %d", len(got.GetEvidence()))
+	}
+	if len(got.GetRatings()) != 2 {
+		t.Fatalf("expected two ratings but got %d", len(got.GetRatings()))
+	}
+	latest := got.GetRatings()[1]
+	if latest.GetBeliefPercent() != 50 {
+		t.Errorf("expected the latest belief rated 50 but got %d", latest.GetBeliefPercent())
+	}
+	if latest.AlternativePercent != nil {
+		t.Errorf("expected the alternative unrated but got %d", latest.GetAlternativePercent())
+	}
+
+	listed, err := server.ListPositiveDataLogs(ctx, &proto.ListPositiveDataLogsRequest{Search: "first train"})
+	if err != nil {
+		t.Fatalf("failed to list the logs: %v", err)
+	}
+	if len(listed.GetLogs()) != 1 {
+		t.Errorf("expected the search to find the log by its evidence but got %d", len(listed.GetLogs()))
+	}
+
+	if _, err := server.DeletePositiveDataLog(ctx, &proto.DeletePositiveDataLogRequest{Id: created.GetId()}); err != nil {
+		t.Fatalf("failed to delete the log: %v", err)
+	}
+	if _, err := server.GetPositiveDataLog(ctx, &proto.GetPositiveDataLogRequest{Id: created.GetId()}); statusCode(err) != codes.NotFound {
+		t.Errorf("expected NotFound after deletion but got %v", statusCode(err))
+	}
+}
+
+func TestPositiveDataLogErrorsAreMapped(t *testing.T) {
+	server := newTestServer(t)
+	ctx := authenticatedContext()
+
+	created, err := server.CreatePositiveDataLog(ctx, &proto.CreatePositiveDataLogRequest{Belief: "I am always late"})
+	if err != nil {
+		t.Fatalf("failed to create the log: %v", err)
+	}
+
+	tests := []struct {
+		name     string
+		run      func() error
+		expected codes.Code
+	}{
+		{"blank belief", func() error {
+			_, err := server.CreatePositiveDataLog(ctx, &proto.CreatePositiveDataLogRequest{Belief: " "})
+			return err
+		}, codes.InvalidArgument},
+		{"missing log", func() error {
+			_, err := server.GetPositiveDataLog(ctx, &proto.GetPositiveDataLogRequest{Id: 99})
+			return err
+		}, codes.NotFound},
+		{"missing evidence", func() error {
+			_, err := server.DeleteDataLogEvidence(ctx, &proto.DeleteDataLogEvidenceRequest{Id: 99})
+			return err
+		}, codes.NotFound},
+		{"blank evidence", func() error {
+			_, err := server.AddDataLogEvidence(ctx, &proto.AddDataLogEvidenceRequest{LogId: created.GetId(), Evidence: &proto.DataLogEvidenceInput{Body: " "}})
+			return err
+		}, codes.InvalidArgument},
+		{"empty rating", func() error {
+			_, err := server.RateBeliefs(ctx, &proto.RateBeliefsRequest{LogId: created.GetId()})
+			return err
+		}, codes.InvalidArgument},
+		{"rating out of range", func() error {
+			_, err := server.RateBeliefs(ctx, &proto.RateBeliefsRequest{LogId: created.GetId(), AlternativePercent: proto2Int32(101)})
 			return err
 		}, codes.InvalidArgument},
 	}

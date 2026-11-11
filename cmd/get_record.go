@@ -47,10 +47,22 @@ var getBehaviouralExperimentCmd = &cobra.Command{
 	RunE:        runGetBehaviouralExperiment,
 }
 
+// getPositiveDataLogCmd shows a single positive data log in full.
+var getPositiveDataLogCmd = &cobra.Command{
+	Use:         "data-log [id]",
+	Aliases:     []string{"positive-data-log", "pdl"},
+	Short:       "Show a positive data log in full, with every rating and all evidence",
+	Example:     `  cbt get data-log 4`,
+	Args:        cobra.ExactArgs(1),
+	Annotations: map[string]string{annotationRequiresService: "true"},
+	RunE:        runGetPositiveDataLog,
+}
+
 func init() {
 	getCmd.AddCommand(getThoughtRecordCmd)
 	getCmd.AddCommand(getMapOfWorryCmd)
 	getCmd.AddCommand(getBehaviouralExperimentCmd)
+	getCmd.AddCommand(getPositiveDataLogCmd)
 }
 
 func runGetThoughtRecord(cmd *cobra.Command, args []string) error {
@@ -111,6 +123,26 @@ func runGetBehaviouralExperiment(cmd *cobra.Command, args []string) error {
 	}
 
 	return writeBehaviouralExperimentDetail(cmd.OutOrStdout(), experiment)
+}
+
+func runGetPositiveDataLog(cmd *cobra.Command, args []string) error {
+	id, err := parseRecordID(args[0])
+	if err != nil {
+		return err
+	}
+
+	conn, err := dial()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = conn.Close() }()
+
+	log, err := proto.NewRecordServiceClient(conn).GetPositiveDataLog(cmd.Context(), &proto.GetPositiveDataLogRequest{Id: id})
+	if err != nil {
+		return fmt.Errorf("failed to get the positive data log: %w", err)
+	}
+
+	return writePositiveDataLogDetail(cmd.OutOrStdout(), log)
 }
 
 // parseRecordID converts a positional identifier argument. Identifiers are

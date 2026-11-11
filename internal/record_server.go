@@ -275,6 +275,8 @@ func mapDatabaseError(err error) error {
 		errors.Is(err, database.ErrBehaviouralExperimentNotFound),
 		errors.Is(err, database.ErrThoughtNotFound),
 		errors.Is(err, database.ErrFeelingNotFound),
+		errors.Is(err, database.ErrPositiveDataLogNotFound),
+		errors.Is(err, database.ErrDataLogEvidenceNotFound),
 		errors.Is(err, database.ErrBiasNotFound):
 		return status.Error(codes.NotFound, err.Error())
 	case errors.Is(err, database.ErrBiasExists):
@@ -287,7 +289,11 @@ func mapDatabaseError(err error) error {
 		errors.Is(err, database.ErrThoughtBeliefRange),
 		errors.Is(err, database.ErrBiasNameEmpty),
 		errors.Is(err, database.ErrMultipleHotThoughts),
-		errors.Is(err, database.ErrMapDerivedFromSelf):
+		errors.Is(err, database.ErrMapDerivedFromSelf),
+		errors.Is(err, database.ErrBeliefEmpty),
+		errors.Is(err, database.ErrDataLogEvidenceEmpty),
+		errors.Is(err, database.ErrBeliefRatingEmpty),
+		errors.Is(err, database.ErrBeliefRatingRange):
 		return status.Error(codes.InvalidArgument, err.Error())
 	case errors.Is(err, database.ErrBiasBuiltin),
 		errors.Is(err, database.ErrBiasInUse),

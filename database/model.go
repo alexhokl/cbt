@@ -9,7 +9,8 @@ import (
 // User is an authenticated Tailscale user. It is created on first sight by
 // the Tailscale authentication interceptor and referenced by TailscaleAddress
 // and every per-user record (CognitiveBias, ThoughtRecord, MapOfWorry,
-// BehaviouralExperiment, NegativeThought, Feeling).
+// BehaviouralExperiment, PositiveDataLog, NegativeThought, Feeling and the
+// rows hanging off a positive data log).
 //
 // User creation also seeds the builtin cognitive biases for that user; see
 // SeedBuiltinBiases.
@@ -265,4 +266,74 @@ type BehaviouralExperiment struct {
 	// Feelings are the emotions predicted before the experiment and rated
 	// again afterwards, together with any felt but not predicted.
 	Feelings []Feeling `gorm:"foreignKey:BehaviouralExperimentID"`
+}
+
+// PositiveDataLog is the positive data log: a self-critical belief and how
+// strongly it is believed, an alternative belief and how strongly that is
+// believed, and the evidence, gathered over time, that supports the
+// alternative and weakens the old belief.
+//
+// The log is meant to be returned to. Evidence is added a row at a time as it
+// is noticed, and both beliefs are re-rated on each return, so the ratings are
+// kept as a dated history rather than overwritten. The application stores what
+// the user wrote and rated; it never computes a trend or a score from it.
+//
+// Only Belief is required.
+type PositiveDataLog struct {
+	gorm.Model
+	// Belief is the self-critical belief being challenged. It is stored
+	// verbatim apart from surrounding whitespace.
+	Belief string `gorm:"not null"`
+	// AlternativeBelief is the belief offered in its place. It is stored
+	// verbatim apart from surrounding whitespace.
+	AlternativeBelief string `gorm:""`
+	UserID            uint   `gorm:"not null;index"`
+	User              User   `gorm:"foreignKey:UserID"`
+	// Evidence is what supports the alternative belief and weakens the old
+	// one, in the order it was written down.
+	Evidence []PositiveDataLogEvidence `gorm:"foreignKey:PositiveDataLogID"`
+	// Ratings are how strongly each belief was held, oldest first.
+	Ratings []BeliefRating `gorm:"foreignKey:PositiveDataLogID"`
+}
+
+// PositiveDataLogEvidence is a single row of evidence in a PositiveDataLog.
+type PositiveDataLogEvidence struct {
+	gorm.Model
+	// Body is the evidence as the user phrased it, stored verbatim apart from
+	// surrounding whitespace.
+	Body string `gorm:"not null"`
+	// NotedAt is when the evidence happened, which is frequently not when it
+	// was typed. It is nil when the user did not say; see
+	// ThoughtRecord.OccurredAt.
+	NotedAt           *time.Time
+	PositiveDataLogID uint `gorm:"not null;index"`
+	UserID            uint `gorm:"not null;index"`
+	User              User `gorm:"foreignKey:UserID"`
+}
+
+// TableName pins the table name for PositiveDataLogEvidence. GORM's
+// pluraliser treats "evidence" as uncountable, which would give the singular
+// "positive_data_log_evidence"; the name is written out literally in the
+// search subquery, so it is fixed here rather than left to inference.
+func (PositiveDataLogEvidence) TableName() string {
+	return "positive_data_log_evidences"
+}
+
+// BeliefRating is one rating of both beliefs of a PositiveDataLog, on a 0-100
+// scale. A log carries one per sitting: the first when the log is opened, and
+// another each time the user comes back to it. Either percentage may be left
+// out, but not both; the belief_ratings_not_empty triggers enforce that.
+type BeliefRating struct {
+	gorm.Model
+	// RatedAt is when the rating was given.
+	RatedAt time.Time `gorm:"not null;index"`
+	// BeliefPercent is how strongly the self-critical belief was held, or nil
+	// when it was not rated this time.
+	BeliefPercent *int
+	// AlternativePercent is how strongly the alternative belief was held, or
+	// nil when it was not rated this time.
+	AlternativePercent *int
+	PositiveDataLogID  uint `gorm:"not null;index"`
+	UserID             uint `gorm:"not null;index"`
+	User               User `gorm:"foreignKey:UserID"`
 }

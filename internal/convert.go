@@ -31,9 +31,10 @@ func toProtoIntensity(intensity *int) *int32 {
 		return nil
 	}
 	// The value cannot overflow: a rating is a percentage, held to 0-100 by
-	// validateIntensity and validateBelief in the operations and by the
-	// feelings_intensity_range and thoughts_belief_range triggers in the
-	// schema, so anything reaching here is already in range.
+	// validateIntensity, validateBelief and createBeliefRating in the
+	// operations and by the feelings_intensity_range, thoughts_belief_range
+	// and belief_ratings_range triggers in the schema, so anything reaching
+	// here is already in range.
 	narrowed := int32(*intensity) // #nosec G115
 	return &narrowed
 }
@@ -315,6 +316,80 @@ func toProtoBehaviouralExperiments(experiments []database.BehaviouralExperiment)
 	}
 
 	return converted, nil
+}
+
+// toProtoPositiveDataLog converts a positive data log with its evidence and
+// ratings.
+func toProtoPositiveDataLog(log *database.PositiveDataLog) (*proto.PositiveDataLog, error) {
+	if log == nil {
+		return nil, status.Error(codes.Internal, "positive data log is missing")
+	}
+
+	id, err := toProtoID(log.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	evidence := make([]*proto.DataLogEvidence, 0, len(log.Evidence))
+	for _, row := range log.Evidence {
+		rowID, err := toProtoID(row.ID)
+		if err != nil {
+			return nil, err
+		}
+		evidence = append(evidence, &proto.DataLogEvidence{
+			Id:        rowID,
+			Body:      row.Body,
+			NotedAt:   toProtoTimestamp(row.NotedAt),
+			CreatedAt: timestamppb.New(row.CreatedAt),
+		})
+	}
+
+	ratings := make([]*proto.BeliefRating, 0, len(log.Ratings))
+	for _, rating := range log.Ratings {
+		ratingID, err := toProtoID(rating.ID)
+		if err != nil {
+			return nil, err
+		}
+		ratings = append(ratings, &proto.BeliefRating{
+			Id:                 ratingID,
+			RatedAt:            timestamppb.New(rating.RatedAt),
+			BeliefPercent:      toProtoIntensity(rating.BeliefPercent),
+			AlternativePercent: toProtoIntensity(rating.AlternativePercent),
+		})
+	}
+
+	return &proto.PositiveDataLog{
+		Id:                id,
+		Belief:            log.Belief,
+		AlternativeBelief: log.AlternativeBelief,
+		Evidence:          evidence,
+		Ratings:           ratings,
+		CreatedAt:         timestamppb.New(log.CreatedAt),
+		UpdatedAt:         timestamppb.New(log.UpdatedAt),
+	}, nil
+}
+
+// toProtoPositiveDataLogs converts a list of positive data logs.
+func toProtoPositiveDataLogs(logs []database.PositiveDataLog) ([]*proto.PositiveDataLog, error) {
+	converted := make([]*proto.PositiveDataLog, 0, len(logs))
+	for index := range logs {
+		protoLog, err := toProtoPositiveDataLog(&logs[index])
+		if err != nil {
+			return nil, err
+		}
+		converted = append(converted, protoLog)
+	}
+
+	return converted, nil
+}
+
+// toDataLogEvidenceInput converts a wire row of evidence to the operation
+// input type.
+func toDataLogEvidenceInput(input *proto.DataLogEvidenceInput) database.DataLogEvidenceInput {
+	return database.DataLogEvidenceInput{
+		Body:    input.GetBody(),
+		NotedAt: fromProtoTimestamp(input.GetNotedAt()),
+	}
 }
 
 // toFeelingInputs converts wire feelings to the operation input type.

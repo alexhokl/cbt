@@ -671,6 +671,297 @@ func (x *BehaviouralExperiment) GetUpdatedAt() *timestamppb.Timestamp {
 	return nil
 }
 
+// PositiveDataLog is the positive data log: a self-critical belief, an
+// alternative belief, how strongly each is believed over time, and the
+// evidence that supports the alternative and weakens the old belief.
+type PositiveDataLog struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Id                uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Belief            string                 `protobuf:"bytes,2,opt,name=belief,proto3" json:"belief,omitempty"`
+	AlternativeBelief string                 `protobuf:"bytes,3,opt,name=alternative_belief,json=alternativeBelief,proto3" json:"alternative_belief,omitempty"`
+	// evidence is in the order it was written down.
+	Evidence []*DataLogEvidence `protobuf:"bytes,4,rep,name=evidence,proto3" json:"evidence,omitempty"`
+	// ratings are oldest first. Each return to the log appends one.
+	Ratings       []*BeliefRating        `protobuf:"bytes,5,rep,name=ratings,proto3" json:"ratings,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,6,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt     *timestamppb.Timestamp `protobuf:"bytes,7,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *PositiveDataLog) Reset() {
+	*x = PositiveDataLog{}
+	mi := &file_proto_record_proto_msgTypes[6]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *PositiveDataLog) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*PositiveDataLog) ProtoMessage() {}
+
+func (x *PositiveDataLog) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[6]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use PositiveDataLog.ProtoReflect.Descriptor instead.
+func (*PositiveDataLog) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{6}
+}
+
+func (x *PositiveDataLog) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *PositiveDataLog) GetBelief() string {
+	if x != nil {
+		return x.Belief
+	}
+	return ""
+}
+
+func (x *PositiveDataLog) GetAlternativeBelief() string {
+	if x != nil {
+		return x.AlternativeBelief
+	}
+	return ""
+}
+
+func (x *PositiveDataLog) GetEvidence() []*DataLogEvidence {
+	if x != nil {
+		return x.Evidence
+	}
+	return nil
+}
+
+func (x *PositiveDataLog) GetRatings() []*BeliefRating {
+	if x != nil {
+		return x.Ratings
+	}
+	return nil
+}
+
+func (x *PositiveDataLog) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+func (x *PositiveDataLog) GetUpdatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.UpdatedAt
+	}
+	return nil
+}
+
+// DataLogEvidence is a single row of evidence in a positive data log.
+type DataLogEvidence struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	Id    uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Body  string                 `protobuf:"bytes,2,opt,name=body,proto3" json:"body,omitempty"`
+	// noted_at is when the evidence happened. It is absent when the user did
+	// not say.
+	NotedAt       *timestamppb.Timestamp `protobuf:"bytes,3,opt,name=noted_at,json=notedAt,proto3,oneof" json:"noted_at,omitempty"`
+	CreatedAt     *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DataLogEvidence) Reset() {
+	*x = DataLogEvidence{}
+	mi := &file_proto_record_proto_msgTypes[7]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DataLogEvidence) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DataLogEvidence) ProtoMessage() {}
+
+func (x *DataLogEvidence) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[7]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DataLogEvidence.ProtoReflect.Descriptor instead.
+func (*DataLogEvidence) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{7}
+}
+
+func (x *DataLogEvidence) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *DataLogEvidence) GetBody() string {
+	if x != nil {
+		return x.Body
+	}
+	return ""
+}
+
+func (x *DataLogEvidence) GetNotedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.NotedAt
+	}
+	return nil
+}
+
+func (x *DataLogEvidence) GetCreatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.CreatedAt
+	}
+	return nil
+}
+
+// BeliefRating is how strongly each belief was held at one sitting, 0-100.
+// Either may be absent, but not both.
+type BeliefRating struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	Id                 uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	RatedAt            *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=rated_at,json=ratedAt,proto3" json:"rated_at,omitempty"`
+	BeliefPercent      *int32                 `protobuf:"varint,3,opt,name=belief_percent,json=beliefPercent,proto3,oneof" json:"belief_percent,omitempty"`
+	AlternativePercent *int32                 `protobuf:"varint,4,opt,name=alternative_percent,json=alternativePercent,proto3,oneof" json:"alternative_percent,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *BeliefRating) Reset() {
+	*x = BeliefRating{}
+	mi := &file_proto_record_proto_msgTypes[8]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *BeliefRating) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*BeliefRating) ProtoMessage() {}
+
+func (x *BeliefRating) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[8]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use BeliefRating.ProtoReflect.Descriptor instead.
+func (*BeliefRating) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{8}
+}
+
+func (x *BeliefRating) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *BeliefRating) GetRatedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.RatedAt
+	}
+	return nil
+}
+
+func (x *BeliefRating) GetBeliefPercent() int32 {
+	if x != nil && x.BeliefPercent != nil {
+		return *x.BeliefPercent
+	}
+	return 0
+}
+
+func (x *BeliefRating) GetAlternativePercent() int32 {
+	if x != nil && x.AlternativePercent != nil {
+		return *x.AlternativePercent
+	}
+	return 0
+}
+
+// DataLogEvidenceInput is a row of evidence as supplied by the client.
+type DataLogEvidenceInput struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Body          string                 `protobuf:"bytes,1,opt,name=body,proto3" json:"body,omitempty"`
+	NotedAt       *timestamppb.Timestamp `protobuf:"bytes,2,opt,name=noted_at,json=notedAt,proto3,oneof" json:"noted_at,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DataLogEvidenceInput) Reset() {
+	*x = DataLogEvidenceInput{}
+	mi := &file_proto_record_proto_msgTypes[9]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DataLogEvidenceInput) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DataLogEvidenceInput) ProtoMessage() {}
+
+func (x *DataLogEvidenceInput) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[9]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DataLogEvidenceInput.ProtoReflect.Descriptor instead.
+func (*DataLogEvidenceInput) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{9}
+}
+
+func (x *DataLogEvidenceInput) GetBody() string {
+	if x != nil {
+		return x.Body
+	}
+	return ""
+}
+
+func (x *DataLogEvidenceInput) GetNotedAt() *timestamppb.Timestamp {
+	if x != nil {
+		return x.NotedAt
+	}
+	return nil
+}
+
 // FeelingInput is a feeling as supplied by the client: a name and an optional
 // 0-100 rating.
 type FeelingInput struct {
@@ -683,7 +974,7 @@ type FeelingInput struct {
 
 func (x *FeelingInput) Reset() {
 	*x = FeelingInput{}
-	mi := &file_proto_record_proto_msgTypes[6]
+	mi := &file_proto_record_proto_msgTypes[10]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -695,7 +986,7 @@ func (x *FeelingInput) String() string {
 func (*FeelingInput) ProtoMessage() {}
 
 func (x *FeelingInput) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[6]
+	mi := &file_proto_record_proto_msgTypes[10]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -708,7 +999,7 @@ func (x *FeelingInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FeelingInput.ProtoReflect.Descriptor instead.
 func (*FeelingInput) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{6}
+	return file_proto_record_proto_rawDescGZIP(), []int{10}
 }
 
 func (x *FeelingInput) GetName() string {
@@ -741,7 +1032,7 @@ type ThoughtInput struct {
 
 func (x *ThoughtInput) Reset() {
 	*x = ThoughtInput{}
-	mi := &file_proto_record_proto_msgTypes[7]
+	mi := &file_proto_record_proto_msgTypes[11]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -753,7 +1044,7 @@ func (x *ThoughtInput) String() string {
 func (*ThoughtInput) ProtoMessage() {}
 
 func (x *ThoughtInput) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[7]
+	mi := &file_proto_record_proto_msgTypes[11]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -766,7 +1057,7 @@ func (x *ThoughtInput) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ThoughtInput.ProtoReflect.Descriptor instead.
 func (*ThoughtInput) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{7}
+	return file_proto_record_proto_rawDescGZIP(), []int{11}
 }
 
 func (x *ThoughtInput) GetBody() string {
@@ -814,7 +1105,7 @@ type ListThoughtRecordsRequest struct {
 
 func (x *ListThoughtRecordsRequest) Reset() {
 	*x = ListThoughtRecordsRequest{}
-	mi := &file_proto_record_proto_msgTypes[8]
+	mi := &file_proto_record_proto_msgTypes[12]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -826,7 +1117,7 @@ func (x *ListThoughtRecordsRequest) String() string {
 func (*ListThoughtRecordsRequest) ProtoMessage() {}
 
 func (x *ListThoughtRecordsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[8]
+	mi := &file_proto_record_proto_msgTypes[12]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -839,7 +1130,7 @@ func (x *ListThoughtRecordsRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListThoughtRecordsRequest.ProtoReflect.Descriptor instead.
 func (*ListThoughtRecordsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{8}
+	return file_proto_record_proto_rawDescGZIP(), []int{12}
 }
 
 func (x *ListThoughtRecordsRequest) GetChallenged() bool {
@@ -872,7 +1163,7 @@ type ListThoughtRecordsResponse struct {
 
 func (x *ListThoughtRecordsResponse) Reset() {
 	*x = ListThoughtRecordsResponse{}
-	mi := &file_proto_record_proto_msgTypes[9]
+	mi := &file_proto_record_proto_msgTypes[13]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -884,7 +1175,7 @@ func (x *ListThoughtRecordsResponse) String() string {
 func (*ListThoughtRecordsResponse) ProtoMessage() {}
 
 func (x *ListThoughtRecordsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[9]
+	mi := &file_proto_record_proto_msgTypes[13]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -897,7 +1188,7 @@ func (x *ListThoughtRecordsResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListThoughtRecordsResponse.ProtoReflect.Descriptor instead.
 func (*ListThoughtRecordsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{9}
+	return file_proto_record_proto_rawDescGZIP(), []int{13}
 }
 
 func (x *ListThoughtRecordsResponse) GetRecords() []*ThoughtRecord {
@@ -922,7 +1213,7 @@ type CreateThoughtRecordRequest struct {
 
 func (x *CreateThoughtRecordRequest) Reset() {
 	*x = CreateThoughtRecordRequest{}
-	mi := &file_proto_record_proto_msgTypes[10]
+	mi := &file_proto_record_proto_msgTypes[14]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -934,7 +1225,7 @@ func (x *CreateThoughtRecordRequest) String() string {
 func (*CreateThoughtRecordRequest) ProtoMessage() {}
 
 func (x *CreateThoughtRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[10]
+	mi := &file_proto_record_proto_msgTypes[14]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -947,7 +1238,7 @@ func (x *CreateThoughtRecordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateThoughtRecordRequest.ProtoReflect.Descriptor instead.
 func (*CreateThoughtRecordRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{10}
+	return file_proto_record_proto_rawDescGZIP(), []int{14}
 }
 
 func (x *CreateThoughtRecordRequest) GetEvent() string {
@@ -1008,7 +1299,7 @@ type GetThoughtRecordRequest struct {
 
 func (x *GetThoughtRecordRequest) Reset() {
 	*x = GetThoughtRecordRequest{}
-	mi := &file_proto_record_proto_msgTypes[11]
+	mi := &file_proto_record_proto_msgTypes[15]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1020,7 +1311,7 @@ func (x *GetThoughtRecordRequest) String() string {
 func (*GetThoughtRecordRequest) ProtoMessage() {}
 
 func (x *GetThoughtRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[11]
+	mi := &file_proto_record_proto_msgTypes[15]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1033,7 +1324,7 @@ func (x *GetThoughtRecordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetThoughtRecordRequest.ProtoReflect.Descriptor instead.
 func (*GetThoughtRecordRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{11}
+	return file_proto_record_proto_rawDescGZIP(), []int{15}
 }
 
 func (x *GetThoughtRecordRequest) GetId() uint32 {
@@ -1062,7 +1353,7 @@ type UpdateThoughtRecordRequest struct {
 
 func (x *UpdateThoughtRecordRequest) Reset() {
 	*x = UpdateThoughtRecordRequest{}
-	mi := &file_proto_record_proto_msgTypes[12]
+	mi := &file_proto_record_proto_msgTypes[16]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1074,7 +1365,7 @@ func (x *UpdateThoughtRecordRequest) String() string {
 func (*UpdateThoughtRecordRequest) ProtoMessage() {}
 
 func (x *UpdateThoughtRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[12]
+	mi := &file_proto_record_proto_msgTypes[16]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1087,7 +1378,7 @@ func (x *UpdateThoughtRecordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateThoughtRecordRequest.ProtoReflect.Descriptor instead.
 func (*UpdateThoughtRecordRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{12}
+	return file_proto_record_proto_rawDescGZIP(), []int{16}
 }
 
 func (x *UpdateThoughtRecordRequest) GetId() uint32 {
@@ -1164,7 +1455,7 @@ type ThoughtJudgement struct {
 
 func (x *ThoughtJudgement) Reset() {
 	*x = ThoughtJudgement{}
-	mi := &file_proto_record_proto_msgTypes[13]
+	mi := &file_proto_record_proto_msgTypes[17]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1176,7 +1467,7 @@ func (x *ThoughtJudgement) String() string {
 func (*ThoughtJudgement) ProtoMessage() {}
 
 func (x *ThoughtJudgement) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[13]
+	mi := &file_proto_record_proto_msgTypes[17]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1189,7 +1480,7 @@ func (x *ThoughtJudgement) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ThoughtJudgement.ProtoReflect.Descriptor instead.
 func (*ThoughtJudgement) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{13}
+	return file_proto_record_proto_rawDescGZIP(), []int{17}
 }
 
 func (x *ThoughtJudgement) GetThoughtId() uint32 {
@@ -1231,7 +1522,7 @@ type FeelingRerating struct {
 
 func (x *FeelingRerating) Reset() {
 	*x = FeelingRerating{}
-	mi := &file_proto_record_proto_msgTypes[14]
+	mi := &file_proto_record_proto_msgTypes[18]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1243,7 +1534,7 @@ func (x *FeelingRerating) String() string {
 func (*FeelingRerating) ProtoMessage() {}
 
 func (x *FeelingRerating) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[14]
+	mi := &file_proto_record_proto_msgTypes[18]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1256,7 +1547,7 @@ func (x *FeelingRerating) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use FeelingRerating.ProtoReflect.Descriptor instead.
 func (*FeelingRerating) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{14}
+	return file_proto_record_proto_rawDescGZIP(), []int{18}
 }
 
 func (x *FeelingRerating) GetFeelingId() uint32 {
@@ -1287,7 +1578,7 @@ type ChallengeThoughtRecordRequest struct {
 
 func (x *ChallengeThoughtRecordRequest) Reset() {
 	*x = ChallengeThoughtRecordRequest{}
-	mi := &file_proto_record_proto_msgTypes[15]
+	mi := &file_proto_record_proto_msgTypes[19]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1299,7 +1590,7 @@ func (x *ChallengeThoughtRecordRequest) String() string {
 func (*ChallengeThoughtRecordRequest) ProtoMessage() {}
 
 func (x *ChallengeThoughtRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[15]
+	mi := &file_proto_record_proto_msgTypes[19]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1312,7 +1603,7 @@ func (x *ChallengeThoughtRecordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ChallengeThoughtRecordRequest.ProtoReflect.Descriptor instead.
 func (*ChallengeThoughtRecordRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{15}
+	return file_proto_record_proto_rawDescGZIP(), []int{19}
 }
 
 func (x *ChallengeThoughtRecordRequest) GetId() uint32 {
@@ -1366,7 +1657,7 @@ type DeleteThoughtRecordRequest struct {
 
 func (x *DeleteThoughtRecordRequest) Reset() {
 	*x = DeleteThoughtRecordRequest{}
-	mi := &file_proto_record_proto_msgTypes[16]
+	mi := &file_proto_record_proto_msgTypes[20]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1378,7 +1669,7 @@ func (x *DeleteThoughtRecordRequest) String() string {
 func (*DeleteThoughtRecordRequest) ProtoMessage() {}
 
 func (x *DeleteThoughtRecordRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[16]
+	mi := &file_proto_record_proto_msgTypes[20]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1391,7 +1682,7 @@ func (x *DeleteThoughtRecordRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteThoughtRecordRequest.ProtoReflect.Descriptor instead.
 func (*DeleteThoughtRecordRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{16}
+	return file_proto_record_proto_rawDescGZIP(), []int{20}
 }
 
 func (x *DeleteThoughtRecordRequest) GetId() uint32 {
@@ -1411,7 +1702,7 @@ type AddThoughtRequest struct {
 
 func (x *AddThoughtRequest) Reset() {
 	*x = AddThoughtRequest{}
-	mi := &file_proto_record_proto_msgTypes[17]
+	mi := &file_proto_record_proto_msgTypes[21]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1423,7 +1714,7 @@ func (x *AddThoughtRequest) String() string {
 func (*AddThoughtRequest) ProtoMessage() {}
 
 func (x *AddThoughtRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[17]
+	mi := &file_proto_record_proto_msgTypes[21]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1436,7 +1727,7 @@ func (x *AddThoughtRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddThoughtRequest.ProtoReflect.Descriptor instead.
 func (*AddThoughtRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{17}
+	return file_proto_record_proto_rawDescGZIP(), []int{21}
 }
 
 func (x *AddThoughtRequest) GetRecordId() uint32 {
@@ -1467,7 +1758,7 @@ type UpdateThoughtRequest struct {
 
 func (x *UpdateThoughtRequest) Reset() {
 	*x = UpdateThoughtRequest{}
-	mi := &file_proto_record_proto_msgTypes[18]
+	mi := &file_proto_record_proto_msgTypes[22]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1479,7 +1770,7 @@ func (x *UpdateThoughtRequest) String() string {
 func (*UpdateThoughtRequest) ProtoMessage() {}
 
 func (x *UpdateThoughtRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[18]
+	mi := &file_proto_record_proto_msgTypes[22]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1492,7 +1783,7 @@ func (x *UpdateThoughtRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateThoughtRequest.ProtoReflect.Descriptor instead.
 func (*UpdateThoughtRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{18}
+	return file_proto_record_proto_rawDescGZIP(), []int{22}
 }
 
 func (x *UpdateThoughtRequest) GetId() uint32 {
@@ -1527,7 +1818,7 @@ type BiasNames struct {
 
 func (x *BiasNames) Reset() {
 	*x = BiasNames{}
-	mi := &file_proto_record_proto_msgTypes[19]
+	mi := &file_proto_record_proto_msgTypes[23]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1539,7 +1830,7 @@ func (x *BiasNames) String() string {
 func (*BiasNames) ProtoMessage() {}
 
 func (x *BiasNames) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[19]
+	mi := &file_proto_record_proto_msgTypes[23]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1552,7 +1843,7 @@ func (x *BiasNames) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use BiasNames.ProtoReflect.Descriptor instead.
 func (*BiasNames) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{19}
+	return file_proto_record_proto_rawDescGZIP(), []int{23}
 }
 
 func (x *BiasNames) GetNames() []string {
@@ -1571,7 +1862,7 @@ type SetHotThoughtRequest struct {
 
 func (x *SetHotThoughtRequest) Reset() {
 	*x = SetHotThoughtRequest{}
-	mi := &file_proto_record_proto_msgTypes[20]
+	mi := &file_proto_record_proto_msgTypes[24]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1583,7 +1874,7 @@ func (x *SetHotThoughtRequest) String() string {
 func (*SetHotThoughtRequest) ProtoMessage() {}
 
 func (x *SetHotThoughtRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[20]
+	mi := &file_proto_record_proto_msgTypes[24]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1596,7 +1887,7 @@ func (x *SetHotThoughtRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetHotThoughtRequest.ProtoReflect.Descriptor instead.
 func (*SetHotThoughtRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{20}
+	return file_proto_record_proto_rawDescGZIP(), []int{24}
 }
 
 func (x *SetHotThoughtRequest) GetId() uint32 {
@@ -1616,7 +1907,7 @@ type SetThoughtFactualRequest struct {
 
 func (x *SetThoughtFactualRequest) Reset() {
 	*x = SetThoughtFactualRequest{}
-	mi := &file_proto_record_proto_msgTypes[21]
+	mi := &file_proto_record_proto_msgTypes[25]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1628,7 +1919,7 @@ func (x *SetThoughtFactualRequest) String() string {
 func (*SetThoughtFactualRequest) ProtoMessage() {}
 
 func (x *SetThoughtFactualRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[21]
+	mi := &file_proto_record_proto_msgTypes[25]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1641,7 +1932,7 @@ func (x *SetThoughtFactualRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetThoughtFactualRequest.ProtoReflect.Descriptor instead.
 func (*SetThoughtFactualRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{21}
+	return file_proto_record_proto_rawDescGZIP(), []int{25}
 }
 
 func (x *SetThoughtFactualRequest) GetId() uint32 {
@@ -1669,7 +1960,7 @@ type SetThoughtEvidenceRequest struct {
 
 func (x *SetThoughtEvidenceRequest) Reset() {
 	*x = SetThoughtEvidenceRequest{}
-	mi := &file_proto_record_proto_msgTypes[22]
+	mi := &file_proto_record_proto_msgTypes[26]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1681,7 +1972,7 @@ func (x *SetThoughtEvidenceRequest) String() string {
 func (*SetThoughtEvidenceRequest) ProtoMessage() {}
 
 func (x *SetThoughtEvidenceRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[22]
+	mi := &file_proto_record_proto_msgTypes[26]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1694,7 +1985,7 @@ func (x *SetThoughtEvidenceRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use SetThoughtEvidenceRequest.ProtoReflect.Descriptor instead.
 func (*SetThoughtEvidenceRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{22}
+	return file_proto_record_proto_rawDescGZIP(), []int{26}
 }
 
 func (x *SetThoughtEvidenceRequest) GetId() uint32 {
@@ -1720,7 +2011,7 @@ type DeleteThoughtRequest struct {
 
 func (x *DeleteThoughtRequest) Reset() {
 	*x = DeleteThoughtRequest{}
-	mi := &file_proto_record_proto_msgTypes[23]
+	mi := &file_proto_record_proto_msgTypes[27]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1732,7 +2023,7 @@ func (x *DeleteThoughtRequest) String() string {
 func (*DeleteThoughtRequest) ProtoMessage() {}
 
 func (x *DeleteThoughtRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[23]
+	mi := &file_proto_record_proto_msgTypes[27]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1745,7 +2036,7 @@ func (x *DeleteThoughtRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteThoughtRequest.ProtoReflect.Descriptor instead.
 func (*DeleteThoughtRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{23}
+	return file_proto_record_proto_rawDescGZIP(), []int{27}
 }
 
 func (x *DeleteThoughtRequest) GetId() uint32 {
@@ -1765,7 +2056,7 @@ type AddFeelingRequest struct {
 
 func (x *AddFeelingRequest) Reset() {
 	*x = AddFeelingRequest{}
-	mi := &file_proto_record_proto_msgTypes[24]
+	mi := &file_proto_record_proto_msgTypes[28]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1777,7 +2068,7 @@ func (x *AddFeelingRequest) String() string {
 func (*AddFeelingRequest) ProtoMessage() {}
 
 func (x *AddFeelingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[24]
+	mi := &file_proto_record_proto_msgTypes[28]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1790,7 +2081,7 @@ func (x *AddFeelingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddFeelingRequest.ProtoReflect.Descriptor instead.
 func (*AddFeelingRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{24}
+	return file_proto_record_proto_rawDescGZIP(), []int{28}
 }
 
 func (x *AddFeelingRequest) GetRecordId() uint32 {
@@ -1817,7 +2108,7 @@ type AddMapFeelingRequest struct {
 
 func (x *AddMapFeelingRequest) Reset() {
 	*x = AddMapFeelingRequest{}
-	mi := &file_proto_record_proto_msgTypes[25]
+	mi := &file_proto_record_proto_msgTypes[29]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1829,7 +2120,7 @@ func (x *AddMapFeelingRequest) String() string {
 func (*AddMapFeelingRequest) ProtoMessage() {}
 
 func (x *AddMapFeelingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[25]
+	mi := &file_proto_record_proto_msgTypes[29]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1842,7 +2133,7 @@ func (x *AddMapFeelingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddMapFeelingRequest.ProtoReflect.Descriptor instead.
 func (*AddMapFeelingRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{25}
+	return file_proto_record_proto_rawDescGZIP(), []int{29}
 }
 
 func (x *AddMapFeelingRequest) GetMapId() uint32 {
@@ -1868,7 +2159,7 @@ type DeleteFeelingRequest struct {
 
 func (x *DeleteFeelingRequest) Reset() {
 	*x = DeleteFeelingRequest{}
-	mi := &file_proto_record_proto_msgTypes[26]
+	mi := &file_proto_record_proto_msgTypes[30]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1880,7 +2171,7 @@ func (x *DeleteFeelingRequest) String() string {
 func (*DeleteFeelingRequest) ProtoMessage() {}
 
 func (x *DeleteFeelingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[26]
+	mi := &file_proto_record_proto_msgTypes[30]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1893,7 +2184,7 @@ func (x *DeleteFeelingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteFeelingRequest.ProtoReflect.Descriptor instead.
 func (*DeleteFeelingRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{26}
+	return file_proto_record_proto_rawDescGZIP(), []int{30}
 }
 
 func (x *DeleteFeelingRequest) GetId() uint32 {
@@ -1913,7 +2204,7 @@ type ListMapsOfWorryRequest struct {
 
 func (x *ListMapsOfWorryRequest) Reset() {
 	*x = ListMapsOfWorryRequest{}
-	mi := &file_proto_record_proto_msgTypes[27]
+	mi := &file_proto_record_proto_msgTypes[31]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1925,7 +2216,7 @@ func (x *ListMapsOfWorryRequest) String() string {
 func (*ListMapsOfWorryRequest) ProtoMessage() {}
 
 func (x *ListMapsOfWorryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[27]
+	mi := &file_proto_record_proto_msgTypes[31]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1938,7 +2229,7 @@ func (x *ListMapsOfWorryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMapsOfWorryRequest.ProtoReflect.Descriptor instead.
 func (*ListMapsOfWorryRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{27}
+	return file_proto_record_proto_rawDescGZIP(), []int{31}
 }
 
 func (x *ListMapsOfWorryRequest) GetSince() *timestamppb.Timestamp {
@@ -1964,7 +2255,7 @@ type ListMapsOfWorryResponse struct {
 
 func (x *ListMapsOfWorryResponse) Reset() {
 	*x = ListMapsOfWorryResponse{}
-	mi := &file_proto_record_proto_msgTypes[28]
+	mi := &file_proto_record_proto_msgTypes[32]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -1976,7 +2267,7 @@ func (x *ListMapsOfWorryResponse) String() string {
 func (*ListMapsOfWorryResponse) ProtoMessage() {}
 
 func (x *ListMapsOfWorryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[28]
+	mi := &file_proto_record_proto_msgTypes[32]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -1989,7 +2280,7 @@ func (x *ListMapsOfWorryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListMapsOfWorryResponse.ProtoReflect.Descriptor instead.
 func (*ListMapsOfWorryResponse) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{28}
+	return file_proto_record_proto_rawDescGZIP(), []int{32}
 }
 
 func (x *ListMapsOfWorryResponse) GetMaps() []*MapOfWorry {
@@ -2015,7 +2306,7 @@ type CreateMapOfWorryRequest struct {
 
 func (x *CreateMapOfWorryRequest) Reset() {
 	*x = CreateMapOfWorryRequest{}
-	mi := &file_proto_record_proto_msgTypes[29]
+	mi := &file_proto_record_proto_msgTypes[33]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2027,7 +2318,7 @@ func (x *CreateMapOfWorryRequest) String() string {
 func (*CreateMapOfWorryRequest) ProtoMessage() {}
 
 func (x *CreateMapOfWorryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[29]
+	mi := &file_proto_record_proto_msgTypes[33]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2040,7 +2331,7 @@ func (x *CreateMapOfWorryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateMapOfWorryRequest.ProtoReflect.Descriptor instead.
 func (*CreateMapOfWorryRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{29}
+	return file_proto_record_proto_rawDescGZIP(), []int{33}
 }
 
 func (x *CreateMapOfWorryRequest) GetEvent() string {
@@ -2108,7 +2399,7 @@ type GetMapOfWorryRequest struct {
 
 func (x *GetMapOfWorryRequest) Reset() {
 	*x = GetMapOfWorryRequest{}
-	mi := &file_proto_record_proto_msgTypes[30]
+	mi := &file_proto_record_proto_msgTypes[34]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2120,7 +2411,7 @@ func (x *GetMapOfWorryRequest) String() string {
 func (*GetMapOfWorryRequest) ProtoMessage() {}
 
 func (x *GetMapOfWorryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[30]
+	mi := &file_proto_record_proto_msgTypes[34]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2133,7 +2424,7 @@ func (x *GetMapOfWorryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMapOfWorryRequest.ProtoReflect.Descriptor instead.
 func (*GetMapOfWorryRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{30}
+	return file_proto_record_proto_rawDescGZIP(), []int{34}
 }
 
 func (x *GetMapOfWorryRequest) GetId() uint32 {
@@ -2158,7 +2449,7 @@ type GetMapOfWorryResponse struct {
 
 func (x *GetMapOfWorryResponse) Reset() {
 	*x = GetMapOfWorryResponse{}
-	mi := &file_proto_record_proto_msgTypes[31]
+	mi := &file_proto_record_proto_msgTypes[35]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2170,7 +2461,7 @@ func (x *GetMapOfWorryResponse) String() string {
 func (*GetMapOfWorryResponse) ProtoMessage() {}
 
 func (x *GetMapOfWorryResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[31]
+	mi := &file_proto_record_proto_msgTypes[35]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2183,7 +2474,7 @@ func (x *GetMapOfWorryResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetMapOfWorryResponse.ProtoReflect.Descriptor instead.
 func (*GetMapOfWorryResponse) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{31}
+	return file_proto_record_proto_rawDescGZIP(), []int{35}
 }
 
 func (x *GetMapOfWorryResponse) GetMap() *MapOfWorry {
@@ -2223,7 +2514,7 @@ type UpdateMapOfWorryRequest struct {
 
 func (x *UpdateMapOfWorryRequest) Reset() {
 	*x = UpdateMapOfWorryRequest{}
-	mi := &file_proto_record_proto_msgTypes[32]
+	mi := &file_proto_record_proto_msgTypes[36]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2235,7 +2526,7 @@ func (x *UpdateMapOfWorryRequest) String() string {
 func (*UpdateMapOfWorryRequest) ProtoMessage() {}
 
 func (x *UpdateMapOfWorryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[32]
+	mi := &file_proto_record_proto_msgTypes[36]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2248,7 +2539,7 @@ func (x *UpdateMapOfWorryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use UpdateMapOfWorryRequest.ProtoReflect.Descriptor instead.
 func (*UpdateMapOfWorryRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{32}
+	return file_proto_record_proto_rawDescGZIP(), []int{36}
 }
 
 func (x *UpdateMapOfWorryRequest) GetId() uint32 {
@@ -2316,7 +2607,7 @@ type DeleteMapOfWorryRequest struct {
 
 func (x *DeleteMapOfWorryRequest) Reset() {
 	*x = DeleteMapOfWorryRequest{}
-	mi := &file_proto_record_proto_msgTypes[33]
+	mi := &file_proto_record_proto_msgTypes[37]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2328,7 +2619,7 @@ func (x *DeleteMapOfWorryRequest) String() string {
 func (*DeleteMapOfWorryRequest) ProtoMessage() {}
 
 func (x *DeleteMapOfWorryRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[33]
+	mi := &file_proto_record_proto_msgTypes[37]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2341,7 +2632,7 @@ func (x *DeleteMapOfWorryRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteMapOfWorryRequest.ProtoReflect.Descriptor instead.
 func (*DeleteMapOfWorryRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{33}
+	return file_proto_record_proto_rawDescGZIP(), []int{37}
 }
 
 func (x *DeleteMapOfWorryRequest) GetId() uint32 {
@@ -2365,7 +2656,7 @@ type ListBehaviouralExperimentsRequest struct {
 
 func (x *ListBehaviouralExperimentsRequest) Reset() {
 	*x = ListBehaviouralExperimentsRequest{}
-	mi := &file_proto_record_proto_msgTypes[34]
+	mi := &file_proto_record_proto_msgTypes[38]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2377,7 +2668,7 @@ func (x *ListBehaviouralExperimentsRequest) String() string {
 func (*ListBehaviouralExperimentsRequest) ProtoMessage() {}
 
 func (x *ListBehaviouralExperimentsRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[34]
+	mi := &file_proto_record_proto_msgTypes[38]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2390,7 +2681,7 @@ func (x *ListBehaviouralExperimentsRequest) ProtoReflect() protoreflect.Message 
 
 // Deprecated: Use ListBehaviouralExperimentsRequest.ProtoReflect.Descriptor instead.
 func (*ListBehaviouralExperimentsRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{34}
+	return file_proto_record_proto_rawDescGZIP(), []int{38}
 }
 
 func (x *ListBehaviouralExperimentsRequest) GetCompleted() bool {
@@ -2423,7 +2714,7 @@ type ListBehaviouralExperimentsResponse struct {
 
 func (x *ListBehaviouralExperimentsResponse) Reset() {
 	*x = ListBehaviouralExperimentsResponse{}
-	mi := &file_proto_record_proto_msgTypes[35]
+	mi := &file_proto_record_proto_msgTypes[39]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2435,7 +2726,7 @@ func (x *ListBehaviouralExperimentsResponse) String() string {
 func (*ListBehaviouralExperimentsResponse) ProtoMessage() {}
 
 func (x *ListBehaviouralExperimentsResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[35]
+	mi := &file_proto_record_proto_msgTypes[39]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2448,7 +2739,7 @@ func (x *ListBehaviouralExperimentsResponse) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use ListBehaviouralExperimentsResponse.ProtoReflect.Descriptor instead.
 func (*ListBehaviouralExperimentsResponse) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{35}
+	return file_proto_record_proto_rawDescGZIP(), []int{39}
 }
 
 func (x *ListBehaviouralExperimentsResponse) GetExperiments() []*BehaviouralExperiment {
@@ -2471,7 +2762,7 @@ type CreateBehaviouralExperimentRequest struct {
 
 func (x *CreateBehaviouralExperimentRequest) Reset() {
 	*x = CreateBehaviouralExperimentRequest{}
-	mi := &file_proto_record_proto_msgTypes[36]
+	mi := &file_proto_record_proto_msgTypes[40]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2483,7 +2774,7 @@ func (x *CreateBehaviouralExperimentRequest) String() string {
 func (*CreateBehaviouralExperimentRequest) ProtoMessage() {}
 
 func (x *CreateBehaviouralExperimentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[36]
+	mi := &file_proto_record_proto_msgTypes[40]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2496,7 +2787,7 @@ func (x *CreateBehaviouralExperimentRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use CreateBehaviouralExperimentRequest.ProtoReflect.Descriptor instead.
 func (*CreateBehaviouralExperimentRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{36}
+	return file_proto_record_proto_rawDescGZIP(), []int{40}
 }
 
 func (x *CreateBehaviouralExperimentRequest) GetPlan() string {
@@ -2536,7 +2827,7 @@ type GetBehaviouralExperimentRequest struct {
 
 func (x *GetBehaviouralExperimentRequest) Reset() {
 	*x = GetBehaviouralExperimentRequest{}
-	mi := &file_proto_record_proto_msgTypes[37]
+	mi := &file_proto_record_proto_msgTypes[41]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2548,7 +2839,7 @@ func (x *GetBehaviouralExperimentRequest) String() string {
 func (*GetBehaviouralExperimentRequest) ProtoMessage() {}
 
 func (x *GetBehaviouralExperimentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[37]
+	mi := &file_proto_record_proto_msgTypes[41]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2561,7 +2852,7 @@ func (x *GetBehaviouralExperimentRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use GetBehaviouralExperimentRequest.ProtoReflect.Descriptor instead.
 func (*GetBehaviouralExperimentRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{37}
+	return file_proto_record_proto_rawDescGZIP(), []int{41}
 }
 
 func (x *GetBehaviouralExperimentRequest) GetId() uint32 {
@@ -2587,7 +2878,7 @@ type UpdateBehaviouralExperimentRequest struct {
 
 func (x *UpdateBehaviouralExperimentRequest) Reset() {
 	*x = UpdateBehaviouralExperimentRequest{}
-	mi := &file_proto_record_proto_msgTypes[38]
+	mi := &file_proto_record_proto_msgTypes[42]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2599,7 +2890,7 @@ func (x *UpdateBehaviouralExperimentRequest) String() string {
 func (*UpdateBehaviouralExperimentRequest) ProtoMessage() {}
 
 func (x *UpdateBehaviouralExperimentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[38]
+	mi := &file_proto_record_proto_msgTypes[42]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2612,7 +2903,7 @@ func (x *UpdateBehaviouralExperimentRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use UpdateBehaviouralExperimentRequest.ProtoReflect.Descriptor instead.
 func (*UpdateBehaviouralExperimentRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{38}
+	return file_proto_record_proto_rawDescGZIP(), []int{42}
 }
 
 func (x *UpdateBehaviouralExperimentRequest) GetId() uint32 {
@@ -2688,7 +2979,7 @@ type CompleteBehaviouralExperimentRequest struct {
 
 func (x *CompleteBehaviouralExperimentRequest) Reset() {
 	*x = CompleteBehaviouralExperimentRequest{}
-	mi := &file_proto_record_proto_msgTypes[39]
+	mi := &file_proto_record_proto_msgTypes[43]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2700,7 +2991,7 @@ func (x *CompleteBehaviouralExperimentRequest) String() string {
 func (*CompleteBehaviouralExperimentRequest) ProtoMessage() {}
 
 func (x *CompleteBehaviouralExperimentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[39]
+	mi := &file_proto_record_proto_msgTypes[43]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2713,7 +3004,7 @@ func (x *CompleteBehaviouralExperimentRequest) ProtoReflect() protoreflect.Messa
 
 // Deprecated: Use CompleteBehaviouralExperimentRequest.ProtoReflect.Descriptor instead.
 func (*CompleteBehaviouralExperimentRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{39}
+	return file_proto_record_proto_rawDescGZIP(), []int{43}
 }
 
 func (x *CompleteBehaviouralExperimentRequest) GetId() uint32 {
@@ -2767,7 +3058,7 @@ type DeleteBehaviouralExperimentRequest struct {
 
 func (x *DeleteBehaviouralExperimentRequest) Reset() {
 	*x = DeleteBehaviouralExperimentRequest{}
-	mi := &file_proto_record_proto_msgTypes[40]
+	mi := &file_proto_record_proto_msgTypes[44]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2779,7 +3070,7 @@ func (x *DeleteBehaviouralExperimentRequest) String() string {
 func (*DeleteBehaviouralExperimentRequest) ProtoMessage() {}
 
 func (x *DeleteBehaviouralExperimentRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[40]
+	mi := &file_proto_record_proto_msgTypes[44]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2792,7 +3083,7 @@ func (x *DeleteBehaviouralExperimentRequest) ProtoReflect() protoreflect.Message
 
 // Deprecated: Use DeleteBehaviouralExperimentRequest.ProtoReflect.Descriptor instead.
 func (*DeleteBehaviouralExperimentRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{40}
+	return file_proto_record_proto_rawDescGZIP(), []int{44}
 }
 
 func (x *DeleteBehaviouralExperimentRequest) GetId() uint32 {
@@ -2812,7 +3103,7 @@ type AddExperimentFeelingRequest struct {
 
 func (x *AddExperimentFeelingRequest) Reset() {
 	*x = AddExperimentFeelingRequest{}
-	mi := &file_proto_record_proto_msgTypes[41]
+	mi := &file_proto_record_proto_msgTypes[45]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2824,7 +3115,7 @@ func (x *AddExperimentFeelingRequest) String() string {
 func (*AddExperimentFeelingRequest) ProtoMessage() {}
 
 func (x *AddExperimentFeelingRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[41]
+	mi := &file_proto_record_proto_msgTypes[45]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2837,7 +3128,7 @@ func (x *AddExperimentFeelingRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use AddExperimentFeelingRequest.ProtoReflect.Descriptor instead.
 func (*AddExperimentFeelingRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{41}
+	return file_proto_record_proto_rawDescGZIP(), []int{45}
 }
 
 func (x *AddExperimentFeelingRequest) GetExperimentId() uint32 {
@@ -2854,6 +3145,477 @@ func (x *AddExperimentFeelingRequest) GetFeeling() *FeelingInput {
 	return nil
 }
 
+type ListPositiveDataLogsRequest struct {
+	state protoimpl.MessageState `protogen:"open.v1"`
+	// search matches both beliefs and every row of evidence.
+	Search        string `protobuf:"bytes,1,opt,name=search,proto3" json:"search,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListPositiveDataLogsRequest) Reset() {
+	*x = ListPositiveDataLogsRequest{}
+	mi := &file_proto_record_proto_msgTypes[46]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListPositiveDataLogsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListPositiveDataLogsRequest) ProtoMessage() {}
+
+func (x *ListPositiveDataLogsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[46]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListPositiveDataLogsRequest.ProtoReflect.Descriptor instead.
+func (*ListPositiveDataLogsRequest) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{46}
+}
+
+func (x *ListPositiveDataLogsRequest) GetSearch() string {
+	if x != nil {
+		return x.Search
+	}
+	return ""
+}
+
+type ListPositiveDataLogsResponse struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Logs          []*PositiveDataLog     `protobuf:"bytes,1,rep,name=logs,proto3" json:"logs,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *ListPositiveDataLogsResponse) Reset() {
+	*x = ListPositiveDataLogsResponse{}
+	mi := &file_proto_record_proto_msgTypes[47]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *ListPositiveDataLogsResponse) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*ListPositiveDataLogsResponse) ProtoMessage() {}
+
+func (x *ListPositiveDataLogsResponse) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[47]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use ListPositiveDataLogsResponse.ProtoReflect.Descriptor instead.
+func (*ListPositiveDataLogsResponse) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{47}
+}
+
+func (x *ListPositiveDataLogsResponse) GetLogs() []*PositiveDataLog {
+	if x != nil {
+		return x.Logs
+	}
+	return nil
+}
+
+type CreatePositiveDataLogRequest struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Belief            string                 `protobuf:"bytes,1,opt,name=belief,proto3" json:"belief,omitempty"`
+	AlternativeBelief string                 `protobuf:"bytes,2,opt,name=alternative_belief,json=alternativeBelief,proto3" json:"alternative_belief,omitempty"`
+	// belief_percent and alternative_percent form the first rating. It is
+	// stored when either is given.
+	BeliefPercent      *int32                  `protobuf:"varint,3,opt,name=belief_percent,json=beliefPercent,proto3,oneof" json:"belief_percent,omitempty"`
+	AlternativePercent *int32                  `protobuf:"varint,4,opt,name=alternative_percent,json=alternativePercent,proto3,oneof" json:"alternative_percent,omitempty"`
+	Evidence           []*DataLogEvidenceInput `protobuf:"bytes,5,rep,name=evidence,proto3" json:"evidence,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *CreatePositiveDataLogRequest) Reset() {
+	*x = CreatePositiveDataLogRequest{}
+	mi := &file_proto_record_proto_msgTypes[48]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *CreatePositiveDataLogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*CreatePositiveDataLogRequest) ProtoMessage() {}
+
+func (x *CreatePositiveDataLogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[48]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use CreatePositiveDataLogRequest.ProtoReflect.Descriptor instead.
+func (*CreatePositiveDataLogRequest) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{48}
+}
+
+func (x *CreatePositiveDataLogRequest) GetBelief() string {
+	if x != nil {
+		return x.Belief
+	}
+	return ""
+}
+
+func (x *CreatePositiveDataLogRequest) GetAlternativeBelief() string {
+	if x != nil {
+		return x.AlternativeBelief
+	}
+	return ""
+}
+
+func (x *CreatePositiveDataLogRequest) GetBeliefPercent() int32 {
+	if x != nil && x.BeliefPercent != nil {
+		return *x.BeliefPercent
+	}
+	return 0
+}
+
+func (x *CreatePositiveDataLogRequest) GetAlternativePercent() int32 {
+	if x != nil && x.AlternativePercent != nil {
+		return *x.AlternativePercent
+	}
+	return 0
+}
+
+func (x *CreatePositiveDataLogRequest) GetEvidence() []*DataLogEvidenceInput {
+	if x != nil {
+		return x.Evidence
+	}
+	return nil
+}
+
+type GetPositiveDataLogRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *GetPositiveDataLogRequest) Reset() {
+	*x = GetPositiveDataLogRequest{}
+	mi := &file_proto_record_proto_msgTypes[49]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *GetPositiveDataLogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*GetPositiveDataLogRequest) ProtoMessage() {}
+
+func (x *GetPositiveDataLogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[49]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use GetPositiveDataLogRequest.ProtoReflect.Descriptor instead.
+func (*GetPositiveDataLogRequest) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{49}
+}
+
+func (x *GetPositiveDataLogRequest) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type UpdatePositiveDataLogRequest struct {
+	state             protoimpl.MessageState `protogen:"open.v1"`
+	Id                uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	Belief            *string                `protobuf:"bytes,2,opt,name=belief,proto3,oneof" json:"belief,omitempty"`
+	AlternativeBelief *string                `protobuf:"bytes,3,opt,name=alternative_belief,json=alternativeBelief,proto3,oneof" json:"alternative_belief,omitempty"`
+	unknownFields     protoimpl.UnknownFields
+	sizeCache         protoimpl.SizeCache
+}
+
+func (x *UpdatePositiveDataLogRequest) Reset() {
+	*x = UpdatePositiveDataLogRequest{}
+	mi := &file_proto_record_proto_msgTypes[50]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *UpdatePositiveDataLogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*UpdatePositiveDataLogRequest) ProtoMessage() {}
+
+func (x *UpdatePositiveDataLogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[50]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use UpdatePositiveDataLogRequest.ProtoReflect.Descriptor instead.
+func (*UpdatePositiveDataLogRequest) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{50}
+}
+
+func (x *UpdatePositiveDataLogRequest) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+func (x *UpdatePositiveDataLogRequest) GetBelief() string {
+	if x != nil && x.Belief != nil {
+		return *x.Belief
+	}
+	return ""
+}
+
+func (x *UpdatePositiveDataLogRequest) GetAlternativeBelief() string {
+	if x != nil && x.AlternativeBelief != nil {
+		return *x.AlternativeBelief
+	}
+	return ""
+}
+
+type DeletePositiveDataLogRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeletePositiveDataLogRequest) Reset() {
+	*x = DeletePositiveDataLogRequest{}
+	mi := &file_proto_record_proto_msgTypes[51]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeletePositiveDataLogRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeletePositiveDataLogRequest) ProtoMessage() {}
+
+func (x *DeletePositiveDataLogRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[51]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeletePositiveDataLogRequest.ProtoReflect.Descriptor instead.
+func (*DeletePositiveDataLogRequest) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{51}
+}
+
+func (x *DeletePositiveDataLogRequest) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type AddDataLogEvidenceRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	LogId         uint32                 `protobuf:"varint,1,opt,name=log_id,json=logId,proto3" json:"log_id,omitempty"`
+	Evidence      *DataLogEvidenceInput  `protobuf:"bytes,2,opt,name=evidence,proto3" json:"evidence,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *AddDataLogEvidenceRequest) Reset() {
+	*x = AddDataLogEvidenceRequest{}
+	mi := &file_proto_record_proto_msgTypes[52]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *AddDataLogEvidenceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*AddDataLogEvidenceRequest) ProtoMessage() {}
+
+func (x *AddDataLogEvidenceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[52]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use AddDataLogEvidenceRequest.ProtoReflect.Descriptor instead.
+func (*AddDataLogEvidenceRequest) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{52}
+}
+
+func (x *AddDataLogEvidenceRequest) GetLogId() uint32 {
+	if x != nil {
+		return x.LogId
+	}
+	return 0
+}
+
+func (x *AddDataLogEvidenceRequest) GetEvidence() *DataLogEvidenceInput {
+	if x != nil {
+		return x.Evidence
+	}
+	return nil
+}
+
+type DeleteDataLogEvidenceRequest struct {
+	state         protoimpl.MessageState `protogen:"open.v1"`
+	Id            uint32                 `protobuf:"varint,1,opt,name=id,proto3" json:"id,omitempty"`
+	unknownFields protoimpl.UnknownFields
+	sizeCache     protoimpl.SizeCache
+}
+
+func (x *DeleteDataLogEvidenceRequest) Reset() {
+	*x = DeleteDataLogEvidenceRequest{}
+	mi := &file_proto_record_proto_msgTypes[53]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *DeleteDataLogEvidenceRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*DeleteDataLogEvidenceRequest) ProtoMessage() {}
+
+func (x *DeleteDataLogEvidenceRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[53]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use DeleteDataLogEvidenceRequest.ProtoReflect.Descriptor instead.
+func (*DeleteDataLogEvidenceRequest) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{53}
+}
+
+func (x *DeleteDataLogEvidenceRequest) GetId() uint32 {
+	if x != nil {
+		return x.Id
+	}
+	return 0
+}
+
+type RateBeliefsRequest struct {
+	state              protoimpl.MessageState `protogen:"open.v1"`
+	LogId              uint32                 `protobuf:"varint,1,opt,name=log_id,json=logId,proto3" json:"log_id,omitempty"`
+	BeliefPercent      *int32                 `protobuf:"varint,2,opt,name=belief_percent,json=beliefPercent,proto3,oneof" json:"belief_percent,omitempty"`
+	AlternativePercent *int32                 `protobuf:"varint,3,opt,name=alternative_percent,json=alternativePercent,proto3,oneof" json:"alternative_percent,omitempty"`
+	unknownFields      protoimpl.UnknownFields
+	sizeCache          protoimpl.SizeCache
+}
+
+func (x *RateBeliefsRequest) Reset() {
+	*x = RateBeliefsRequest{}
+	mi := &file_proto_record_proto_msgTypes[54]
+	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+	ms.StoreMessageInfo(mi)
+}
+
+func (x *RateBeliefsRequest) String() string {
+	return protoimpl.X.MessageStringOf(x)
+}
+
+func (*RateBeliefsRequest) ProtoMessage() {}
+
+func (x *RateBeliefsRequest) ProtoReflect() protoreflect.Message {
+	mi := &file_proto_record_proto_msgTypes[54]
+	if x != nil {
+		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
+		if ms.LoadMessageInfo() == nil {
+			ms.StoreMessageInfo(mi)
+		}
+		return ms
+	}
+	return mi.MessageOf(x)
+}
+
+// Deprecated: Use RateBeliefsRequest.ProtoReflect.Descriptor instead.
+func (*RateBeliefsRequest) Descriptor() ([]byte, []int) {
+	return file_proto_record_proto_rawDescGZIP(), []int{54}
+}
+
+func (x *RateBeliefsRequest) GetLogId() uint32 {
+	if x != nil {
+		return x.LogId
+	}
+	return 0
+}
+
+func (x *RateBeliefsRequest) GetBeliefPercent() int32 {
+	if x != nil && x.BeliefPercent != nil {
+		return *x.BeliefPercent
+	}
+	return 0
+}
+
+func (x *RateBeliefsRequest) GetAlternativePercent() int32 {
+	if x != nil && x.AlternativePercent != nil {
+		return *x.AlternativePercent
+	}
+	return 0
+}
+
 type ListBiasesRequest struct {
 	state         protoimpl.MessageState `protogen:"open.v1"`
 	unknownFields protoimpl.UnknownFields
@@ -2862,7 +3624,7 @@ type ListBiasesRequest struct {
 
 func (x *ListBiasesRequest) Reset() {
 	*x = ListBiasesRequest{}
-	mi := &file_proto_record_proto_msgTypes[42]
+	mi := &file_proto_record_proto_msgTypes[55]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2874,7 +3636,7 @@ func (x *ListBiasesRequest) String() string {
 func (*ListBiasesRequest) ProtoMessage() {}
 
 func (x *ListBiasesRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[42]
+	mi := &file_proto_record_proto_msgTypes[55]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2887,7 +3649,7 @@ func (x *ListBiasesRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListBiasesRequest.ProtoReflect.Descriptor instead.
 func (*ListBiasesRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{42}
+	return file_proto_record_proto_rawDescGZIP(), []int{55}
 }
 
 type ListBiasesResponse struct {
@@ -2899,7 +3661,7 @@ type ListBiasesResponse struct {
 
 func (x *ListBiasesResponse) Reset() {
 	*x = ListBiasesResponse{}
-	mi := &file_proto_record_proto_msgTypes[43]
+	mi := &file_proto_record_proto_msgTypes[56]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2911,7 +3673,7 @@ func (x *ListBiasesResponse) String() string {
 func (*ListBiasesResponse) ProtoMessage() {}
 
 func (x *ListBiasesResponse) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[43]
+	mi := &file_proto_record_proto_msgTypes[56]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2924,7 +3686,7 @@ func (x *ListBiasesResponse) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use ListBiasesResponse.ProtoReflect.Descriptor instead.
 func (*ListBiasesResponse) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{43}
+	return file_proto_record_proto_rawDescGZIP(), []int{56}
 }
 
 func (x *ListBiasesResponse) GetBiases() []*CognitiveBias {
@@ -2943,7 +3705,7 @@ type CreateBiasRequest struct {
 
 func (x *CreateBiasRequest) Reset() {
 	*x = CreateBiasRequest{}
-	mi := &file_proto_record_proto_msgTypes[44]
+	mi := &file_proto_record_proto_msgTypes[57]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -2955,7 +3717,7 @@ func (x *CreateBiasRequest) String() string {
 func (*CreateBiasRequest) ProtoMessage() {}
 
 func (x *CreateBiasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[44]
+	mi := &file_proto_record_proto_msgTypes[57]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -2968,7 +3730,7 @@ func (x *CreateBiasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use CreateBiasRequest.ProtoReflect.Descriptor instead.
 func (*CreateBiasRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{44}
+	return file_proto_record_proto_rawDescGZIP(), []int{57}
 }
 
 func (x *CreateBiasRequest) GetName() string {
@@ -2988,7 +3750,7 @@ type RenameBiasRequest struct {
 
 func (x *RenameBiasRequest) Reset() {
 	*x = RenameBiasRequest{}
-	mi := &file_proto_record_proto_msgTypes[45]
+	mi := &file_proto_record_proto_msgTypes[58]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3000,7 +3762,7 @@ func (x *RenameBiasRequest) String() string {
 func (*RenameBiasRequest) ProtoMessage() {}
 
 func (x *RenameBiasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[45]
+	mi := &file_proto_record_proto_msgTypes[58]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3013,7 +3775,7 @@ func (x *RenameBiasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use RenameBiasRequest.ProtoReflect.Descriptor instead.
 func (*RenameBiasRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{45}
+	return file_proto_record_proto_rawDescGZIP(), []int{58}
 }
 
 func (x *RenameBiasRequest) GetId() uint32 {
@@ -3039,7 +3801,7 @@ type DeleteBiasRequest struct {
 
 func (x *DeleteBiasRequest) Reset() {
 	*x = DeleteBiasRequest{}
-	mi := &file_proto_record_proto_msgTypes[46]
+	mi := &file_proto_record_proto_msgTypes[59]
 	ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 	ms.StoreMessageInfo(mi)
 }
@@ -3051,7 +3813,7 @@ func (x *DeleteBiasRequest) String() string {
 func (*DeleteBiasRequest) ProtoMessage() {}
 
 func (x *DeleteBiasRequest) ProtoReflect() protoreflect.Message {
-	mi := &file_proto_record_proto_msgTypes[46]
+	mi := &file_proto_record_proto_msgTypes[59]
 	if x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
 		if ms.LoadMessageInfo() == nil {
@@ -3064,7 +3826,7 @@ func (x *DeleteBiasRequest) ProtoReflect() protoreflect.Message {
 
 // Deprecated: Use DeleteBiasRequest.ProtoReflect.Descriptor instead.
 func (*DeleteBiasRequest) Descriptor() ([]byte, []int) {
-	return file_proto_record_proto_rawDescGZIP(), []int{46}
+	return file_proto_record_proto_rawDescGZIP(), []int{59}
 }
 
 func (x *DeleteBiasRequest) GetId() uint32 {
@@ -3160,7 +3922,35 @@ const file_proto_record_proto_rawDesc = "" +
 	"\n" +
 	"updated_at\x18\v \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAtB\x0e\n" +
 	"\f_occurred_atB\x0f\n" +
-	"\r_completed_at\"S\n" +
+	"\r_completed_at\"\xc3\x02\n" +
+	"\x0fPositiveDataLog\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x16\n" +
+	"\x06belief\x18\x02 \x01(\tR\x06belief\x12-\n" +
+	"\x12alternative_belief\x18\x03 \x01(\tR\x11alternativeBelief\x123\n" +
+	"\bevidence\x18\x04 \x03(\v2\x17.record.DataLogEvidenceR\bevidence\x12.\n" +
+	"\aratings\x18\x05 \x03(\v2\x14.record.BeliefRatingR\aratings\x129\n" +
+	"\n" +
+	"created_at\x18\x06 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAt\x129\n" +
+	"\n" +
+	"updated_at\x18\a \x01(\v2\x1a.google.protobuf.TimestampR\tupdatedAt\"\xb9\x01\n" +
+	"\x0fDataLogEvidence\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x12\n" +
+	"\x04body\x18\x02 \x01(\tR\x04body\x12:\n" +
+	"\bnoted_at\x18\x03 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\anotedAt\x88\x01\x01\x129\n" +
+	"\n" +
+	"created_at\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\tcreatedAtB\v\n" +
+	"\t_noted_at\"\xe2\x01\n" +
+	"\fBeliefRating\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x125\n" +
+	"\brated_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampR\aratedAt\x12*\n" +
+	"\x0ebelief_percent\x18\x03 \x01(\x05H\x00R\rbeliefPercent\x88\x01\x01\x124\n" +
+	"\x13alternative_percent\x18\x04 \x01(\x05H\x01R\x12alternativePercent\x88\x01\x01B\x11\n" +
+	"\x0f_belief_percentB\x16\n" +
+	"\x14_alternative_percent\"s\n" +
+	"\x14DataLogEvidenceInput\x12\x12\n" +
+	"\x04body\x18\x01 \x01(\tR\x04body\x12:\n" +
+	"\bnoted_at\x18\x02 \x01(\v2\x1a.google.protobuf.TimestampH\x00R\anotedAt\x88\x01\x01B\v\n" +
+	"\t_noted_at\"S\n" +
 	"\fFeelingInput\x12\x12\n" +
 	"\x04name\x18\x01 \x01(\tR\x04name\x12!\n" +
 	"\tintensity\x18\x02 \x01(\x05H\x00R\tintensity\x88\x01\x01B\f\n" +
@@ -3352,7 +4142,40 @@ const file_proto_record_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\rR\x02id\"r\n" +
 	"\x1bAddExperimentFeelingRequest\x12#\n" +
 	"\rexperiment_id\x18\x01 \x01(\rR\fexperimentId\x12.\n" +
-	"\afeeling\x18\x02 \x01(\v2\x14.record.FeelingInputR\afeeling\"\x13\n" +
+	"\afeeling\x18\x02 \x01(\v2\x14.record.FeelingInputR\afeeling\"5\n" +
+	"\x1bListPositiveDataLogsRequest\x12\x16\n" +
+	"\x06search\x18\x01 \x01(\tR\x06search\"K\n" +
+	"\x1cListPositiveDataLogsResponse\x12+\n" +
+	"\x04logs\x18\x01 \x03(\v2\x17.record.PositiveDataLogR\x04logs\"\xac\x02\n" +
+	"\x1cCreatePositiveDataLogRequest\x12\x16\n" +
+	"\x06belief\x18\x01 \x01(\tR\x06belief\x12-\n" +
+	"\x12alternative_belief\x18\x02 \x01(\tR\x11alternativeBelief\x12*\n" +
+	"\x0ebelief_percent\x18\x03 \x01(\x05H\x00R\rbeliefPercent\x88\x01\x01\x124\n" +
+	"\x13alternative_percent\x18\x04 \x01(\x05H\x01R\x12alternativePercent\x88\x01\x01\x128\n" +
+	"\bevidence\x18\x05 \x03(\v2\x1c.record.DataLogEvidenceInputR\bevidenceB\x11\n" +
+	"\x0f_belief_percentB\x16\n" +
+	"\x14_alternative_percent\"+\n" +
+	"\x19GetPositiveDataLogRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"\xa1\x01\n" +
+	"\x1cUpdatePositiveDataLogRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\x12\x1b\n" +
+	"\x06belief\x18\x02 \x01(\tH\x00R\x06belief\x88\x01\x01\x122\n" +
+	"\x12alternative_belief\x18\x03 \x01(\tH\x01R\x11alternativeBelief\x88\x01\x01B\t\n" +
+	"\a_beliefB\x15\n" +
+	"\x13_alternative_belief\".\n" +
+	"\x1cDeletePositiveDataLogRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"l\n" +
+	"\x19AddDataLogEvidenceRequest\x12\x15\n" +
+	"\x06log_id\x18\x01 \x01(\rR\x05logId\x128\n" +
+	"\bevidence\x18\x02 \x01(\v2\x1c.record.DataLogEvidenceInputR\bevidence\".\n" +
+	"\x1cDeleteDataLogEvidenceRequest\x12\x0e\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id\"\xb8\x01\n" +
+	"\x12RateBeliefsRequest\x12\x15\n" +
+	"\x06log_id\x18\x01 \x01(\rR\x05logId\x12*\n" +
+	"\x0ebelief_percent\x18\x02 \x01(\x05H\x00R\rbeliefPercent\x88\x01\x01\x124\n" +
+	"\x13alternative_percent\x18\x03 \x01(\x05H\x01R\x12alternativePercent\x88\x01\x01B\x11\n" +
+	"\x0f_belief_percentB\x16\n" +
+	"\x14_alternative_percent\"\x13\n" +
 	"\x11ListBiasesRequest\"C\n" +
 	"\x12ListBiasesResponse\x12-\n" +
 	"\x06biases\x18\x01 \x03(\v2\x15.record.CognitiveBiasR\x06biases\"'\n" +
@@ -3362,7 +4185,7 @@ const file_proto_record_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\rR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\"#\n" +
 	"\x11DeleteBiasRequest\x12\x0e\n" +
-	"\x02id\x18\x01 \x01(\rR\x02id2\xe2\x13\n" +
+	"\x02id\x18\x01 \x01(\rR\x02id2\x8c\x19\n" +
 	"\rRecordService\x12[\n" +
 	"\x12ListThoughtRecords\x12!.record.ListThoughtRecordsRequest\x1a\".record.ListThoughtRecordsResponse\x12P\n" +
 	"\x13CreateThoughtRecord\x12\".record.CreateThoughtRecordRequest\x1a\x15.record.ThoughtRecord\x12J\n" +
@@ -3392,7 +4215,15 @@ const file_proto_record_proto_rawDesc = "" +
 	"\x1bUpdateBehaviouralExperiment\x12*.record.UpdateBehaviouralExperimentRequest\x1a\x1d.record.BehaviouralExperiment\x12l\n" +
 	"\x1dCompleteBehaviouralExperiment\x12,.record.CompleteBehaviouralExperimentRequest\x1a\x1d.record.BehaviouralExperiment\x12a\n" +
 	"\x1bDeleteBehaviouralExperiment\x12*.record.DeleteBehaviouralExperimentRequest\x1a\x16.google.protobuf.Empty\x12Z\n" +
-	"\x14AddExperimentFeeling\x12#.record.AddExperimentFeelingRequest\x1a\x1d.record.BehaviouralExperiment\x12C\n" +
+	"\x14AddExperimentFeeling\x12#.record.AddExperimentFeelingRequest\x1a\x1d.record.BehaviouralExperiment\x12a\n" +
+	"\x14ListPositiveDataLogs\x12#.record.ListPositiveDataLogsRequest\x1a$.record.ListPositiveDataLogsResponse\x12V\n" +
+	"\x15CreatePositiveDataLog\x12$.record.CreatePositiveDataLogRequest\x1a\x17.record.PositiveDataLog\x12P\n" +
+	"\x12GetPositiveDataLog\x12!.record.GetPositiveDataLogRequest\x1a\x17.record.PositiveDataLog\x12V\n" +
+	"\x15UpdatePositiveDataLog\x12$.record.UpdatePositiveDataLogRequest\x1a\x17.record.PositiveDataLog\x12U\n" +
+	"\x15DeletePositiveDataLog\x12$.record.DeletePositiveDataLogRequest\x1a\x16.google.protobuf.Empty\x12P\n" +
+	"\x12AddDataLogEvidence\x12!.record.AddDataLogEvidenceRequest\x1a\x17.record.PositiveDataLog\x12V\n" +
+	"\x15DeleteDataLogEvidence\x12$.record.DeleteDataLogEvidenceRequest\x1a\x17.record.PositiveDataLog\x12B\n" +
+	"\vRateBeliefs\x12\x1a.record.RateBeliefsRequest\x1a\x17.record.PositiveDataLog\x12C\n" +
 	"\n" +
 	"ListBiases\x12\x19.record.ListBiasesRequest\x1a\x1a.record.ListBiasesResponse\x12>\n" +
 	"\n" +
@@ -3414,7 +4245,7 @@ func file_proto_record_proto_rawDescGZIP() []byte {
 	return file_proto_record_proto_rawDescData
 }
 
-var file_proto_record_proto_msgTypes = make([]protoimpl.MessageInfo, 47)
+var file_proto_record_proto_msgTypes = make([]protoimpl.MessageInfo, 60)
 var file_proto_record_proto_goTypes = []any{
 	(*CognitiveBias)(nil),                        // 0: record.CognitiveBias
 	(*NegativeThought)(nil),                      // 1: record.NegativeThought
@@ -3422,164 +4253,204 @@ var file_proto_record_proto_goTypes = []any{
 	(*ThoughtRecord)(nil),                        // 3: record.ThoughtRecord
 	(*MapOfWorry)(nil),                           // 4: record.MapOfWorry
 	(*BehaviouralExperiment)(nil),                // 5: record.BehaviouralExperiment
-	(*FeelingInput)(nil),                         // 6: record.FeelingInput
-	(*ThoughtInput)(nil),                         // 7: record.ThoughtInput
-	(*ListThoughtRecordsRequest)(nil),            // 8: record.ListThoughtRecordsRequest
-	(*ListThoughtRecordsResponse)(nil),           // 9: record.ListThoughtRecordsResponse
-	(*CreateThoughtRecordRequest)(nil),           // 10: record.CreateThoughtRecordRequest
-	(*GetThoughtRecordRequest)(nil),              // 11: record.GetThoughtRecordRequest
-	(*UpdateThoughtRecordRequest)(nil),           // 12: record.UpdateThoughtRecordRequest
-	(*ThoughtJudgement)(nil),                     // 13: record.ThoughtJudgement
-	(*FeelingRerating)(nil),                      // 14: record.FeelingRerating
-	(*ChallengeThoughtRecordRequest)(nil),        // 15: record.ChallengeThoughtRecordRequest
-	(*DeleteThoughtRecordRequest)(nil),           // 16: record.DeleteThoughtRecordRequest
-	(*AddThoughtRequest)(nil),                    // 17: record.AddThoughtRequest
-	(*UpdateThoughtRequest)(nil),                 // 18: record.UpdateThoughtRequest
-	(*BiasNames)(nil),                            // 19: record.BiasNames
-	(*SetHotThoughtRequest)(nil),                 // 20: record.SetHotThoughtRequest
-	(*SetThoughtFactualRequest)(nil),             // 21: record.SetThoughtFactualRequest
-	(*SetThoughtEvidenceRequest)(nil),            // 22: record.SetThoughtEvidenceRequest
-	(*DeleteThoughtRequest)(nil),                 // 23: record.DeleteThoughtRequest
-	(*AddFeelingRequest)(nil),                    // 24: record.AddFeelingRequest
-	(*AddMapFeelingRequest)(nil),                 // 25: record.AddMapFeelingRequest
-	(*DeleteFeelingRequest)(nil),                 // 26: record.DeleteFeelingRequest
-	(*ListMapsOfWorryRequest)(nil),               // 27: record.ListMapsOfWorryRequest
-	(*ListMapsOfWorryResponse)(nil),              // 28: record.ListMapsOfWorryResponse
-	(*CreateMapOfWorryRequest)(nil),              // 29: record.CreateMapOfWorryRequest
-	(*GetMapOfWorryRequest)(nil),                 // 30: record.GetMapOfWorryRequest
-	(*GetMapOfWorryResponse)(nil),                // 31: record.GetMapOfWorryResponse
-	(*UpdateMapOfWorryRequest)(nil),              // 32: record.UpdateMapOfWorryRequest
-	(*DeleteMapOfWorryRequest)(nil),              // 33: record.DeleteMapOfWorryRequest
-	(*ListBehaviouralExperimentsRequest)(nil),    // 34: record.ListBehaviouralExperimentsRequest
-	(*ListBehaviouralExperimentsResponse)(nil),   // 35: record.ListBehaviouralExperimentsResponse
-	(*CreateBehaviouralExperimentRequest)(nil),   // 36: record.CreateBehaviouralExperimentRequest
-	(*GetBehaviouralExperimentRequest)(nil),      // 37: record.GetBehaviouralExperimentRequest
-	(*UpdateBehaviouralExperimentRequest)(nil),   // 38: record.UpdateBehaviouralExperimentRequest
-	(*CompleteBehaviouralExperimentRequest)(nil), // 39: record.CompleteBehaviouralExperimentRequest
-	(*DeleteBehaviouralExperimentRequest)(nil),   // 40: record.DeleteBehaviouralExperimentRequest
-	(*AddExperimentFeelingRequest)(nil),          // 41: record.AddExperimentFeelingRequest
-	(*ListBiasesRequest)(nil),                    // 42: record.ListBiasesRequest
-	(*ListBiasesResponse)(nil),                   // 43: record.ListBiasesResponse
-	(*CreateBiasRequest)(nil),                    // 44: record.CreateBiasRequest
-	(*RenameBiasRequest)(nil),                    // 45: record.RenameBiasRequest
-	(*DeleteBiasRequest)(nil),                    // 46: record.DeleteBiasRequest
-	(*timestamppb.Timestamp)(nil),                // 47: google.protobuf.Timestamp
-	(*emptypb.Empty)(nil),                        // 48: google.protobuf.Empty
+	(*PositiveDataLog)(nil),                      // 6: record.PositiveDataLog
+	(*DataLogEvidence)(nil),                      // 7: record.DataLogEvidence
+	(*BeliefRating)(nil),                         // 8: record.BeliefRating
+	(*DataLogEvidenceInput)(nil),                 // 9: record.DataLogEvidenceInput
+	(*FeelingInput)(nil),                         // 10: record.FeelingInput
+	(*ThoughtInput)(nil),                         // 11: record.ThoughtInput
+	(*ListThoughtRecordsRequest)(nil),            // 12: record.ListThoughtRecordsRequest
+	(*ListThoughtRecordsResponse)(nil),           // 13: record.ListThoughtRecordsResponse
+	(*CreateThoughtRecordRequest)(nil),           // 14: record.CreateThoughtRecordRequest
+	(*GetThoughtRecordRequest)(nil),              // 15: record.GetThoughtRecordRequest
+	(*UpdateThoughtRecordRequest)(nil),           // 16: record.UpdateThoughtRecordRequest
+	(*ThoughtJudgement)(nil),                     // 17: record.ThoughtJudgement
+	(*FeelingRerating)(nil),                      // 18: record.FeelingRerating
+	(*ChallengeThoughtRecordRequest)(nil),        // 19: record.ChallengeThoughtRecordRequest
+	(*DeleteThoughtRecordRequest)(nil),           // 20: record.DeleteThoughtRecordRequest
+	(*AddThoughtRequest)(nil),                    // 21: record.AddThoughtRequest
+	(*UpdateThoughtRequest)(nil),                 // 22: record.UpdateThoughtRequest
+	(*BiasNames)(nil),                            // 23: record.BiasNames
+	(*SetHotThoughtRequest)(nil),                 // 24: record.SetHotThoughtRequest
+	(*SetThoughtFactualRequest)(nil),             // 25: record.SetThoughtFactualRequest
+	(*SetThoughtEvidenceRequest)(nil),            // 26: record.SetThoughtEvidenceRequest
+	(*DeleteThoughtRequest)(nil),                 // 27: record.DeleteThoughtRequest
+	(*AddFeelingRequest)(nil),                    // 28: record.AddFeelingRequest
+	(*AddMapFeelingRequest)(nil),                 // 29: record.AddMapFeelingRequest
+	(*DeleteFeelingRequest)(nil),                 // 30: record.DeleteFeelingRequest
+	(*ListMapsOfWorryRequest)(nil),               // 31: record.ListMapsOfWorryRequest
+	(*ListMapsOfWorryResponse)(nil),              // 32: record.ListMapsOfWorryResponse
+	(*CreateMapOfWorryRequest)(nil),              // 33: record.CreateMapOfWorryRequest
+	(*GetMapOfWorryRequest)(nil),                 // 34: record.GetMapOfWorryRequest
+	(*GetMapOfWorryResponse)(nil),                // 35: record.GetMapOfWorryResponse
+	(*UpdateMapOfWorryRequest)(nil),              // 36: record.UpdateMapOfWorryRequest
+	(*DeleteMapOfWorryRequest)(nil),              // 37: record.DeleteMapOfWorryRequest
+	(*ListBehaviouralExperimentsRequest)(nil),    // 38: record.ListBehaviouralExperimentsRequest
+	(*ListBehaviouralExperimentsResponse)(nil),   // 39: record.ListBehaviouralExperimentsResponse
+	(*CreateBehaviouralExperimentRequest)(nil),   // 40: record.CreateBehaviouralExperimentRequest
+	(*GetBehaviouralExperimentRequest)(nil),      // 41: record.GetBehaviouralExperimentRequest
+	(*UpdateBehaviouralExperimentRequest)(nil),   // 42: record.UpdateBehaviouralExperimentRequest
+	(*CompleteBehaviouralExperimentRequest)(nil), // 43: record.CompleteBehaviouralExperimentRequest
+	(*DeleteBehaviouralExperimentRequest)(nil),   // 44: record.DeleteBehaviouralExperimentRequest
+	(*AddExperimentFeelingRequest)(nil),          // 45: record.AddExperimentFeelingRequest
+	(*ListPositiveDataLogsRequest)(nil),          // 46: record.ListPositiveDataLogsRequest
+	(*ListPositiveDataLogsResponse)(nil),         // 47: record.ListPositiveDataLogsResponse
+	(*CreatePositiveDataLogRequest)(nil),         // 48: record.CreatePositiveDataLogRequest
+	(*GetPositiveDataLogRequest)(nil),            // 49: record.GetPositiveDataLogRequest
+	(*UpdatePositiveDataLogRequest)(nil),         // 50: record.UpdatePositiveDataLogRequest
+	(*DeletePositiveDataLogRequest)(nil),         // 51: record.DeletePositiveDataLogRequest
+	(*AddDataLogEvidenceRequest)(nil),            // 52: record.AddDataLogEvidenceRequest
+	(*DeleteDataLogEvidenceRequest)(nil),         // 53: record.DeleteDataLogEvidenceRequest
+	(*RateBeliefsRequest)(nil),                   // 54: record.RateBeliefsRequest
+	(*ListBiasesRequest)(nil),                    // 55: record.ListBiasesRequest
+	(*ListBiasesResponse)(nil),                   // 56: record.ListBiasesResponse
+	(*CreateBiasRequest)(nil),                    // 57: record.CreateBiasRequest
+	(*RenameBiasRequest)(nil),                    // 58: record.RenameBiasRequest
+	(*DeleteBiasRequest)(nil),                    // 59: record.DeleteBiasRequest
+	(*timestamppb.Timestamp)(nil),                // 60: google.protobuf.Timestamp
+	(*emptypb.Empty)(nil),                        // 61: google.protobuf.Empty
 }
 var file_proto_record_proto_depIdxs = []int32{
 	0,  // 0: record.NegativeThought.biases:type_name -> record.CognitiveBias
-	47, // 1: record.ThoughtRecord.occurred_at:type_name -> google.protobuf.Timestamp
-	47, // 2: record.ThoughtRecord.challenged_at:type_name -> google.protobuf.Timestamp
+	60, // 1: record.ThoughtRecord.occurred_at:type_name -> google.protobuf.Timestamp
+	60, // 2: record.ThoughtRecord.challenged_at:type_name -> google.protobuf.Timestamp
 	1,  // 3: record.ThoughtRecord.thoughts:type_name -> record.NegativeThought
 	2,  // 4: record.ThoughtRecord.feelings:type_name -> record.Feeling
-	47, // 5: record.ThoughtRecord.created_at:type_name -> google.protobuf.Timestamp
-	47, // 6: record.ThoughtRecord.updated_at:type_name -> google.protobuf.Timestamp
-	47, // 7: record.MapOfWorry.occurred_at:type_name -> google.protobuf.Timestamp
+	60, // 5: record.ThoughtRecord.created_at:type_name -> google.protobuf.Timestamp
+	60, // 6: record.ThoughtRecord.updated_at:type_name -> google.protobuf.Timestamp
+	60, // 7: record.MapOfWorry.occurred_at:type_name -> google.protobuf.Timestamp
 	2,  // 8: record.MapOfWorry.feelings:type_name -> record.Feeling
-	47, // 9: record.MapOfWorry.created_at:type_name -> google.protobuf.Timestamp
-	47, // 10: record.MapOfWorry.updated_at:type_name -> google.protobuf.Timestamp
-	47, // 11: record.BehaviouralExperiment.occurred_at:type_name -> google.protobuf.Timestamp
-	47, // 12: record.BehaviouralExperiment.completed_at:type_name -> google.protobuf.Timestamp
+	60, // 9: record.MapOfWorry.created_at:type_name -> google.protobuf.Timestamp
+	60, // 10: record.MapOfWorry.updated_at:type_name -> google.protobuf.Timestamp
+	60, // 11: record.BehaviouralExperiment.occurred_at:type_name -> google.protobuf.Timestamp
+	60, // 12: record.BehaviouralExperiment.completed_at:type_name -> google.protobuf.Timestamp
 	2,  // 13: record.BehaviouralExperiment.feelings:type_name -> record.Feeling
-	47, // 14: record.BehaviouralExperiment.created_at:type_name -> google.protobuf.Timestamp
-	47, // 15: record.BehaviouralExperiment.updated_at:type_name -> google.protobuf.Timestamp
-	47, // 16: record.ListThoughtRecordsRequest.since:type_name -> google.protobuf.Timestamp
-	3,  // 17: record.ListThoughtRecordsResponse.records:type_name -> record.ThoughtRecord
-	47, // 18: record.CreateThoughtRecordRequest.occurred_at:type_name -> google.protobuf.Timestamp
-	7,  // 19: record.CreateThoughtRecordRequest.thoughts:type_name -> record.ThoughtInput
-	6,  // 20: record.CreateThoughtRecordRequest.feelings:type_name -> record.FeelingInput
-	47, // 21: record.UpdateThoughtRecordRequest.occurred_at:type_name -> google.protobuf.Timestamp
-	19, // 22: record.ThoughtJudgement.biases:type_name -> record.BiasNames
-	14, // 23: record.ChallengeThoughtRecordRequest.feeling_reratings:type_name -> record.FeelingRerating
-	13, // 24: record.ChallengeThoughtRecordRequest.thoughts:type_name -> record.ThoughtJudgement
-	7,  // 25: record.AddThoughtRequest.thought:type_name -> record.ThoughtInput
-	19, // 26: record.UpdateThoughtRequest.biases:type_name -> record.BiasNames
-	6,  // 27: record.AddFeelingRequest.feeling:type_name -> record.FeelingInput
-	6,  // 28: record.AddMapFeelingRequest.feeling:type_name -> record.FeelingInput
-	47, // 29: record.ListMapsOfWorryRequest.since:type_name -> google.protobuf.Timestamp
-	4,  // 30: record.ListMapsOfWorryResponse.maps:type_name -> record.MapOfWorry
-	47, // 31: record.CreateMapOfWorryRequest.occurred_at:type_name -> google.protobuf.Timestamp
-	6,  // 32: record.CreateMapOfWorryRequest.feelings:type_name -> record.FeelingInput
-	4,  // 33: record.GetMapOfWorryResponse.map:type_name -> record.MapOfWorry
-	4,  // 34: record.GetMapOfWorryResponse.derived_from:type_name -> record.MapOfWorry
-	4,  // 35: record.GetMapOfWorryResponse.alternatives:type_name -> record.MapOfWorry
-	47, // 36: record.UpdateMapOfWorryRequest.occurred_at:type_name -> google.protobuf.Timestamp
-	47, // 37: record.ListBehaviouralExperimentsRequest.since:type_name -> google.protobuf.Timestamp
-	5,  // 38: record.ListBehaviouralExperimentsResponse.experiments:type_name -> record.BehaviouralExperiment
-	47, // 39: record.CreateBehaviouralExperimentRequest.occurred_at:type_name -> google.protobuf.Timestamp
-	6,  // 40: record.CreateBehaviouralExperimentRequest.feelings:type_name -> record.FeelingInput
-	47, // 41: record.UpdateBehaviouralExperimentRequest.occurred_at:type_name -> google.protobuf.Timestamp
-	14, // 42: record.CompleteBehaviouralExperimentRequest.feeling_reratings:type_name -> record.FeelingRerating
-	6,  // 43: record.CompleteBehaviouralExperimentRequest.new_feelings:type_name -> record.FeelingInput
-	6,  // 44: record.AddExperimentFeelingRequest.feeling:type_name -> record.FeelingInput
-	0,  // 45: record.ListBiasesResponse.biases:type_name -> record.CognitiveBias
-	8,  // 46: record.RecordService.ListThoughtRecords:input_type -> record.ListThoughtRecordsRequest
-	10, // 47: record.RecordService.CreateThoughtRecord:input_type -> record.CreateThoughtRecordRequest
-	11, // 48: record.RecordService.GetThoughtRecord:input_type -> record.GetThoughtRecordRequest
-	12, // 49: record.RecordService.UpdateThoughtRecord:input_type -> record.UpdateThoughtRecordRequest
-	15, // 50: record.RecordService.ChallengeThoughtRecord:input_type -> record.ChallengeThoughtRecordRequest
-	16, // 51: record.RecordService.DeleteThoughtRecord:input_type -> record.DeleteThoughtRecordRequest
-	17, // 52: record.RecordService.AddThought:input_type -> record.AddThoughtRequest
-	18, // 53: record.RecordService.UpdateThought:input_type -> record.UpdateThoughtRequest
-	20, // 54: record.RecordService.SetHotThought:input_type -> record.SetHotThoughtRequest
-	21, // 55: record.RecordService.SetThoughtFactual:input_type -> record.SetThoughtFactualRequest
-	22, // 56: record.RecordService.SetThoughtEvidence:input_type -> record.SetThoughtEvidenceRequest
-	23, // 57: record.RecordService.DeleteThought:input_type -> record.DeleteThoughtRequest
-	24, // 58: record.RecordService.AddFeeling:input_type -> record.AddFeelingRequest
-	25, // 59: record.RecordService.AddMapFeeling:input_type -> record.AddMapFeelingRequest
-	26, // 60: record.RecordService.DeleteFeeling:input_type -> record.DeleteFeelingRequest
-	27, // 61: record.RecordService.ListMapsOfWorry:input_type -> record.ListMapsOfWorryRequest
-	29, // 62: record.RecordService.CreateMapOfWorry:input_type -> record.CreateMapOfWorryRequest
-	30, // 63: record.RecordService.GetMapOfWorry:input_type -> record.GetMapOfWorryRequest
-	32, // 64: record.RecordService.UpdateMapOfWorry:input_type -> record.UpdateMapOfWorryRequest
-	33, // 65: record.RecordService.DeleteMapOfWorry:input_type -> record.DeleteMapOfWorryRequest
-	34, // 66: record.RecordService.ListBehaviouralExperiments:input_type -> record.ListBehaviouralExperimentsRequest
-	36, // 67: record.RecordService.CreateBehaviouralExperiment:input_type -> record.CreateBehaviouralExperimentRequest
-	37, // 68: record.RecordService.GetBehaviouralExperiment:input_type -> record.GetBehaviouralExperimentRequest
-	38, // 69: record.RecordService.UpdateBehaviouralExperiment:input_type -> record.UpdateBehaviouralExperimentRequest
-	39, // 70: record.RecordService.CompleteBehaviouralExperiment:input_type -> record.CompleteBehaviouralExperimentRequest
-	40, // 71: record.RecordService.DeleteBehaviouralExperiment:input_type -> record.DeleteBehaviouralExperimentRequest
-	41, // 72: record.RecordService.AddExperimentFeeling:input_type -> record.AddExperimentFeelingRequest
-	42, // 73: record.RecordService.ListBiases:input_type -> record.ListBiasesRequest
-	44, // 74: record.RecordService.CreateBias:input_type -> record.CreateBiasRequest
-	45, // 75: record.RecordService.RenameBias:input_type -> record.RenameBiasRequest
-	46, // 76: record.RecordService.DeleteBias:input_type -> record.DeleteBiasRequest
-	9,  // 77: record.RecordService.ListThoughtRecords:output_type -> record.ListThoughtRecordsResponse
-	3,  // 78: record.RecordService.CreateThoughtRecord:output_type -> record.ThoughtRecord
-	3,  // 79: record.RecordService.GetThoughtRecord:output_type -> record.ThoughtRecord
-	3,  // 80: record.RecordService.UpdateThoughtRecord:output_type -> record.ThoughtRecord
-	3,  // 81: record.RecordService.ChallengeThoughtRecord:output_type -> record.ThoughtRecord
-	48, // 82: record.RecordService.DeleteThoughtRecord:output_type -> google.protobuf.Empty
-	3,  // 83: record.RecordService.AddThought:output_type -> record.ThoughtRecord
-	3,  // 84: record.RecordService.UpdateThought:output_type -> record.ThoughtRecord
-	3,  // 85: record.RecordService.SetHotThought:output_type -> record.ThoughtRecord
-	3,  // 86: record.RecordService.SetThoughtFactual:output_type -> record.ThoughtRecord
-	3,  // 87: record.RecordService.SetThoughtEvidence:output_type -> record.ThoughtRecord
-	3,  // 88: record.RecordService.DeleteThought:output_type -> record.ThoughtRecord
-	3,  // 89: record.RecordService.AddFeeling:output_type -> record.ThoughtRecord
-	4,  // 90: record.RecordService.AddMapFeeling:output_type -> record.MapOfWorry
-	48, // 91: record.RecordService.DeleteFeeling:output_type -> google.protobuf.Empty
-	28, // 92: record.RecordService.ListMapsOfWorry:output_type -> record.ListMapsOfWorryResponse
-	4,  // 93: record.RecordService.CreateMapOfWorry:output_type -> record.MapOfWorry
-	31, // 94: record.RecordService.GetMapOfWorry:output_type -> record.GetMapOfWorryResponse
-	4,  // 95: record.RecordService.UpdateMapOfWorry:output_type -> record.MapOfWorry
-	48, // 96: record.RecordService.DeleteMapOfWorry:output_type -> google.protobuf.Empty
-	35, // 97: record.RecordService.ListBehaviouralExperiments:output_type -> record.ListBehaviouralExperimentsResponse
-	5,  // 98: record.RecordService.CreateBehaviouralExperiment:output_type -> record.BehaviouralExperiment
-	5,  // 99: record.RecordService.GetBehaviouralExperiment:output_type -> record.BehaviouralExperiment
-	5,  // 100: record.RecordService.UpdateBehaviouralExperiment:output_type -> record.BehaviouralExperiment
-	5,  // 101: record.RecordService.CompleteBehaviouralExperiment:output_type -> record.BehaviouralExperiment
-	48, // 102: record.RecordService.DeleteBehaviouralExperiment:output_type -> google.protobuf.Empty
-	5,  // 103: record.RecordService.AddExperimentFeeling:output_type -> record.BehaviouralExperiment
-	43, // 104: record.RecordService.ListBiases:output_type -> record.ListBiasesResponse
-	0,  // 105: record.RecordService.CreateBias:output_type -> record.CognitiveBias
-	0,  // 106: record.RecordService.RenameBias:output_type -> record.CognitiveBias
-	48, // 107: record.RecordService.DeleteBias:output_type -> google.protobuf.Empty
-	77, // [77:108] is the sub-list for method output_type
-	46, // [46:77] is the sub-list for method input_type
-	46, // [46:46] is the sub-list for extension type_name
-	46, // [46:46] is the sub-list for extension extendee
-	0,  // [0:46] is the sub-list for field type_name
+	60, // 14: record.BehaviouralExperiment.created_at:type_name -> google.protobuf.Timestamp
+	60, // 15: record.BehaviouralExperiment.updated_at:type_name -> google.protobuf.Timestamp
+	7,  // 16: record.PositiveDataLog.evidence:type_name -> record.DataLogEvidence
+	8,  // 17: record.PositiveDataLog.ratings:type_name -> record.BeliefRating
+	60, // 18: record.PositiveDataLog.created_at:type_name -> google.protobuf.Timestamp
+	60, // 19: record.PositiveDataLog.updated_at:type_name -> google.protobuf.Timestamp
+	60, // 20: record.DataLogEvidence.noted_at:type_name -> google.protobuf.Timestamp
+	60, // 21: record.DataLogEvidence.created_at:type_name -> google.protobuf.Timestamp
+	60, // 22: record.BeliefRating.rated_at:type_name -> google.protobuf.Timestamp
+	60, // 23: record.DataLogEvidenceInput.noted_at:type_name -> google.protobuf.Timestamp
+	60, // 24: record.ListThoughtRecordsRequest.since:type_name -> google.protobuf.Timestamp
+	3,  // 25: record.ListThoughtRecordsResponse.records:type_name -> record.ThoughtRecord
+	60, // 26: record.CreateThoughtRecordRequest.occurred_at:type_name -> google.protobuf.Timestamp
+	11, // 27: record.CreateThoughtRecordRequest.thoughts:type_name -> record.ThoughtInput
+	10, // 28: record.CreateThoughtRecordRequest.feelings:type_name -> record.FeelingInput
+	60, // 29: record.UpdateThoughtRecordRequest.occurred_at:type_name -> google.protobuf.Timestamp
+	23, // 30: record.ThoughtJudgement.biases:type_name -> record.BiasNames
+	18, // 31: record.ChallengeThoughtRecordRequest.feeling_reratings:type_name -> record.FeelingRerating
+	17, // 32: record.ChallengeThoughtRecordRequest.thoughts:type_name -> record.ThoughtJudgement
+	11, // 33: record.AddThoughtRequest.thought:type_name -> record.ThoughtInput
+	23, // 34: record.UpdateThoughtRequest.biases:type_name -> record.BiasNames
+	10, // 35: record.AddFeelingRequest.feeling:type_name -> record.FeelingInput
+	10, // 36: record.AddMapFeelingRequest.feeling:type_name -> record.FeelingInput
+	60, // 37: record.ListMapsOfWorryRequest.since:type_name -> google.protobuf.Timestamp
+	4,  // 38: record.ListMapsOfWorryResponse.maps:type_name -> record.MapOfWorry
+	60, // 39: record.CreateMapOfWorryRequest.occurred_at:type_name -> google.protobuf.Timestamp
+	10, // 40: record.CreateMapOfWorryRequest.feelings:type_name -> record.FeelingInput
+	4,  // 41: record.GetMapOfWorryResponse.map:type_name -> record.MapOfWorry
+	4,  // 42: record.GetMapOfWorryResponse.derived_from:type_name -> record.MapOfWorry
+	4,  // 43: record.GetMapOfWorryResponse.alternatives:type_name -> record.MapOfWorry
+	60, // 44: record.UpdateMapOfWorryRequest.occurred_at:type_name -> google.protobuf.Timestamp
+	60, // 45: record.ListBehaviouralExperimentsRequest.since:type_name -> google.protobuf.Timestamp
+	5,  // 46: record.ListBehaviouralExperimentsResponse.experiments:type_name -> record.BehaviouralExperiment
+	60, // 47: record.CreateBehaviouralExperimentRequest.occurred_at:type_name -> google.protobuf.Timestamp
+	10, // 48: record.CreateBehaviouralExperimentRequest.feelings:type_name -> record.FeelingInput
+	60, // 49: record.UpdateBehaviouralExperimentRequest.occurred_at:type_name -> google.protobuf.Timestamp
+	18, // 50: record.CompleteBehaviouralExperimentRequest.feeling_reratings:type_name -> record.FeelingRerating
+	10, // 51: record.CompleteBehaviouralExperimentRequest.new_feelings:type_name -> record.FeelingInput
+	10, // 52: record.AddExperimentFeelingRequest.feeling:type_name -> record.FeelingInput
+	6,  // 53: record.ListPositiveDataLogsResponse.logs:type_name -> record.PositiveDataLog
+	9,  // 54: record.CreatePositiveDataLogRequest.evidence:type_name -> record.DataLogEvidenceInput
+	9,  // 55: record.AddDataLogEvidenceRequest.evidence:type_name -> record.DataLogEvidenceInput
+	0,  // 56: record.ListBiasesResponse.biases:type_name -> record.CognitiveBias
+	12, // 57: record.RecordService.ListThoughtRecords:input_type -> record.ListThoughtRecordsRequest
+	14, // 58: record.RecordService.CreateThoughtRecord:input_type -> record.CreateThoughtRecordRequest
+	15, // 59: record.RecordService.GetThoughtRecord:input_type -> record.GetThoughtRecordRequest
+	16, // 60: record.RecordService.UpdateThoughtRecord:input_type -> record.UpdateThoughtRecordRequest
+	19, // 61: record.RecordService.ChallengeThoughtRecord:input_type -> record.ChallengeThoughtRecordRequest
+	20, // 62: record.RecordService.DeleteThoughtRecord:input_type -> record.DeleteThoughtRecordRequest
+	21, // 63: record.RecordService.AddThought:input_type -> record.AddThoughtRequest
+	22, // 64: record.RecordService.UpdateThought:input_type -> record.UpdateThoughtRequest
+	24, // 65: record.RecordService.SetHotThought:input_type -> record.SetHotThoughtRequest
+	25, // 66: record.RecordService.SetThoughtFactual:input_type -> record.SetThoughtFactualRequest
+	26, // 67: record.RecordService.SetThoughtEvidence:input_type -> record.SetThoughtEvidenceRequest
+	27, // 68: record.RecordService.DeleteThought:input_type -> record.DeleteThoughtRequest
+	28, // 69: record.RecordService.AddFeeling:input_type -> record.AddFeelingRequest
+	29, // 70: record.RecordService.AddMapFeeling:input_type -> record.AddMapFeelingRequest
+	30, // 71: record.RecordService.DeleteFeeling:input_type -> record.DeleteFeelingRequest
+	31, // 72: record.RecordService.ListMapsOfWorry:input_type -> record.ListMapsOfWorryRequest
+	33, // 73: record.RecordService.CreateMapOfWorry:input_type -> record.CreateMapOfWorryRequest
+	34, // 74: record.RecordService.GetMapOfWorry:input_type -> record.GetMapOfWorryRequest
+	36, // 75: record.RecordService.UpdateMapOfWorry:input_type -> record.UpdateMapOfWorryRequest
+	37, // 76: record.RecordService.DeleteMapOfWorry:input_type -> record.DeleteMapOfWorryRequest
+	38, // 77: record.RecordService.ListBehaviouralExperiments:input_type -> record.ListBehaviouralExperimentsRequest
+	40, // 78: record.RecordService.CreateBehaviouralExperiment:input_type -> record.CreateBehaviouralExperimentRequest
+	41, // 79: record.RecordService.GetBehaviouralExperiment:input_type -> record.GetBehaviouralExperimentRequest
+	42, // 80: record.RecordService.UpdateBehaviouralExperiment:input_type -> record.UpdateBehaviouralExperimentRequest
+	43, // 81: record.RecordService.CompleteBehaviouralExperiment:input_type -> record.CompleteBehaviouralExperimentRequest
+	44, // 82: record.RecordService.DeleteBehaviouralExperiment:input_type -> record.DeleteBehaviouralExperimentRequest
+	45, // 83: record.RecordService.AddExperimentFeeling:input_type -> record.AddExperimentFeelingRequest
+	46, // 84: record.RecordService.ListPositiveDataLogs:input_type -> record.ListPositiveDataLogsRequest
+	48, // 85: record.RecordService.CreatePositiveDataLog:input_type -> record.CreatePositiveDataLogRequest
+	49, // 86: record.RecordService.GetPositiveDataLog:input_type -> record.GetPositiveDataLogRequest
+	50, // 87: record.RecordService.UpdatePositiveDataLog:input_type -> record.UpdatePositiveDataLogRequest
+	51, // 88: record.RecordService.DeletePositiveDataLog:input_type -> record.DeletePositiveDataLogRequest
+	52, // 89: record.RecordService.AddDataLogEvidence:input_type -> record.AddDataLogEvidenceRequest
+	53, // 90: record.RecordService.DeleteDataLogEvidence:input_type -> record.DeleteDataLogEvidenceRequest
+	54, // 91: record.RecordService.RateBeliefs:input_type -> record.RateBeliefsRequest
+	55, // 92: record.RecordService.ListBiases:input_type -> record.ListBiasesRequest
+	57, // 93: record.RecordService.CreateBias:input_type -> record.CreateBiasRequest
+	58, // 94: record.RecordService.RenameBias:input_type -> record.RenameBiasRequest
+	59, // 95: record.RecordService.DeleteBias:input_type -> record.DeleteBiasRequest
+	13, // 96: record.RecordService.ListThoughtRecords:output_type -> record.ListThoughtRecordsResponse
+	3,  // 97: record.RecordService.CreateThoughtRecord:output_type -> record.ThoughtRecord
+	3,  // 98: record.RecordService.GetThoughtRecord:output_type -> record.ThoughtRecord
+	3,  // 99: record.RecordService.UpdateThoughtRecord:output_type -> record.ThoughtRecord
+	3,  // 100: record.RecordService.ChallengeThoughtRecord:output_type -> record.ThoughtRecord
+	61, // 101: record.RecordService.DeleteThoughtRecord:output_type -> google.protobuf.Empty
+	3,  // 102: record.RecordService.AddThought:output_type -> record.ThoughtRecord
+	3,  // 103: record.RecordService.UpdateThought:output_type -> record.ThoughtRecord
+	3,  // 104: record.RecordService.SetHotThought:output_type -> record.ThoughtRecord
+	3,  // 105: record.RecordService.SetThoughtFactual:output_type -> record.ThoughtRecord
+	3,  // 106: record.RecordService.SetThoughtEvidence:output_type -> record.ThoughtRecord
+	3,  // 107: record.RecordService.DeleteThought:output_type -> record.ThoughtRecord
+	3,  // 108: record.RecordService.AddFeeling:output_type -> record.ThoughtRecord
+	4,  // 109: record.RecordService.AddMapFeeling:output_type -> record.MapOfWorry
+	61, // 110: record.RecordService.DeleteFeeling:output_type -> google.protobuf.Empty
+	32, // 111: record.RecordService.ListMapsOfWorry:output_type -> record.ListMapsOfWorryResponse
+	4,  // 112: record.RecordService.CreateMapOfWorry:output_type -> record.MapOfWorry
+	35, // 113: record.RecordService.GetMapOfWorry:output_type -> record.GetMapOfWorryResponse
+	4,  // 114: record.RecordService.UpdateMapOfWorry:output_type -> record.MapOfWorry
+	61, // 115: record.RecordService.DeleteMapOfWorry:output_type -> google.protobuf.Empty
+	39, // 116: record.RecordService.ListBehaviouralExperiments:output_type -> record.ListBehaviouralExperimentsResponse
+	5,  // 117: record.RecordService.CreateBehaviouralExperiment:output_type -> record.BehaviouralExperiment
+	5,  // 118: record.RecordService.GetBehaviouralExperiment:output_type -> record.BehaviouralExperiment
+	5,  // 119: record.RecordService.UpdateBehaviouralExperiment:output_type -> record.BehaviouralExperiment
+	5,  // 120: record.RecordService.CompleteBehaviouralExperiment:output_type -> record.BehaviouralExperiment
+	61, // 121: record.RecordService.DeleteBehaviouralExperiment:output_type -> google.protobuf.Empty
+	5,  // 122: record.RecordService.AddExperimentFeeling:output_type -> record.BehaviouralExperiment
+	47, // 123: record.RecordService.ListPositiveDataLogs:output_type -> record.ListPositiveDataLogsResponse
+	6,  // 124: record.RecordService.CreatePositiveDataLog:output_type -> record.PositiveDataLog
+	6,  // 125: record.RecordService.GetPositiveDataLog:output_type -> record.PositiveDataLog
+	6,  // 126: record.RecordService.UpdatePositiveDataLog:output_type -> record.PositiveDataLog
+	61, // 127: record.RecordService.DeletePositiveDataLog:output_type -> google.protobuf.Empty
+	6,  // 128: record.RecordService.AddDataLogEvidence:output_type -> record.PositiveDataLog
+	6,  // 129: record.RecordService.DeleteDataLogEvidence:output_type -> record.PositiveDataLog
+	6,  // 130: record.RecordService.RateBeliefs:output_type -> record.PositiveDataLog
+	56, // 131: record.RecordService.ListBiases:output_type -> record.ListBiasesResponse
+	0,  // 132: record.RecordService.CreateBias:output_type -> record.CognitiveBias
+	0,  // 133: record.RecordService.RenameBias:output_type -> record.CognitiveBias
+	61, // 134: record.RecordService.DeleteBias:output_type -> google.protobuf.Empty
+	96, // [96:135] is the sub-list for method output_type
+	57, // [57:96] is the sub-list for method input_type
+	57, // [57:57] is the sub-list for extension type_name
+	57, // [57:57] is the sub-list for extension extendee
+	0,  // [0:57] is the sub-list for field type_name
 }
 
 func init() { file_proto_record_proto_init() }
@@ -3592,26 +4463,32 @@ func file_proto_record_proto_init() {
 	file_proto_record_proto_msgTypes[3].OneofWrappers = []any{}
 	file_proto_record_proto_msgTypes[4].OneofWrappers = []any{}
 	file_proto_record_proto_msgTypes[5].OneofWrappers = []any{}
-	file_proto_record_proto_msgTypes[6].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[7].OneofWrappers = []any{}
 	file_proto_record_proto_msgTypes[8].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[9].OneofWrappers = []any{}
 	file_proto_record_proto_msgTypes[10].OneofWrappers = []any{}
 	file_proto_record_proto_msgTypes[12].OneofWrappers = []any{}
-	file_proto_record_proto_msgTypes[13].OneofWrappers = []any{}
-	file_proto_record_proto_msgTypes[18].OneofWrappers = []any{}
-	file_proto_record_proto_msgTypes[27].OneofWrappers = []any{}
-	file_proto_record_proto_msgTypes[29].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[14].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[16].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[17].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[22].OneofWrappers = []any{}
 	file_proto_record_proto_msgTypes[31].OneofWrappers = []any{}
-	file_proto_record_proto_msgTypes[32].OneofWrappers = []any{}
-	file_proto_record_proto_msgTypes[34].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[33].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[35].OneofWrappers = []any{}
 	file_proto_record_proto_msgTypes[36].OneofWrappers = []any{}
 	file_proto_record_proto_msgTypes[38].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[40].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[42].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[48].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[50].OneofWrappers = []any{}
+	file_proto_record_proto_msgTypes[54].OneofWrappers = []any{}
 	type x struct{}
 	out := protoimpl.TypeBuilder{
 		File: protoimpl.DescBuilder{
 			GoPackagePath: reflect.TypeOf(x{}).PkgPath(),
 			RawDescriptor: unsafe.Slice(unsafe.StringData(file_proto_record_proto_rawDesc), len(file_proto_record_proto_rawDesc)),
 			NumEnums:      0,
-			NumMessages:   47,
+			NumMessages:   60,
 			NumExtensions: 0,
 			NumServices:   1,
 		},

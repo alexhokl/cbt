@@ -5,7 +5,7 @@ A journal for cognitive behavioural therapy thought records.
 It records what you write and shows it back to you. It does not interpret an
 entry, score it, or tell you what it means.
 
-## The three exercises
+## The four exercises
 
 **Thought record**:
 
@@ -38,6 +38,16 @@ come after, together with how strongly each feeling was actually felt.
 `cbt complete` records that second part, and
 `cbt list experiments --not-completed` is the queue of experiments still to be
 carried out.
+
+**Positive data log** — challenging a self-critical belief over time:
+
+| Self-critical belief | How strongly I believe this | Alternative belief | How strongly I believe this | Evidence to support the alternative belief and weaken the old belief |
+|---|---|---|---|---|
+
+A log is meant to be returned to. Evidence is added a row at a time as you
+notice it, with `cbt create evidence`, and both beliefs are rated again
+whenever you come back to it, with `cbt rerate`. Earlier ratings are kept with
+their dates rather than overwritten, so `cbt get data-log` shows each one.
 
 ## Using it
 
@@ -80,6 +90,18 @@ cbt complete 1 \
   --rerate 1=20 --feeling relieved=50
 
 cbt list experiments --not-completed
+
+# open a positive data log
+cbt create data-log "I am always late" \
+  --alternative "I am on time for most things" \
+  --believe 70 --believe-alternative 30 \
+  --evidence "arrived early for the dentist"
+
+# add evidence as you notice it, and rate both beliefs again later
+cbt create evidence 1 "caught the first train on Monday" --at yesterday
+cbt rerate 1 --believe 55 --believe-alternative 45
+cbt get data-log 1
+cbt list data-logs
 ```
 
 Feelings are rated 0-100 and re-rated during the challenge, because seeing

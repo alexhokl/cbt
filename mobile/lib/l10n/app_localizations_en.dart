@@ -24,6 +24,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabExperiments => 'Experiments';
 
   @override
+  String get tabDataLogs => 'Data logs';
+
+  @override
   String get menuBiases => 'Cognitive biases';
 
   @override
@@ -249,6 +252,77 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get planRequired =>
       'Write down what you are going to try before saving.';
+
+  @override
+  String get emptyDataLogs => 'No positive data logs yet.';
+
+  @override
+  String get newDataLog => 'New positive data log';
+
+  @override
+  String get editDataLog => 'Edit positive data log';
+
+  @override
+  String get fieldBelief => 'Self-critical belief';
+
+  @override
+  String get fieldAlternativeBelief => 'Alternative belief';
+
+  @override
+  String get fieldBelieveBelief =>
+      'How strongly I believe the self-critical belief';
+
+  @override
+  String get fieldBelieveAlternative =>
+      'How strongly I believe the alternative belief';
+
+  @override
+  String get fieldBeliefRatings => 'How strongly I believe this';
+
+  @override
+  String get fieldDataLogEvidence =>
+      'Evidence to support the alternative belief and weaken the old belief';
+
+  @override
+  String get fieldEvidenceWhen => 'When it happened';
+
+  @override
+  String beliefRatingLine(String belief, String alternative) {
+    return 'Belief $belief · alternative $alternative';
+  }
+
+  @override
+  String get addEvidence => 'Add evidence';
+
+  @override
+  String get rateAgain => 'Rate again';
+
+  @override
+  String get rateAgainTitle => 'How strongly do you believe each now?';
+
+  @override
+  String get ratingRequired => 'Move at least one slider before saving.';
+
+  @override
+  String get beliefRequired => 'Write down the belief before saving.';
+
+  @override
+  String get deleteEvidenceTitle => 'Delete this evidence?';
+
+  @override
+  String get deleteEvidenceBody => 'There is no undo.';
+
+  @override
+  String evidenceCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count pieces of evidence',
+      one: '1 piece of evidence',
+      zero: 'No evidence yet',
+    );
+    return '$_temp0';
+  }
 
   @override
   String get alternativeReading => 'An alternative reading of the same event';

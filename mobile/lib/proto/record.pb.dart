@@ -923,6 +923,411 @@ class BehaviouralExperiment extends $pb.GeneratedMessage {
   $2.Timestamp ensureUpdatedAt() => $_ensure(10);
 }
 
+/// PositiveDataLog is the positive data log: a self-critical belief, an
+/// alternative belief, how strongly each is believed over time, and the
+/// evidence that supports the alternative and weakens the old belief.
+class PositiveDataLog extends $pb.GeneratedMessage {
+  factory PositiveDataLog({
+    $core.int? id,
+    $core.String? belief,
+    $core.String? alternativeBelief,
+    $core.Iterable<DataLogEvidence>? evidence,
+    $core.Iterable<BeliefRating>? ratings,
+    $2.Timestamp? createdAt,
+    $2.Timestamp? updatedAt,
+  }) {
+    final result = PositiveDataLog._();
+    if (id != null) result.id = id;
+    if (belief != null) result.belief = belief;
+    if (alternativeBelief != null) result.alternativeBelief = alternativeBelief;
+    if (evidence != null) result.evidence.addAll(evidence);
+    if (ratings != null) result.ratings.addAll(ratings);
+    if (createdAt != null) result.createdAt = createdAt;
+    if (updatedAt != null) result.updatedAt = updatedAt;
+    return result;
+  }
+
+  PositiveDataLog._();
+
+  factory PositiveDataLog.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      PositiveDataLog()..mergeFromBuffer(data, registry);
+  factory PositiveDataLog.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      PositiveDataLog()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'PositiveDataLog',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: PositiveDataLog.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'belief')
+    ..aOS(3, _omitFieldNames ? '' : 'alternativeBelief')
+    ..pPM<DataLogEvidence>(4, _omitFieldNames ? '' : 'evidence',
+        subBuilder: DataLogEvidence.$_createMessage)
+    ..pPM<BeliefRating>(5, _omitFieldNames ? '' : 'ratings',
+        subBuilder: BeliefRating.$_createMessage)
+    ..aOM<$2.Timestamp>(6, _omitFieldNames ? '' : 'createdAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..aOM<$2.Timestamp>(7, _omitFieldNames ? '' : 'updatedAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PositiveDataLog clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  PositiveDataLog copyWith(void Function(PositiveDataLog) updates) =>
+      super.copyWith((message) => updates(message as PositiveDataLog))
+          as PositiveDataLog;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use PositiveDataLog() / PositiveDataLog.new instead')
+  static PositiveDataLog create() => PositiveDataLog._();
+  static $pb.GeneratedMessage $_createMessage() => PositiveDataLog._();
+  @$core.override
+  PositiveDataLog createEmptyInstance() => PositiveDataLog._();
+  @$core.pragma('dart2js:noInline')
+  static PositiveDataLog getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<PositiveDataLog>(
+          PositiveDataLog.$_createMessage);
+  static PositiveDataLog? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get belief => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set belief($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBelief() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBelief() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get alternativeBelief => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set alternativeBelief($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAlternativeBelief() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAlternativeBelief() => $_clearField(3);
+
+  /// evidence is in the order it was written down.
+  @$pb.TagNumber(4)
+  $pb.PbList<DataLogEvidence> get evidence => $_getList(3);
+
+  /// ratings are oldest first. Each return to the log appends one.
+  @$pb.TagNumber(5)
+  $pb.PbList<BeliefRating> get ratings => $_getList(4);
+
+  @$pb.TagNumber(6)
+  $2.Timestamp get createdAt => $_getN(5);
+  @$pb.TagNumber(6)
+  set createdAt($2.Timestamp value) => $_setField(6, value);
+  @$pb.TagNumber(6)
+  $core.bool hasCreatedAt() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearCreatedAt() => $_clearField(6);
+  @$pb.TagNumber(6)
+  $2.Timestamp ensureCreatedAt() => $_ensure(5);
+
+  @$pb.TagNumber(7)
+  $2.Timestamp get updatedAt => $_getN(6);
+  @$pb.TagNumber(7)
+  set updatedAt($2.Timestamp value) => $_setField(7, value);
+  @$pb.TagNumber(7)
+  $core.bool hasUpdatedAt() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearUpdatedAt() => $_clearField(7);
+  @$pb.TagNumber(7)
+  $2.Timestamp ensureUpdatedAt() => $_ensure(6);
+}
+
+/// DataLogEvidence is a single row of evidence in a positive data log.
+class DataLogEvidence extends $pb.GeneratedMessage {
+  factory DataLogEvidence({
+    $core.int? id,
+    $core.String? body,
+    $2.Timestamp? notedAt,
+    $2.Timestamp? createdAt,
+  }) {
+    final result = DataLogEvidence._();
+    if (id != null) result.id = id;
+    if (body != null) result.body = body;
+    if (notedAt != null) result.notedAt = notedAt;
+    if (createdAt != null) result.createdAt = createdAt;
+    return result;
+  }
+
+  DataLogEvidence._();
+
+  factory DataLogEvidence.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DataLogEvidence()..mergeFromBuffer(data, registry);
+  factory DataLogEvidence.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DataLogEvidence()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DataLogEvidence',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: DataLogEvidence.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'body')
+    ..aOM<$2.Timestamp>(3, _omitFieldNames ? '' : 'notedAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..aOM<$2.Timestamp>(4, _omitFieldNames ? '' : 'createdAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DataLogEvidence clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DataLogEvidence copyWith(void Function(DataLogEvidence) updates) =>
+      super.copyWith((message) => updates(message as DataLogEvidence))
+          as DataLogEvidence;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use DataLogEvidence() / DataLogEvidence.new instead')
+  static DataLogEvidence create() => DataLogEvidence._();
+  static $pb.GeneratedMessage $_createMessage() => DataLogEvidence._();
+  @$core.override
+  DataLogEvidence createEmptyInstance() => DataLogEvidence._();
+  @$core.pragma('dart2js:noInline')
+  static DataLogEvidence getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<DataLogEvidence>(
+          DataLogEvidence.$_createMessage);
+  static DataLogEvidence? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get body => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set body($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBody() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBody() => $_clearField(2);
+
+  /// noted_at is when the evidence happened. It is absent when the user did
+  /// not say.
+  @$pb.TagNumber(3)
+  $2.Timestamp get notedAt => $_getN(2);
+  @$pb.TagNumber(3)
+  set notedAt($2.Timestamp value) => $_setField(3, value);
+  @$pb.TagNumber(3)
+  $core.bool hasNotedAt() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearNotedAt() => $_clearField(3);
+  @$pb.TagNumber(3)
+  $2.Timestamp ensureNotedAt() => $_ensure(2);
+
+  @$pb.TagNumber(4)
+  $2.Timestamp get createdAt => $_getN(3);
+  @$pb.TagNumber(4)
+  set createdAt($2.Timestamp value) => $_setField(4, value);
+  @$pb.TagNumber(4)
+  $core.bool hasCreatedAt() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearCreatedAt() => $_clearField(4);
+  @$pb.TagNumber(4)
+  $2.Timestamp ensureCreatedAt() => $_ensure(3);
+}
+
+/// BeliefRating is how strongly each belief was held at one sitting, 0-100.
+/// Either may be absent, but not both.
+class BeliefRating extends $pb.GeneratedMessage {
+  factory BeliefRating({
+    $core.int? id,
+    $2.Timestamp? ratedAt,
+    $core.int? beliefPercent,
+    $core.int? alternativePercent,
+  }) {
+    final result = BeliefRating._();
+    if (id != null) result.id = id;
+    if (ratedAt != null) result.ratedAt = ratedAt;
+    if (beliefPercent != null) result.beliefPercent = beliefPercent;
+    if (alternativePercent != null)
+      result.alternativePercent = alternativePercent;
+    return result;
+  }
+
+  BeliefRating._();
+
+  factory BeliefRating.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      BeliefRating()..mergeFromBuffer(data, registry);
+  factory BeliefRating.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      BeliefRating()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'BeliefRating',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: BeliefRating.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'ratedAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..aI(3, _omitFieldNames ? '' : 'beliefPercent')
+    ..aI(4, _omitFieldNames ? '' : 'alternativePercent')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BeliefRating clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  BeliefRating copyWith(void Function(BeliefRating) updates) =>
+      super.copyWith((message) => updates(message as BeliefRating))
+          as BeliefRating;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use BeliefRating() / BeliefRating.new instead')
+  static BeliefRating create() => BeliefRating._();
+  static $pb.GeneratedMessage $_createMessage() => BeliefRating._();
+  @$core.override
+  BeliefRating createEmptyInstance() => BeliefRating._();
+  @$core.pragma('dart2js:noInline')
+  static BeliefRating getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<BeliefRating>(
+          BeliefRating.$_createMessage);
+  static BeliefRating? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.Timestamp get ratedAt => $_getN(1);
+  @$pb.TagNumber(2)
+  set ratedAt($2.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasRatedAt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearRatedAt() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Timestamp ensureRatedAt() => $_ensure(1);
+
+  @$pb.TagNumber(3)
+  $core.int get beliefPercent => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set beliefPercent($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasBeliefPercent() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBeliefPercent() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get alternativePercent => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set alternativePercent($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAlternativePercent() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAlternativePercent() => $_clearField(4);
+}
+
+/// DataLogEvidenceInput is a row of evidence as supplied by the client.
+class DataLogEvidenceInput extends $pb.GeneratedMessage {
+  factory DataLogEvidenceInput({
+    $core.String? body,
+    $2.Timestamp? notedAt,
+  }) {
+    final result = DataLogEvidenceInput._();
+    if (body != null) result.body = body;
+    if (notedAt != null) result.notedAt = notedAt;
+    return result;
+  }
+
+  DataLogEvidenceInput._();
+
+  factory DataLogEvidenceInput.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DataLogEvidenceInput()..mergeFromBuffer(data, registry);
+  factory DataLogEvidenceInput.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DataLogEvidenceInput()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DataLogEvidenceInput',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: DataLogEvidenceInput.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'body')
+    ..aOM<$2.Timestamp>(2, _omitFieldNames ? '' : 'notedAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DataLogEvidenceInput clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DataLogEvidenceInput copyWith(void Function(DataLogEvidenceInput) updates) =>
+      super.copyWith((message) => updates(message as DataLogEvidenceInput))
+          as DataLogEvidenceInput;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use DataLogEvidenceInput() / DataLogEvidenceInput.new instead')
+  static DataLogEvidenceInput create() => DataLogEvidenceInput._();
+  static $pb.GeneratedMessage $_createMessage() => DataLogEvidenceInput._();
+  @$core.override
+  DataLogEvidenceInput createEmptyInstance() => DataLogEvidenceInput._();
+  @$core.pragma('dart2js:noInline')
+  static DataLogEvidenceInput getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DataLogEvidenceInput>(
+          DataLogEvidenceInput.$_createMessage);
+  static DataLogEvidenceInput? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get body => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set body($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBody() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBody() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $2.Timestamp get notedAt => $_getN(1);
+  @$pb.TagNumber(2)
+  set notedAt($2.Timestamp value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasNotedAt() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearNotedAt() => $_clearField(2);
+  @$pb.TagNumber(2)
+  $2.Timestamp ensureNotedAt() => $_ensure(1);
+}
+
 /// FeelingInput is a feeling as supplied by the client: a name and an optional
 /// 0-100 rating.
 class FeelingInput extends $pb.GeneratedMessage {
@@ -3950,6 +4355,669 @@ class AddExperimentFeelingRequest extends $pb.GeneratedMessage {
   void clearFeeling() => $_clearField(2);
   @$pb.TagNumber(2)
   FeelingInput ensureFeeling() => $_ensure(1);
+}
+
+class ListPositiveDataLogsRequest extends $pb.GeneratedMessage {
+  factory ListPositiveDataLogsRequest({
+    $core.String? search,
+  }) {
+    final result = ListPositiveDataLogsRequest._();
+    if (search != null) result.search = search;
+    return result;
+  }
+
+  ListPositiveDataLogsRequest._();
+
+  factory ListPositiveDataLogsRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListPositiveDataLogsRequest()..mergeFromBuffer(data, registry);
+  factory ListPositiveDataLogsRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListPositiveDataLogsRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListPositiveDataLogsRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: ListPositiveDataLogsRequest.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'search')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPositiveDataLogsRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPositiveDataLogsRequest copyWith(
+          void Function(ListPositiveDataLogsRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as ListPositiveDataLogsRequest))
+          as ListPositiveDataLogsRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ListPositiveDataLogsRequest() / ListPositiveDataLogsRequest.new instead')
+  static ListPositiveDataLogsRequest create() =>
+      ListPositiveDataLogsRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      ListPositiveDataLogsRequest._();
+  @$core.override
+  ListPositiveDataLogsRequest createEmptyInstance() =>
+      ListPositiveDataLogsRequest._();
+  @$core.pragma('dart2js:noInline')
+  static ListPositiveDataLogsRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListPositiveDataLogsRequest>(
+          ListPositiveDataLogsRequest.$_createMessage);
+  static ListPositiveDataLogsRequest? _defaultInstance;
+
+  /// search matches both beliefs and every row of evidence.
+  @$pb.TagNumber(1)
+  $core.String get search => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set search($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSearch() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSearch() => $_clearField(1);
+}
+
+class ListPositiveDataLogsResponse extends $pb.GeneratedMessage {
+  factory ListPositiveDataLogsResponse({
+    $core.Iterable<PositiveDataLog>? logs,
+  }) {
+    final result = ListPositiveDataLogsResponse._();
+    if (logs != null) result.logs.addAll(logs);
+    return result;
+  }
+
+  ListPositiveDataLogsResponse._();
+
+  factory ListPositiveDataLogsResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListPositiveDataLogsResponse()..mergeFromBuffer(data, registry);
+  factory ListPositiveDataLogsResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListPositiveDataLogsResponse()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListPositiveDataLogsResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: ListPositiveDataLogsResponse.$_createMessage)
+    ..pPM<PositiveDataLog>(1, _omitFieldNames ? '' : 'logs',
+        subBuilder: PositiveDataLog.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPositiveDataLogsResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListPositiveDataLogsResponse copyWith(
+          void Function(ListPositiveDataLogsResponse) updates) =>
+      super.copyWith(
+              (message) => updates(message as ListPositiveDataLogsResponse))
+          as ListPositiveDataLogsResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ListPositiveDataLogsResponse() / ListPositiveDataLogsResponse.new instead')
+  static ListPositiveDataLogsResponse create() =>
+      ListPositiveDataLogsResponse._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      ListPositiveDataLogsResponse._();
+  @$core.override
+  ListPositiveDataLogsResponse createEmptyInstance() =>
+      ListPositiveDataLogsResponse._();
+  @$core.pragma('dart2js:noInline')
+  static ListPositiveDataLogsResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListPositiveDataLogsResponse>(
+          ListPositiveDataLogsResponse.$_createMessage);
+  static ListPositiveDataLogsResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<PositiveDataLog> get logs => $_getList(0);
+}
+
+class CreatePositiveDataLogRequest extends $pb.GeneratedMessage {
+  factory CreatePositiveDataLogRequest({
+    $core.String? belief,
+    $core.String? alternativeBelief,
+    $core.int? beliefPercent,
+    $core.int? alternativePercent,
+    $core.Iterable<DataLogEvidenceInput>? evidence,
+  }) {
+    final result = CreatePositiveDataLogRequest._();
+    if (belief != null) result.belief = belief;
+    if (alternativeBelief != null) result.alternativeBelief = alternativeBelief;
+    if (beliefPercent != null) result.beliefPercent = beliefPercent;
+    if (alternativePercent != null)
+      result.alternativePercent = alternativePercent;
+    if (evidence != null) result.evidence.addAll(evidence);
+    return result;
+  }
+
+  CreatePositiveDataLogRequest._();
+
+  factory CreatePositiveDataLogRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      CreatePositiveDataLogRequest()..mergeFromBuffer(data, registry);
+  factory CreatePositiveDataLogRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      CreatePositiveDataLogRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreatePositiveDataLogRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: CreatePositiveDataLogRequest.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'belief')
+    ..aOS(2, _omitFieldNames ? '' : 'alternativeBelief')
+    ..aI(3, _omitFieldNames ? '' : 'beliefPercent')
+    ..aI(4, _omitFieldNames ? '' : 'alternativePercent')
+    ..pPM<DataLogEvidenceInput>(5, _omitFieldNames ? '' : 'evidence',
+        subBuilder: DataLogEvidenceInput.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreatePositiveDataLogRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreatePositiveDataLogRequest copyWith(
+          void Function(CreatePositiveDataLogRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as CreatePositiveDataLogRequest))
+          as CreatePositiveDataLogRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use CreatePositiveDataLogRequest() / CreatePositiveDataLogRequest.new instead')
+  static CreatePositiveDataLogRequest create() =>
+      CreatePositiveDataLogRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      CreatePositiveDataLogRequest._();
+  @$core.override
+  CreatePositiveDataLogRequest createEmptyInstance() =>
+      CreatePositiveDataLogRequest._();
+  @$core.pragma('dart2js:noInline')
+  static CreatePositiveDataLogRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreatePositiveDataLogRequest>(
+          CreatePositiveDataLogRequest.$_createMessage);
+  static CreatePositiveDataLogRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get belief => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set belief($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasBelief() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearBelief() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get alternativeBelief => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set alternativeBelief($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasAlternativeBelief() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearAlternativeBelief() => $_clearField(2);
+
+  /// belief_percent and alternative_percent form the first rating. It is
+  /// stored when either is given.
+  @$pb.TagNumber(3)
+  $core.int get beliefPercent => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set beliefPercent($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasBeliefPercent() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBeliefPercent() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.int get alternativePercent => $_getIZ(3);
+  @$pb.TagNumber(4)
+  set alternativePercent($core.int value) => $_setSignedInt32(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAlternativePercent() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAlternativePercent() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $pb.PbList<DataLogEvidenceInput> get evidence => $_getList(4);
+}
+
+class GetPositiveDataLogRequest extends $pb.GeneratedMessage {
+  factory GetPositiveDataLogRequest({
+    $core.int? id,
+  }) {
+    final result = GetPositiveDataLogRequest._();
+    if (id != null) result.id = id;
+    return result;
+  }
+
+  GetPositiveDataLogRequest._();
+
+  factory GetPositiveDataLogRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GetPositiveDataLogRequest()..mergeFromBuffer(data, registry);
+  factory GetPositiveDataLogRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GetPositiveDataLogRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetPositiveDataLogRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: GetPositiveDataLogRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetPositiveDataLogRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetPositiveDataLogRequest copyWith(
+          void Function(GetPositiveDataLogRequest) updates) =>
+      super.copyWith((message) => updates(message as GetPositiveDataLogRequest))
+          as GetPositiveDataLogRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use GetPositiveDataLogRequest() / GetPositiveDataLogRequest.new instead')
+  static GetPositiveDataLogRequest create() => GetPositiveDataLogRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      GetPositiveDataLogRequest._();
+  @$core.override
+  GetPositiveDataLogRequest createEmptyInstance() =>
+      GetPositiveDataLogRequest._();
+  @$core.pragma('dart2js:noInline')
+  static GetPositiveDataLogRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetPositiveDataLogRequest>(
+          GetPositiveDataLogRequest.$_createMessage);
+  static GetPositiveDataLogRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+}
+
+class UpdatePositiveDataLogRequest extends $pb.GeneratedMessage {
+  factory UpdatePositiveDataLogRequest({
+    $core.int? id,
+    $core.String? belief,
+    $core.String? alternativeBelief,
+  }) {
+    final result = UpdatePositiveDataLogRequest._();
+    if (id != null) result.id = id;
+    if (belief != null) result.belief = belief;
+    if (alternativeBelief != null) result.alternativeBelief = alternativeBelief;
+    return result;
+  }
+
+  UpdatePositiveDataLogRequest._();
+
+  factory UpdatePositiveDataLogRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      UpdatePositiveDataLogRequest()..mergeFromBuffer(data, registry);
+  factory UpdatePositiveDataLogRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      UpdatePositiveDataLogRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdatePositiveDataLogRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: UpdatePositiveDataLogRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'belief')
+    ..aOS(3, _omitFieldNames ? '' : 'alternativeBelief')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdatePositiveDataLogRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdatePositiveDataLogRequest copyWith(
+          void Function(UpdatePositiveDataLogRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as UpdatePositiveDataLogRequest))
+          as UpdatePositiveDataLogRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use UpdatePositiveDataLogRequest() / UpdatePositiveDataLogRequest.new instead')
+  static UpdatePositiveDataLogRequest create() =>
+      UpdatePositiveDataLogRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      UpdatePositiveDataLogRequest._();
+  @$core.override
+  UpdatePositiveDataLogRequest createEmptyInstance() =>
+      UpdatePositiveDataLogRequest._();
+  @$core.pragma('dart2js:noInline')
+  static UpdatePositiveDataLogRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdatePositiveDataLogRequest>(
+          UpdatePositiveDataLogRequest.$_createMessage);
+  static UpdatePositiveDataLogRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get belief => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set belief($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBelief() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBelief() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get alternativeBelief => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set alternativeBelief($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAlternativeBelief() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAlternativeBelief() => $_clearField(3);
+}
+
+class DeletePositiveDataLogRequest extends $pb.GeneratedMessage {
+  factory DeletePositiveDataLogRequest({
+    $core.int? id,
+  }) {
+    final result = DeletePositiveDataLogRequest._();
+    if (id != null) result.id = id;
+    return result;
+  }
+
+  DeletePositiveDataLogRequest._();
+
+  factory DeletePositiveDataLogRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DeletePositiveDataLogRequest()..mergeFromBuffer(data, registry);
+  factory DeletePositiveDataLogRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DeletePositiveDataLogRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeletePositiveDataLogRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: DeletePositiveDataLogRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeletePositiveDataLogRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeletePositiveDataLogRequest copyWith(
+          void Function(DeletePositiveDataLogRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as DeletePositiveDataLogRequest))
+          as DeletePositiveDataLogRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use DeletePositiveDataLogRequest() / DeletePositiveDataLogRequest.new instead')
+  static DeletePositiveDataLogRequest create() =>
+      DeletePositiveDataLogRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      DeletePositiveDataLogRequest._();
+  @$core.override
+  DeletePositiveDataLogRequest createEmptyInstance() =>
+      DeletePositiveDataLogRequest._();
+  @$core.pragma('dart2js:noInline')
+  static DeletePositiveDataLogRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeletePositiveDataLogRequest>(
+          DeletePositiveDataLogRequest.$_createMessage);
+  static DeletePositiveDataLogRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+}
+
+class AddDataLogEvidenceRequest extends $pb.GeneratedMessage {
+  factory AddDataLogEvidenceRequest({
+    $core.int? logId,
+    DataLogEvidenceInput? evidence,
+  }) {
+    final result = AddDataLogEvidenceRequest._();
+    if (logId != null) result.logId = logId;
+    if (evidence != null) result.evidence = evidence;
+    return result;
+  }
+
+  AddDataLogEvidenceRequest._();
+
+  factory AddDataLogEvidenceRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      AddDataLogEvidenceRequest()..mergeFromBuffer(data, registry);
+  factory AddDataLogEvidenceRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      AddDataLogEvidenceRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'AddDataLogEvidenceRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: AddDataLogEvidenceRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'logId', fieldType: $pb.PbFieldType.OU3)
+    ..aOM<DataLogEvidenceInput>(2, _omitFieldNames ? '' : 'evidence',
+        subBuilder: DataLogEvidenceInput.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AddDataLogEvidenceRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  AddDataLogEvidenceRequest copyWith(
+          void Function(AddDataLogEvidenceRequest) updates) =>
+      super.copyWith((message) => updates(message as AddDataLogEvidenceRequest))
+          as AddDataLogEvidenceRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use AddDataLogEvidenceRequest() / AddDataLogEvidenceRequest.new instead')
+  static AddDataLogEvidenceRequest create() => AddDataLogEvidenceRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      AddDataLogEvidenceRequest._();
+  @$core.override
+  AddDataLogEvidenceRequest createEmptyInstance() =>
+      AddDataLogEvidenceRequest._();
+  @$core.pragma('dart2js:noInline')
+  static AddDataLogEvidenceRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<AddDataLogEvidenceRequest>(
+          AddDataLogEvidenceRequest.$_createMessage);
+  static AddDataLogEvidenceRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get logId => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set logId($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasLogId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearLogId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  DataLogEvidenceInput get evidence => $_getN(1);
+  @$pb.TagNumber(2)
+  set evidence(DataLogEvidenceInput value) => $_setField(2, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEvidence() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEvidence() => $_clearField(2);
+  @$pb.TagNumber(2)
+  DataLogEvidenceInput ensureEvidence() => $_ensure(1);
+}
+
+class DeleteDataLogEvidenceRequest extends $pb.GeneratedMessage {
+  factory DeleteDataLogEvidenceRequest({
+    $core.int? id,
+  }) {
+    final result = DeleteDataLogEvidenceRequest._();
+    if (id != null) result.id = id;
+    return result;
+  }
+
+  DeleteDataLogEvidenceRequest._();
+
+  factory DeleteDataLogEvidenceRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DeleteDataLogEvidenceRequest()..mergeFromBuffer(data, registry);
+  factory DeleteDataLogEvidenceRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DeleteDataLogEvidenceRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteDataLogEvidenceRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: DeleteDataLogEvidenceRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteDataLogEvidenceRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteDataLogEvidenceRequest copyWith(
+          void Function(DeleteDataLogEvidenceRequest) updates) =>
+      super.copyWith(
+              (message) => updates(message as DeleteDataLogEvidenceRequest))
+          as DeleteDataLogEvidenceRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use DeleteDataLogEvidenceRequest() / DeleteDataLogEvidenceRequest.new instead')
+  static DeleteDataLogEvidenceRequest create() =>
+      DeleteDataLogEvidenceRequest._();
+  static $pb.GeneratedMessage $_createMessage() =>
+      DeleteDataLogEvidenceRequest._();
+  @$core.override
+  DeleteDataLogEvidenceRequest createEmptyInstance() =>
+      DeleteDataLogEvidenceRequest._();
+  @$core.pragma('dart2js:noInline')
+  static DeleteDataLogEvidenceRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteDataLogEvidenceRequest>(
+          DeleteDataLogEvidenceRequest.$_createMessage);
+  static DeleteDataLogEvidenceRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+}
+
+class RateBeliefsRequest extends $pb.GeneratedMessage {
+  factory RateBeliefsRequest({
+    $core.int? logId,
+    $core.int? beliefPercent,
+    $core.int? alternativePercent,
+  }) {
+    final result = RateBeliefsRequest._();
+    if (logId != null) result.logId = logId;
+    if (beliefPercent != null) result.beliefPercent = beliefPercent;
+    if (alternativePercent != null)
+      result.alternativePercent = alternativePercent;
+    return result;
+  }
+
+  RateBeliefsRequest._();
+
+  factory RateBeliefsRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      RateBeliefsRequest()..mergeFromBuffer(data, registry);
+  factory RateBeliefsRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      RateBeliefsRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'RateBeliefsRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: RateBeliefsRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'logId', fieldType: $pb.PbFieldType.OU3)
+    ..aI(2, _omitFieldNames ? '' : 'beliefPercent')
+    ..aI(3, _omitFieldNames ? '' : 'alternativePercent')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RateBeliefsRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  RateBeliefsRequest copyWith(void Function(RateBeliefsRequest) updates) =>
+      super.copyWith((message) => updates(message as RateBeliefsRequest))
+          as RateBeliefsRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use RateBeliefsRequest() / RateBeliefsRequest.new instead')
+  static RateBeliefsRequest create() => RateBeliefsRequest._();
+  static $pb.GeneratedMessage $_createMessage() => RateBeliefsRequest._();
+  @$core.override
+  RateBeliefsRequest createEmptyInstance() => RateBeliefsRequest._();
+  @$core.pragma('dart2js:noInline')
+  static RateBeliefsRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<RateBeliefsRequest>(
+          RateBeliefsRequest.$_createMessage);
+  static RateBeliefsRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get logId => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set logId($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasLogId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearLogId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.int get beliefPercent => $_getIZ(1);
+  @$pb.TagNumber(2)
+  set beliefPercent($core.int value) => $_setSignedInt32(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBeliefPercent() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBeliefPercent() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.int get alternativePercent => $_getIZ(2);
+  @$pb.TagNumber(3)
+  set alternativePercent($core.int value) => $_setSignedInt32(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAlternativePercent() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAlternativePercent() => $_clearField(3);
 }
 
 class ListBiasesRequest extends $pb.GeneratedMessage {

@@ -124,6 +124,12 @@ abstract class AppLocalizations {
   /// **'Experiments'**
   String get tabExperiments;
 
+  /// Tab holding positive data logs.
+  ///
+  /// In en, this message translates to:
+  /// **'Data logs'**
+  String get tabDataLogs;
+
   /// Overflow menu entry opening the bias list.
   ///
   /// In en, this message translates to:
@@ -525,6 +531,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Write down what you are going to try before saving.'**
   String get planRequired;
+
+  /// Shown when there are no positive data logs.
+  ///
+  /// In en, this message translates to:
+  /// **'No positive data logs yet.'**
+  String get emptyDataLogs;
+
+  /// Title of the page creating a positive data log.
+  ///
+  /// In en, this message translates to:
+  /// **'New positive data log'**
+  String get newDataLog;
+
+  /// Title of the page editing a positive data log.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit positive data log'**
+  String get editDataLog;
+
+  /// Label for the self-critical belief of a positive data log.
+  ///
+  /// In en, this message translates to:
+  /// **'Self-critical belief'**
+  String get fieldBelief;
+
+  /// Label for the alternative belief of a positive data log.
+  ///
+  /// In en, this message translates to:
+  /// **'Alternative belief'**
+  String get fieldAlternativeBelief;
+
+  /// Label for the rating of the self-critical belief.
+  ///
+  /// In en, this message translates to:
+  /// **'How strongly I believe the self-critical belief'**
+  String get fieldBelieveBelief;
+
+  /// Label for the rating of the alternative belief.
+  ///
+  /// In en, this message translates to:
+  /// **'How strongly I believe the alternative belief'**
+  String get fieldBelieveAlternative;
+
+  /// Header above the dated ratings of a positive data log.
+  ///
+  /// In en, this message translates to:
+  /// **'How strongly I believe this'**
+  String get fieldBeliefRatings;
+
+  /// Header above the evidence of a positive data log.
+  ///
+  /// In en, this message translates to:
+  /// **'Evidence to support the alternative belief and weaken the old belief'**
+  String get fieldDataLogEvidence;
+
+  /// Label for when a row of evidence happened.
+  ///
+  /// In en, this message translates to:
+  /// **'When it happened'**
+  String get fieldEvidenceWhen;
+
+  /// One dated rating of both beliefs of a positive data log.
+  ///
+  /// In en, this message translates to:
+  /// **'Belief {belief} · alternative {alternative}'**
+  String beliefRatingLine(String belief, String alternative);
+
+  /// Button adding a row of evidence to a positive data log.
+  ///
+  /// In en, this message translates to:
+  /// **'Add evidence'**
+  String get addEvidence;
+
+  /// Button adding a new rating of both beliefs of a positive data log.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate again'**
+  String get rateAgain;
+
+  /// Title of the dialog re-rating the beliefs of a positive data log.
+  ///
+  /// In en, this message translates to:
+  /// **'How strongly do you believe each now?'**
+  String get rateAgainTitle;
+
+  /// Validation message when a re-rating rates neither belief.
+  ///
+  /// In en, this message translates to:
+  /// **'Move at least one slider before saving.'**
+  String get ratingRequired;
+
+  /// Validation message when the belief of a positive data log is blank.
+  ///
+  /// In en, this message translates to:
+  /// **'Write down the belief before saving.'**
+  String get beliefRequired;
+
+  /// Title of the dialog confirming deletion of a row of evidence.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete this evidence?'**
+  String get deleteEvidenceTitle;
+
+  /// Body of the dialog confirming deletion of a row of evidence.
+  ///
+  /// In en, this message translates to:
+  /// **'There is no undo.'**
+  String get deleteEvidenceBody;
+
+  /// How many rows of evidence a positive data log has, shown in the listing.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No evidence yet} =1{1 piece of evidence} other{{count} pieces of evidence}}'**
+  String evidenceCount(int count);
 
   /// Header above a derived map of worry.
   ///

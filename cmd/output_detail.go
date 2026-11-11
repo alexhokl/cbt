@@ -229,6 +229,68 @@ func writeBehaviouralExperimentDetail(out io.Writer, experiment *proto.Behaviour
 	return nil
 }
 
+// writePositiveDataLogDetail renders a log as a vertical label and paragraph
+// layout: both beliefs, every rating with its date, oldest first, and every
+// row of evidence. The ratings are shown as given; nothing is derived from
+// them.
+func writePositiveDataLogDetail(out io.Writer, log *proto.PositiveDataLog) error {
+	if _, err := fmt.Fprintf(out, "Positive data log %d\n", log.GetId()); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	if err := writeField(out, "self-critical belief", log.GetBelief()); err != nil {
+		return err
+	}
+	if err := writeField(out, "alternative belief", log.GetAlternativeBelief()); err != nil {
+		return err
+	}
+
+	if len(log.GetRatings()) > 0 {
+		if _, err := fmt.Fprintln(out, "how strongly I believe this:"); err != nil {
+			return fmt.Errorf("failed to write output: %w", err)
+		}
+		for _, rating := range log.GetRatings() {
+			if err := writeBeliefRating(out, rating); err != nil {
+				return err
+			}
+		}
+	}
+
+	if len(log.GetEvidence()) > 0 {
+		if _, err := fmt.Fprintln(out, "evidence to support the alternative belief and weaken the old belief:"); err != nil {
+			return fmt.Errorf("failed to write output: %w", err)
+		}
+		for _, evidence := range log.GetEvidence() {
+			prefix := fmt.Sprintf("[%d] %s  ", evidence.GetId(), formatEventDate(evidence.NotedAt, evidence.GetCreatedAt().AsTime()))
+			// Continuation lines align under the text rather than the id.
+			indent := labelIndent + strings.Repeat(" ", len([]rune(prefix)))
+			if _, err := fmt.Fprintf(out, "%s%s%s\n", labelIndent, prefix, wrap(evidence.GetBody(), detailWrapWidth-len([]rune(prefix)), indent)); err != nil {
+				return fmt.Errorf("failed to write output: %w", err)
+			}
+		}
+	}
+
+	return nil
+}
+
+// writeBeliefRating renders one sitting's rating of both beliefs. A belief
+// left unrated at that sitting is shown as "-", not as zero.
+func writeBeliefRating(out io.Writer, rating *proto.BeliefRating) error {
+	belief, alternative := "-", "-"
+	if rating.BeliefPercent != nil {
+		belief = fmt.Sprintf("%d%%", rating.GetBeliefPercent())
+	}
+	if rating.AlternativePercent != nil {
+		alternative = fmt.Sprintf("%d%%", rating.GetAlternativePercent())
+	}
+
+	if _, err := fmt.Fprintf(out, "%s%s  belief %-4s  alternative %s\n", labelIndent, rating.GetRatedAt().AsTime().Local().Format("2006-01-02 15:04"), belief, alternative); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	return nil
+}
+
 // writeField renders one labelled paragraph, wrapped and indented. An empty
 // value produces no output at all, so a record in progress reads as what has
 // been written rather than as a form with blanks.
@@ -300,4 +362,3 @@ func writeFeeling(out io.Writer, feeling *proto.Feeling) error {
 
 	return nil
 }
-

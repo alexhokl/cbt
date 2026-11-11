@@ -52,6 +52,32 @@ There is no undo.`,
 	RunE:        runDeleteBehaviouralExperiment,
 }
 
+// deletePositiveDataLogCmd removes a positive data log.
+var deletePositiveDataLogCmd = &cobra.Command{
+	Use:     "data-log [id]",
+	Aliases: []string{"positive-data-log", "pdl"},
+	Short:   "Delete a positive data log",
+	Long: `Delete a positive data log along with its evidence and ratings.
+
+There is no undo.`,
+	Example:     `  cbt delete data-log 4`,
+	Args:        cobra.ExactArgs(1),
+	Annotations: map[string]string{annotationRequiresService: "true"},
+	RunE:        runDeletePositiveDataLog,
+}
+
+// deleteEvidenceCmd removes a row of evidence from a positive data log.
+var deleteEvidenceCmd = &cobra.Command{
+	Use:   "evidence [id]",
+	Short: "Delete a row of evidence from a positive data log",
+	Long: `Delete a row of evidence from a positive data log. Run "cbt get data-log
+<id>" first to see the evidence ids.`,
+	Example:     `  cbt delete evidence 7`,
+	Args:        cobra.ExactArgs(1),
+	Annotations: map[string]string{annotationRequiresService: "true"},
+	RunE:        runDeleteEvidence,
+}
+
 // deleteBiasCmd removes a user defined cognitive bias.
 var deleteBiasCmd = &cobra.Command{
 	Use:   "bias [id]",
@@ -69,6 +95,8 @@ func init() {
 	deleteCmd.AddCommand(deleteThoughtRecordCmd)
 	deleteCmd.AddCommand(deleteMapOfWorryCmd)
 	deleteCmd.AddCommand(deleteBehaviouralExperimentCmd)
+	deleteCmd.AddCommand(deletePositiveDataLogCmd)
+	deleteCmd.AddCommand(deleteEvidenceCmd)
 	deleteCmd.AddCommand(deleteBiasCmd)
 }
 
@@ -127,6 +155,44 @@ func runDeleteBehaviouralExperiment(cmd *cobra.Command, args []string) error {
 	}
 
 	return writeDeleted(cmd.OutOrStdout(), "behavioural experiment", id)
+}
+
+func runDeletePositiveDataLog(cmd *cobra.Command, args []string) error {
+	id, err := parseRecordID(args[0])
+	if err != nil {
+		return err
+	}
+
+	conn, err := dial()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = conn.Close() }()
+
+	if _, err := proto.NewRecordServiceClient(conn).DeletePositiveDataLog(cmd.Context(), &proto.DeletePositiveDataLogRequest{Id: id}); err != nil {
+		return fmt.Errorf("failed to delete the positive data log: %w", err)
+	}
+
+	return writeDeleted(cmd.OutOrStdout(), "positive data log", id)
+}
+
+func runDeleteEvidence(cmd *cobra.Command, args []string) error {
+	id, err := parseRecordID(args[0])
+	if err != nil {
+		return err
+	}
+
+	conn, err := dial()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = conn.Close() }()
+
+	if _, err := proto.NewRecordServiceClient(conn).DeleteDataLogEvidence(cmd.Context(), &proto.DeleteDataLogEvidenceRequest{Id: id}); err != nil {
+		return fmt.Errorf("failed to delete the evidence: %w", err)
+	}
+
+	return writeDeleted(cmd.OutOrStdout(), "evidence", id)
 }
 
 func runDeleteBias(cmd *cobra.Command, args []string) error {

@@ -687,3 +687,133 @@ func TestBuildListBehaviouralExperimentsRequestSelectsTheQueue(t *testing.T) {
 		})
 	}
 }
+
+func TestBuildCreatePositiveDataLogRequest(t *testing.T) {
+	req, err := buildCreatePositiveDataLogRequest([]string{"I am always late"}, createPositiveDataLogOptions{
+		Alternative:        "I am on time for most things",
+		Believe:            "70%",
+		BelieveAlternative: "0",
+		Evidence:           []string{"arrived early for the dentist", "caught the first train on Monday"},
+	})
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+
+	if req.GetBelief() != "I am always late" || req.GetAlternativeBelief() != "I am on time for most things" {
+		t.Errorf("unexpected beliefs %q and %q", req.GetBelief(), req.GetAlternativeBelief())
+	}
+	if req.BeliefPercent == nil || req.GetBeliefPercent() != 70 {
+		t.Errorf("expected the belief rated 70 but got %v", req.BeliefPercent)
+	}
+	// Zero is a rating, not the absence of one.
+	if req.AlternativePercent == nil || req.GetAlternativePercent() != 0 {
+		t.Errorf("expected the alternative rated 0 but got %v", req.AlternativePercent)
+	}
+	if len(req.GetEvidence()) != 2 {
+		t.Errorf("expected two rows of evidence but got %d", len(req.GetEvidence()))
+	}
+}
+
+func TestBuildCreatePositiveDataLogRequestLeavesRatingsOut(t *testing.T) {
+	req, err := buildCreatePositiveDataLogRequest([]string{"I am always late"}, createPositiveDataLogOptions{})
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+	if req.BeliefPercent != nil || req.AlternativePercent != nil {
+		t.Error("expected no rating when none was given")
+	}
+}
+
+func TestBuildCreatePositiveDataLogRequestRejectsBadInput(t *testing.T) {
+	tests := []struct {
+		name string
+		opts createPositiveDataLogOptions
+	}{
+		{"belief out of range", createPositiveDataLogOptions{Believe: "101"}},
+		{"alternative not a number", createPositiveDataLogOptions{BelieveAlternative: "most"}},
+		{"blank evidence", createPositiveDataLogOptions{Evidence: []string{" "}}},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if _, err := buildCreatePositiveDataLogRequest([]string{"I am always late"}, test.opts); err == nil {
+				t.Error("expected the input to be rejected")
+			}
+		})
+	}
+}
+
+func TestBuildCreateEvidenceRequest(t *testing.T) {
+	req, err := buildCreateEvidenceRequest([]string{"4", "arrived early for the dentist"}, createEvidenceOptions{At: "yesterday"}, referenceNow)
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+	if req.GetLogId() != 4 {
+		t.Errorf("expected log 4 but got %d", req.GetLogId())
+	}
+	if req.GetEvidence().GetBody() != "arrived early for the dentist" {
+		t.Errorf("unexpected evidence %q", req.GetEvidence().GetBody())
+	}
+	if req.GetEvidence().NotedAt == nil {
+		t.Error("expected the evidence to be dated")
+	}
+
+	undated, err := buildCreateEvidenceRequest([]string{"4", "caught the first train on Monday"}, createEvidenceOptions{}, referenceNow)
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+	if undated.GetEvidence().NotedAt != nil {
+		t.Error("expected no date when --at was not given")
+	}
+
+	for _, args := range [][]string{{"0", "arrived early"}, {"4", "  "}} {
+		if _, err := buildCreateEvidenceRequest(args, createEvidenceOptions{}, referenceNow); err == nil {
+			t.Errorf("expected %q to be rejected", args)
+		}
+	}
+}
+
+func TestBuildRerateRequest(t *testing.T) {
+	req, err := buildRerateRequest([]string{"4"}, rerateOptions{BelieveAlternative: "45"})
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+	if req.GetLogId() != 4 {
+		t.Errorf("expected log 4 but got %d", req.GetLogId())
+	}
+	if req.BeliefPercent != nil {
+		t.Errorf("expected the belief unrated but got %d", req.GetBeliefPercent())
+	}
+	if req.GetAlternativePercent() != 45 {
+		t.Errorf("expected the alternative rated 45 but got %d", req.GetAlternativePercent())
+	}
+
+	tests := []struct {
+		name string
+		opts rerateOptions
+	}{
+		{"nothing rated", rerateOptions{}},
+		{"out of range", rerateOptions{Believe: "-5"}},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if _, err := buildRerateRequest([]string{"4"}, test.opts); err == nil {
+				t.Error("expected the input to be rejected")
+			}
+		})
+	}
+}
+
+func TestBuildUpdatePositiveDataLogRequestSendsOnlyChangedFlags(t *testing.T) {
+	opts := updatePositiveDataLogOptions{Belief: "", Alternative: "I am on time for nearly everything"}
+	req, err := buildUpdatePositiveDataLogRequest([]string{"4"}, opts, stubFlags{changed: map[string]bool{"alternative": true}})
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+	if req.Belief != nil {
+		t.Errorf("expected the belief not to be sent but got %q", req.GetBelief())
+	}
+	if req.AlternativeBelief == nil || req.GetAlternativeBelief() != "I am on time for nearly everything" {
+		t.Errorf("unexpected alternative %v", req.AlternativeBelief)
+	}
+}

@@ -24,6 +24,9 @@ func AutoMigrate(db *gorm.DB) error {
 		&BehaviouralExperiment{},
 		&NegativeThought{},
 		&Feeling{},
+		&PositiveDataLog{},
+		&PositiveDataLogEvidence{},
+		&BeliefRating{},
 	); err != nil {
 		return err
 	}
@@ -127,6 +130,21 @@ func schemaTriggers() []schemaTrigger {
 			table:     "negative_thoughts",
 			condition: "NEW.belief_after IS NOT NULL AND (NEW.belief_after < 0 OR NEW.belief_after > 100)",
 			message:   "belief in a thought must be between 0 and 100",
+		},
+		{
+			// The beliefs of a positive data log are rated as percentages too.
+			name:      "belief_ratings_range",
+			table:     "belief_ratings",
+			condition: "(NEW.belief_percent IS NOT NULL AND (NEW.belief_percent < 0 OR NEW.belief_percent > 100)) OR (NEW.alternative_percent IS NOT NULL AND (NEW.alternative_percent < 0 OR NEW.alternative_percent > 100))",
+			message:   "a belief rating must be between 0 and 100",
+		},
+		{
+			// A rating that rates neither belief records nothing, yet would
+			// still appear as a sitting in the history.
+			name:      "belief_ratings_not_empty",
+			table:     "belief_ratings",
+			condition: "NEW.belief_percent IS NULL AND NEW.alternative_percent IS NULL",
+			message:   "a belief rating must rate at least one of the beliefs",
 		},
 	}
 

@@ -170,6 +170,47 @@ void main() {
     expect(find.textContaining('Not written up yet'), findsOneWidget);
   });
 
+  testWidgets('switches to positive data logs', (tester) async {
+    when(
+      () => service.listThoughtRecords(
+        challenged: any(named: 'challenged'),
+        search: any(named: 'search'),
+      ),
+    ).thenAnswer((_) async => <ThoughtRecord>[]);
+    when(
+      () => service.listPositiveDataLogs(search: any(named: 'search')),
+    ).thenAnswer(
+      (_) async => [
+        PositiveDataLog()
+          ..id = 4
+          ..belief = 'I am always late'
+          ..ratings.add(
+            BeliefRating()
+              ..beliefPercent = 70
+              ..alternativePercent = 30,
+          )
+          ..ratings.add(BeliefRating()..alternativePercent = 45)
+          ..evidence.add(DataLogEvidence()..body = 'arrived early'),
+      ],
+    );
+
+    await tester.pumpWidget(wrap(RecordList(service: service)));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('Data logs'));
+    await tester.tap(find.text('Data logs'));
+    await tester.pumpAndSettle();
+
+    expect(find.text('I am always late'), findsOneWidget);
+    // The latest rating is shown as given, with an unrated belief never shown
+    // as zero.
+    expect(
+      find.textContaining('Belief Not rated · alternative 45%'),
+      findsOneWidget,
+    );
+    expect(find.textContaining('1 piece of evidence'), findsOneWidget);
+  });
+
   group('strongestFeeling', () {
     test('prefers a rated feeling over an unrated one', () {
       // A rating is a judgement the user made; an absent one is not a zero.

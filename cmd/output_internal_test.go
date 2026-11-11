@@ -527,3 +527,116 @@ func TestWriteBehaviouralExperimentDetailShowsBothSittings(t *testing.T) {
 		position += index + len(fragment)
 	}
 }
+
+func TestWritePositiveDataLogTableStaysNarrow(t *testing.T) {
+	var out bytes.Buffer
+
+	logs := []*proto.PositiveDataLog{
+		{
+			Id:        123,
+			Belief:    "I am always late for everything, whether it is work, a train or a dinner",
+			UpdatedAt: timestamppb.New(referenceNow),
+			Ratings: []*proto.BeliefRating{
+				{BeliefPercent: int32Ptr(100), AlternativePercent: int32Ptr(0)},
+				{AlternativePercent: int32Ptr(45)},
+				{BeliefPercent: int32Ptr(55), AlternativePercent: int32Ptr(100)},
+			},
+			Evidence: []*proto.DataLogEvidence{{Id: 1, Body: "arrived early for the dentist"}},
+		},
+		{Id: 9, Belief: "I never finish a book", UpdatedAt: timestamppb.New(referenceNow)},
+	}
+
+	if err := writePositiveDataLogTable(&out, logs); err != nil {
+		t.Fatalf("failed to write the table: %v", err)
+	}
+
+	rendered := out.String()
+	for _, expected := range []string{"100->55", "0->100"} {
+		if !strings.Contains(rendered, expected) {
+			t.Errorf("expected %q in:\n%s", expected, rendered)
+		}
+	}
+	for _, line := range strings.Split(strings.TrimRight(rendered, "\n"), "\n") {
+		if width := len([]rune(line)); width > 80 {
+			t.Errorf("expected every line to fit in 80 columns but got %d: %q", width, line)
+		}
+	}
+}
+
+func TestRatingSpan(t *testing.T) {
+	belief := (*proto.BeliefRating).GetBeliefPercent
+	rated := func(r *proto.BeliefRating) bool { return r.BeliefPercent != nil }
+
+	tests := []struct {
+		name     string
+		ratings  []*proto.BeliefRating
+		expected string
+	}{
+		{"none", nil, "-"},
+		{"never rated", []*proto.BeliefRating{{AlternativePercent: int32Ptr(30)}}, "-"},
+		{"once", []*proto.BeliefRating{{BeliefPercent: int32Ptr(70)}}, "70"},
+		{"skips unrated sittings", []*proto.BeliefRating{{BeliefPercent: int32Ptr(70)}, {BeliefPercent: int32Ptr(60)}, {AlternativePercent: int32Ptr(50)}}, "70->60"},
+		{"zero is a rating", []*proto.BeliefRating{{BeliefPercent: int32Ptr(20)}, {BeliefPercent: int32Ptr(0)}}, "20->0"},
+	}
+
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if got := ratingSpan(test.ratings, belief, rated); got != test.expected {
+				t.Errorf("expected %q but got %q", test.expected, got)
+			}
+		})
+	}
+}
+
+func TestWritePositiveDataLogDetailOmitsEmptySections(t *testing.T) {
+	var out bytes.Buffer
+
+	if err := writePositiveDataLogDetail(&out, &proto.PositiveDataLog{Id: 4, Belief: "I am always late"}); err != nil {
+		t.Fatalf("failed to write the detail: %v", err)
+	}
+
+	rendered := out.String()
+	for _, label := range []string{"alternative belief", "how strongly", "evidence"} {
+		if strings.Contains(rendered, label) {
+			t.Errorf("expected the empty section %q to be omitted but got:\n%s", label, rendered)
+		}
+	}
+}
+
+func TestWritePositiveDataLogDetailShowsTheHistory(t *testing.T) {
+	var out bytes.Buffer
+
+	notedAt := time.Date(2026, 9, 20, 9, 0, 0, 0, time.Local)
+	log := &proto.PositiveDataLog{
+		Id:                4,
+		Belief:            "I am always late",
+		AlternativeBelief: "I am on time for most things",
+		Ratings: []*proto.BeliefRating{
+			{RatedAt: timestamppb.New(referenceNow), BeliefPercent: int32Ptr(70), AlternativePercent: int32Ptr(30)},
+			{RatedAt: timestamppb.New(referenceNow.Add(48 * time.Hour)), AlternativePercent: int32Ptr(45)},
+		},
+		Evidence: []*proto.DataLogEvidence{
+			{Id: 7, Body: "arrived early for the dentist", NotedAt: timestamppb.New(notedAt), CreatedAt: timestamppb.New(referenceNow)},
+			{Id: 8, Body: "caught the first train on Monday", CreatedAt: timestamppb.New(referenceNow)},
+		},
+	}
+
+	if err := writePositiveDataLogDetail(&out, log); err != nil {
+		t.Fatalf("failed to write the detail: %v", err)
+	}
+
+	rendered := out.String()
+	expected := []string{
+		"self-critical belief:\n  I am always late",
+		"alternative belief:\n  I am on time for most things",
+		"2026-09-27 14:30  belief 70%   alternative 30%",
+		"2026-09-29 14:30  belief -     alternative 45%",
+		"[7] 2026-09-20  arrived early for the dentist",
+		"[8] ~2026-09-27  caught the first train on Monday",
+	}
+	for _, text := range expected {
+		if !strings.Contains(rendered, text) {
+			t.Errorf("expected %q in:\n%s", text, rendered)
+		}
+	}
+}

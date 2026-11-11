@@ -95,6 +95,26 @@ service RecordService {
   // AddExperimentFeeling attaches a predicted feeling to an experiment.
   rpc AddExperimentFeeling(AddExperimentFeelingRequest) returns (BehaviouralExperiment);
 
+  // ListPositiveDataLogs returns the user's positive data logs, the most
+  // recently added to first.
+  rpc ListPositiveDataLogs(ListPositiveDataLogsRequest) returns (ListPositiveDataLogsResponse);
+  // CreatePositiveDataLog creates a log. Only the belief is required.
+  rpc CreatePositiveDataLog(CreatePositiveDataLogRequest) returns (PositiveDataLog);
+  // GetPositiveDataLog returns a single log by identifier.
+  rpc GetPositiveDataLog(GetPositiveDataLogRequest) returns (PositiveDataLog);
+  // UpdatePositiveDataLog rewords the beliefs of a log. Ratings are not
+  // changed here; RateBeliefs appends one.
+  rpc UpdatePositiveDataLog(UpdatePositiveDataLogRequest) returns (PositiveDataLog);
+  // DeletePositiveDataLog removes a log along with its evidence and ratings.
+  rpc DeletePositiveDataLog(DeletePositiveDataLogRequest) returns (google.protobuf.Empty);
+  // AddDataLogEvidence appends a row of evidence to a log.
+  rpc AddDataLogEvidence(AddDataLogEvidenceRequest) returns (PositiveDataLog);
+  // DeleteDataLogEvidence removes a row of evidence and returns its log.
+  rpc DeleteDataLogEvidence(DeleteDataLogEvidenceRequest) returns (PositiveDataLog);
+  // RateBeliefs appends a rating of both beliefs to a log, keeping the
+  // earlier ones.
+  rpc RateBeliefs(RateBeliefsRequest) returns (PositiveDataLog);
+
   // ListBiases returns the user's cognitive bias vocabulary, ordered by name.
   rpc ListBiases(ListBiasesRequest) returns (ListBiasesResponse);
   // CreateBias adds a user defined bias alongside the seeded ones.
@@ -217,6 +237,46 @@ message BehaviouralExperiment {
   repeated Feeling feelings = 9;
   google.protobuf.Timestamp created_at = 10;
   google.protobuf.Timestamp updated_at = 11;
+}
+
+// PositiveDataLog is the positive data log: a self-critical belief, an
+// alternative belief, how strongly each is believed over time, and the
+// evidence that supports the alternative and weakens the old belief.
+message PositiveDataLog {
+  uint32 id = 1;
+  string belief = 2;
+  string alternative_belief = 3;
+  // evidence is in the order it was written down.
+  repeated DataLogEvidence evidence = 4;
+  // ratings are oldest first. Each return to the log appends one.
+  repeated BeliefRating ratings = 5;
+  google.protobuf.Timestamp created_at = 6;
+  google.protobuf.Timestamp updated_at = 7;
+}
+
+// DataLogEvidence is a single row of evidence in a positive data log.
+message DataLogEvidence {
+  uint32 id = 1;
+  string body = 2;
+  // noted_at is when the evidence happened. It is absent when the user did
+  // not say.
+  optional google.protobuf.Timestamp noted_at = 3;
+  google.protobuf.Timestamp created_at = 4;
+}
+
+// BeliefRating is how strongly each belief was held at one sitting, 0-100.
+// Either may be absent, but not both.
+message BeliefRating {
+  uint32 id = 1;
+  google.protobuf.Timestamp rated_at = 2;
+  optional int32 belief_percent = 3;
+  optional int32 alternative_percent = 4;
+}
+
+// DataLogEvidenceInput is a row of evidence as supplied by the client.
+message DataLogEvidenceInput {
+  string body = 1;
+  optional google.protobuf.Timestamp noted_at = 2;
 }
 
 // FeelingInput is a feeling as supplied by the client: a name and an optional
@@ -477,6 +537,54 @@ message DeleteBehaviouralExperimentRequest {
 message AddExperimentFeelingRequest {
   uint32 experiment_id = 1;
   FeelingInput feeling = 2;
+}
+
+message ListPositiveDataLogsRequest {
+  // search matches both beliefs and every row of evidence.
+  string search = 1;
+}
+
+message ListPositiveDataLogsResponse {
+  repeated PositiveDataLog logs = 1;
+}
+
+message CreatePositiveDataLogRequest {
+  string belief = 1;
+  string alternative_belief = 2;
+  // belief_percent and alternative_percent form the first rating. It is
+  // stored when either is given.
+  optional int32 belief_percent = 3;
+  optional int32 alternative_percent = 4;
+  repeated DataLogEvidenceInput evidence = 5;
+}
+
+message GetPositiveDataLogRequest {
+  uint32 id = 1;
+}
+
+message UpdatePositiveDataLogRequest {
+  uint32 id = 1;
+  optional string belief = 2;
+  optional string alternative_belief = 3;
+}
+
+message DeletePositiveDataLogRequest {
+  uint32 id = 1;
+}
+
+message AddDataLogEvidenceRequest {
+  uint32 log_id = 1;
+  DataLogEvidenceInput evidence = 2;
+}
+
+message DeleteDataLogEvidenceRequest {
+  uint32 id = 1;
+}
+
+message RateBeliefsRequest {
+  uint32 log_id = 1;
+  optional int32 belief_percent = 2;
+  optional int32 alternative_percent = 3;
 }
 
 message ListBiasesRequest {}

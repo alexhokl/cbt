@@ -372,6 +372,173 @@ final $typed_data.Uint8List behaviouralExperimentDescriptor = $convert.base64Dec
     'dWYuVGltZXN0YW1wUgl1cGRhdGVkQXRCDgoMX29jY3VycmVkX2F0Qg8KDV9jb21wbGV0ZWRfYX'
     'Q=');
 
+@$core.Deprecated('Use positiveDataLogDescriptor instead')
+const PositiveDataLog$json = {
+  '1': 'PositiveDataLog',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {'1': 'belief', '3': 2, '4': 1, '5': 9, '10': 'belief'},
+    {
+      '1': 'alternative_belief',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '10': 'alternativeBelief'
+    },
+    {
+      '1': 'evidence',
+      '3': 4,
+      '4': 3,
+      '5': 11,
+      '6': '.record.DataLogEvidence',
+      '10': 'evidence'
+    },
+    {
+      '1': 'ratings',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.record.BeliefRating',
+      '10': 'ratings'
+    },
+    {
+      '1': 'created_at',
+      '3': 6,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'createdAt'
+    },
+    {
+      '1': 'updated_at',
+      '3': 7,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'updatedAt'
+    },
+  ],
+};
+
+/// Descriptor for `PositiveDataLog`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List positiveDataLogDescriptor = $convert.base64Decode(
+    'Cg9Qb3NpdGl2ZURhdGFMb2cSDgoCaWQYASABKA1SAmlkEhYKBmJlbGllZhgCIAEoCVIGYmVsaW'
+    'VmEi0KEmFsdGVybmF0aXZlX2JlbGllZhgDIAEoCVIRYWx0ZXJuYXRpdmVCZWxpZWYSMwoIZXZp'
+    'ZGVuY2UYBCADKAsyFy5yZWNvcmQuRGF0YUxvZ0V2aWRlbmNlUghldmlkZW5jZRIuCgdyYXRpbm'
+    'dzGAUgAygLMhQucmVjb3JkLkJlbGllZlJhdGluZ1IHcmF0aW5ncxI5CgpjcmVhdGVkX2F0GAYg'
+    'ASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJY3JlYXRlZEF0EjkKCnVwZGF0ZWRfYX'
+    'QYByABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wUgl1cGRhdGVkQXQ=');
+
+@$core.Deprecated('Use dataLogEvidenceDescriptor instead')
+const DataLogEvidence$json = {
+  '1': 'DataLogEvidence',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {'1': 'body', '3': 2, '4': 1, '5': 9, '10': 'body'},
+    {
+      '1': 'noted_at',
+      '3': 3,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 0,
+      '10': 'notedAt',
+      '17': true
+    },
+    {
+      '1': 'created_at',
+      '3': 4,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'createdAt'
+    },
+  ],
+  '8': [
+    {'1': '_noted_at'},
+  ],
+};
+
+/// Descriptor for `DataLogEvidence`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List dataLogEvidenceDescriptor = $convert.base64Decode(
+    'Cg9EYXRhTG9nRXZpZGVuY2USDgoCaWQYASABKA1SAmlkEhIKBGJvZHkYAiABKAlSBGJvZHkSOg'
+    'oIbm90ZWRfYXQYAyABKAsyGi5nb29nbGUucHJvdG9idWYuVGltZXN0YW1wSABSB25vdGVkQXSI'
+    'AQESOQoKY3JlYXRlZF9hdBgEIAEoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCWNyZW'
+    'F0ZWRBdEILCglfbm90ZWRfYXQ=');
+
+@$core.Deprecated('Use beliefRatingDescriptor instead')
+const BeliefRating$json = {
+  '1': 'BeliefRating',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {
+      '1': 'rated_at',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'ratedAt'
+    },
+    {
+      '1': 'belief_percent',
+      '3': 3,
+      '4': 1,
+      '5': 5,
+      '9': 0,
+      '10': 'beliefPercent',
+      '17': true
+    },
+    {
+      '1': 'alternative_percent',
+      '3': 4,
+      '4': 1,
+      '5': 5,
+      '9': 1,
+      '10': 'alternativePercent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_belief_percent'},
+    {'1': '_alternative_percent'},
+  ],
+};
+
+/// Descriptor for `BeliefRating`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List beliefRatingDescriptor = $convert.base64Decode(
+    'CgxCZWxpZWZSYXRpbmcSDgoCaWQYASABKA1SAmlkEjUKCHJhdGVkX2F0GAIgASgLMhouZ29vZ2'
+    'xlLnByb3RvYnVmLlRpbWVzdGFtcFIHcmF0ZWRBdBIqCg5iZWxpZWZfcGVyY2VudBgDIAEoBUgA'
+    'Ug1iZWxpZWZQZXJjZW50iAEBEjQKE2FsdGVybmF0aXZlX3BlcmNlbnQYBCABKAVIAVISYWx0ZX'
+    'JuYXRpdmVQZXJjZW50iAEBQhEKD19iZWxpZWZfcGVyY2VudEIWChRfYWx0ZXJuYXRpdmVfcGVy'
+    'Y2VudA==');
+
+@$core.Deprecated('Use dataLogEvidenceInputDescriptor instead')
+const DataLogEvidenceInput$json = {
+  '1': 'DataLogEvidenceInput',
+  '2': [
+    {'1': 'body', '3': 1, '4': 1, '5': 9, '10': 'body'},
+    {
+      '1': 'noted_at',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '9': 0,
+      '10': 'notedAt',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_noted_at'},
+  ],
+};
+
+/// Descriptor for `DataLogEvidenceInput`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List dataLogEvidenceInputDescriptor = $convert.base64Decode(
+    'ChREYXRhTG9nRXZpZGVuY2VJbnB1dBISCgRib2R5GAEgASgJUgRib2R5EjoKCG5vdGVkX2F0GA'
+    'IgASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcEgAUgdub3RlZEF0iAEBQgsKCV9ub3Rl'
+    'ZF9hdA==');
+
 @$core.Deprecated('Use feelingInputDescriptor instead')
 const FeelingInput$json = {
   '1': 'FeelingInput',
@@ -1411,6 +1578,221 @@ final $typed_data.Uint8List addExperimentFeelingRequestDescriptor =
         'ChtBZGRFeHBlcmltZW50RmVlbGluZ1JlcXVlc3QSIwoNZXhwZXJpbWVudF9pZBgBIAEoDVIMZX'
         'hwZXJpbWVudElkEi4KB2ZlZWxpbmcYAiABKAsyFC5yZWNvcmQuRmVlbGluZ0lucHV0UgdmZWVs'
         'aW5n');
+
+@$core.Deprecated('Use listPositiveDataLogsRequestDescriptor instead')
+const ListPositiveDataLogsRequest$json = {
+  '1': 'ListPositiveDataLogsRequest',
+  '2': [
+    {'1': 'search', '3': 1, '4': 1, '5': 9, '10': 'search'},
+  ],
+};
+
+/// Descriptor for `ListPositiveDataLogsRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listPositiveDataLogsRequestDescriptor =
+    $convert.base64Decode(
+        'ChtMaXN0UG9zaXRpdmVEYXRhTG9nc1JlcXVlc3QSFgoGc2VhcmNoGAEgASgJUgZzZWFyY2g=');
+
+@$core.Deprecated('Use listPositiveDataLogsResponseDescriptor instead')
+const ListPositiveDataLogsResponse$json = {
+  '1': 'ListPositiveDataLogsResponse',
+  '2': [
+    {
+      '1': 'logs',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.record.PositiveDataLog',
+      '10': 'logs'
+    },
+  ],
+};
+
+/// Descriptor for `ListPositiveDataLogsResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listPositiveDataLogsResponseDescriptor =
+    $convert.base64Decode(
+        'ChxMaXN0UG9zaXRpdmVEYXRhTG9nc1Jlc3BvbnNlEisKBGxvZ3MYASADKAsyFy5yZWNvcmQuUG'
+        '9zaXRpdmVEYXRhTG9nUgRsb2dz');
+
+@$core.Deprecated('Use createPositiveDataLogRequestDescriptor instead')
+const CreatePositiveDataLogRequest$json = {
+  '1': 'CreatePositiveDataLogRequest',
+  '2': [
+    {'1': 'belief', '3': 1, '4': 1, '5': 9, '10': 'belief'},
+    {
+      '1': 'alternative_belief',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '10': 'alternativeBelief'
+    },
+    {
+      '1': 'belief_percent',
+      '3': 3,
+      '4': 1,
+      '5': 5,
+      '9': 0,
+      '10': 'beliefPercent',
+      '17': true
+    },
+    {
+      '1': 'alternative_percent',
+      '3': 4,
+      '4': 1,
+      '5': 5,
+      '9': 1,
+      '10': 'alternativePercent',
+      '17': true
+    },
+    {
+      '1': 'evidence',
+      '3': 5,
+      '4': 3,
+      '5': 11,
+      '6': '.record.DataLogEvidenceInput',
+      '10': 'evidence'
+    },
+  ],
+  '8': [
+    {'1': '_belief_percent'},
+    {'1': '_alternative_percent'},
+  ],
+};
+
+/// Descriptor for `CreatePositiveDataLogRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createPositiveDataLogRequestDescriptor = $convert.base64Decode(
+    'ChxDcmVhdGVQb3NpdGl2ZURhdGFMb2dSZXF1ZXN0EhYKBmJlbGllZhgBIAEoCVIGYmVsaWVmEi'
+    '0KEmFsdGVybmF0aXZlX2JlbGllZhgCIAEoCVIRYWx0ZXJuYXRpdmVCZWxpZWYSKgoOYmVsaWVm'
+    'X3BlcmNlbnQYAyABKAVIAFINYmVsaWVmUGVyY2VudIgBARI0ChNhbHRlcm5hdGl2ZV9wZXJjZW'
+    '50GAQgASgFSAFSEmFsdGVybmF0aXZlUGVyY2VudIgBARI4CghldmlkZW5jZRgFIAMoCzIcLnJl'
+    'Y29yZC5EYXRhTG9nRXZpZGVuY2VJbnB1dFIIZXZpZGVuY2VCEQoPX2JlbGllZl9wZXJjZW50Qh'
+    'YKFF9hbHRlcm5hdGl2ZV9wZXJjZW50');
+
+@$core.Deprecated('Use getPositiveDataLogRequestDescriptor instead')
+const GetPositiveDataLogRequest$json = {
+  '1': 'GetPositiveDataLogRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `GetPositiveDataLogRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getPositiveDataLogRequestDescriptor =
+    $convert.base64Decode(
+        'ChlHZXRQb3NpdGl2ZURhdGFMb2dSZXF1ZXN0Eg4KAmlkGAEgASgNUgJpZA==');
+
+@$core.Deprecated('Use updatePositiveDataLogRequestDescriptor instead')
+const UpdatePositiveDataLogRequest$json = {
+  '1': 'UpdatePositiveDataLogRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {'1': 'belief', '3': 2, '4': 1, '5': 9, '9': 0, '10': 'belief', '17': true},
+    {
+      '1': 'alternative_belief',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'alternativeBelief',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_belief'},
+    {'1': '_alternative_belief'},
+  ],
+};
+
+/// Descriptor for `UpdatePositiveDataLogRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updatePositiveDataLogRequestDescriptor =
+    $convert.base64Decode(
+        'ChxVcGRhdGVQb3NpdGl2ZURhdGFMb2dSZXF1ZXN0Eg4KAmlkGAEgASgNUgJpZBIbCgZiZWxpZW'
+        'YYAiABKAlIAFIGYmVsaWVmiAEBEjIKEmFsdGVybmF0aXZlX2JlbGllZhgDIAEoCUgBUhFhbHRl'
+        'cm5hdGl2ZUJlbGllZogBAUIJCgdfYmVsaWVmQhUKE19hbHRlcm5hdGl2ZV9iZWxpZWY=');
+
+@$core.Deprecated('Use deletePositiveDataLogRequestDescriptor instead')
+const DeletePositiveDataLogRequest$json = {
+  '1': 'DeletePositiveDataLogRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `DeletePositiveDataLogRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deletePositiveDataLogRequestDescriptor =
+    $convert.base64Decode(
+        'ChxEZWxldGVQb3NpdGl2ZURhdGFMb2dSZXF1ZXN0Eg4KAmlkGAEgASgNUgJpZA==');
+
+@$core.Deprecated('Use addDataLogEvidenceRequestDescriptor instead')
+const AddDataLogEvidenceRequest$json = {
+  '1': 'AddDataLogEvidenceRequest',
+  '2': [
+    {'1': 'log_id', '3': 1, '4': 1, '5': 13, '10': 'logId'},
+    {
+      '1': 'evidence',
+      '3': 2,
+      '4': 1,
+      '5': 11,
+      '6': '.record.DataLogEvidenceInput',
+      '10': 'evidence'
+    },
+  ],
+};
+
+/// Descriptor for `AddDataLogEvidenceRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List addDataLogEvidenceRequestDescriptor =
+    $convert.base64Decode(
+        'ChlBZGREYXRhTG9nRXZpZGVuY2VSZXF1ZXN0EhUKBmxvZ19pZBgBIAEoDVIFbG9nSWQSOAoIZX'
+        'ZpZGVuY2UYAiABKAsyHC5yZWNvcmQuRGF0YUxvZ0V2aWRlbmNlSW5wdXRSCGV2aWRlbmNl');
+
+@$core.Deprecated('Use deleteDataLogEvidenceRequestDescriptor instead')
+const DeleteDataLogEvidenceRequest$json = {
+  '1': 'DeleteDataLogEvidenceRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `DeleteDataLogEvidenceRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteDataLogEvidenceRequestDescriptor =
+    $convert.base64Decode(
+        'ChxEZWxldGVEYXRhTG9nRXZpZGVuY2VSZXF1ZXN0Eg4KAmlkGAEgASgNUgJpZA==');
+
+@$core.Deprecated('Use rateBeliefsRequestDescriptor instead')
+const RateBeliefsRequest$json = {
+  '1': 'RateBeliefsRequest',
+  '2': [
+    {'1': 'log_id', '3': 1, '4': 1, '5': 13, '10': 'logId'},
+    {
+      '1': 'belief_percent',
+      '3': 2,
+      '4': 1,
+      '5': 5,
+      '9': 0,
+      '10': 'beliefPercent',
+      '17': true
+    },
+    {
+      '1': 'alternative_percent',
+      '3': 3,
+      '4': 1,
+      '5': 5,
+      '9': 1,
+      '10': 'alternativePercent',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_belief_percent'},
+    {'1': '_alternative_percent'},
+  ],
+};
+
+/// Descriptor for `RateBeliefsRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List rateBeliefsRequestDescriptor = $convert.base64Decode(
+    'ChJSYXRlQmVsaWVmc1JlcXVlc3QSFQoGbG9nX2lkGAEgASgNUgVsb2dJZBIqCg5iZWxpZWZfcG'
+    'VyY2VudBgCIAEoBUgAUg1iZWxpZWZQZXJjZW50iAEBEjQKE2FsdGVybmF0aXZlX3BlcmNlbnQY'
+    'AyABKAVIAVISYWx0ZXJuYXRpdmVQZXJjZW50iAEBQhEKD19iZWxpZWZfcGVyY2VudEIWChRfYW'
+    'x0ZXJuYXRpdmVfcGVyY2VudA==');
 
 @$core.Deprecated('Use listBiasesRequestDescriptor instead')
 const ListBiasesRequest$json = {

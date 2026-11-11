@@ -201,6 +201,56 @@ class RecordService {
         ),
       );
 
+  Future<List<PositiveDataLog>> listPositiveDataLogs({String search = ''}) =>
+      _call(
+        (client) async => (await client.listPositiveDataLogs(
+          ListPositiveDataLogsRequest()..search = search,
+        ))
+            .logs,
+      );
+
+  Future<PositiveDataLog> getPositiveDataLog(int id) => _call(
+        (client) =>
+            client.getPositiveDataLog(GetPositiveDataLogRequest()..id = id),
+      );
+
+  Future<PositiveDataLog> createPositiveDataLog(
+    CreatePositiveDataLogRequest request,
+  ) =>
+      _call((client) => client.createPositiveDataLog(request));
+
+  Future<PositiveDataLog> updatePositiveDataLog(
+    UpdatePositiveDataLogRequest request,
+  ) =>
+      _call((client) => client.updatePositiveDataLog(request));
+
+  Future<void> deletePositiveDataLog(int id) => _call(
+        (client) => client.deletePositiveDataLog(
+          DeletePositiveDataLogRequest()..id = id,
+        ),
+      );
+
+  Future<PositiveDataLog> addDataLogEvidence(
+    int logId,
+    DataLogEvidenceInput evidence,
+  ) =>
+      _call(
+        (client) => client.addDataLogEvidence(
+          AddDataLogEvidenceRequest()
+            ..logId = logId
+            ..evidence = evidence,
+        ),
+      );
+
+  Future<PositiveDataLog> deleteDataLogEvidence(int id) => _call(
+        (client) => client.deleteDataLogEvidence(
+          DeleteDataLogEvidenceRequest()..id = id,
+        ),
+      );
+
+  Future<PositiveDataLog> rateBeliefs(RateBeliefsRequest request) =>
+      _call((client) => client.rateBeliefs(request));
+
   Future<List<CognitiveBias>> listBiases() => _call(
         (client) async =>
             (await client.listBiases(ListBiasesRequest())).biases,

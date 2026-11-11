@@ -47,6 +47,14 @@ const (
 	RecordService_CompleteBehaviouralExperiment_FullMethodName = "/record.RecordService/CompleteBehaviouralExperiment"
 	RecordService_DeleteBehaviouralExperiment_FullMethodName   = "/record.RecordService/DeleteBehaviouralExperiment"
 	RecordService_AddExperimentFeeling_FullMethodName          = "/record.RecordService/AddExperimentFeeling"
+	RecordService_ListPositiveDataLogs_FullMethodName          = "/record.RecordService/ListPositiveDataLogs"
+	RecordService_CreatePositiveDataLog_FullMethodName         = "/record.RecordService/CreatePositiveDataLog"
+	RecordService_GetPositiveDataLog_FullMethodName            = "/record.RecordService/GetPositiveDataLog"
+	RecordService_UpdatePositiveDataLog_FullMethodName         = "/record.RecordService/UpdatePositiveDataLog"
+	RecordService_DeletePositiveDataLog_FullMethodName         = "/record.RecordService/DeletePositiveDataLog"
+	RecordService_AddDataLogEvidence_FullMethodName            = "/record.RecordService/AddDataLogEvidence"
+	RecordService_DeleteDataLogEvidence_FullMethodName         = "/record.RecordService/DeleteDataLogEvidence"
+	RecordService_RateBeliefs_FullMethodName                   = "/record.RecordService/RateBeliefs"
 	RecordService_ListBiases_FullMethodName                    = "/record.RecordService/ListBiases"
 	RecordService_CreateBias_FullMethodName                    = "/record.RecordService/CreateBias"
 	RecordService_RenameBias_FullMethodName                    = "/record.RecordService/RenameBias"
@@ -140,6 +148,25 @@ type RecordServiceClient interface {
 	DeleteBehaviouralExperiment(ctx context.Context, in *DeleteBehaviouralExperimentRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// AddExperimentFeeling attaches a predicted feeling to an experiment.
 	AddExperimentFeeling(ctx context.Context, in *AddExperimentFeelingRequest, opts ...grpc.CallOption) (*BehaviouralExperiment, error)
+	// ListPositiveDataLogs returns the user's positive data logs, the most
+	// recently added to first.
+	ListPositiveDataLogs(ctx context.Context, in *ListPositiveDataLogsRequest, opts ...grpc.CallOption) (*ListPositiveDataLogsResponse, error)
+	// CreatePositiveDataLog creates a log. Only the belief is required.
+	CreatePositiveDataLog(ctx context.Context, in *CreatePositiveDataLogRequest, opts ...grpc.CallOption) (*PositiveDataLog, error)
+	// GetPositiveDataLog returns a single log by identifier.
+	GetPositiveDataLog(ctx context.Context, in *GetPositiveDataLogRequest, opts ...grpc.CallOption) (*PositiveDataLog, error)
+	// UpdatePositiveDataLog rewords the beliefs of a log. Ratings are not
+	// changed here; RateBeliefs appends one.
+	UpdatePositiveDataLog(ctx context.Context, in *UpdatePositiveDataLogRequest, opts ...grpc.CallOption) (*PositiveDataLog, error)
+	// DeletePositiveDataLog removes a log along with its evidence and ratings.
+	DeletePositiveDataLog(ctx context.Context, in *DeletePositiveDataLogRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// AddDataLogEvidence appends a row of evidence to a log.
+	AddDataLogEvidence(ctx context.Context, in *AddDataLogEvidenceRequest, opts ...grpc.CallOption) (*PositiveDataLog, error)
+	// DeleteDataLogEvidence removes a row of evidence and returns its log.
+	DeleteDataLogEvidence(ctx context.Context, in *DeleteDataLogEvidenceRequest, opts ...grpc.CallOption) (*PositiveDataLog, error)
+	// RateBeliefs appends a rating of both beliefs to a log, keeping the
+	// earlier ones.
+	RateBeliefs(ctx context.Context, in *RateBeliefsRequest, opts ...grpc.CallOption) (*PositiveDataLog, error)
 	// ListBiases returns the user's cognitive bias vocabulary, ordered by name.
 	ListBiases(ctx context.Context, in *ListBiasesRequest, opts ...grpc.CallOption) (*ListBiasesResponse, error)
 	// CreateBias adds a user defined bias alongside the seeded ones.
@@ -428,6 +455,86 @@ func (c *recordServiceClient) AddExperimentFeeling(ctx context.Context, in *AddE
 	return out, nil
 }
 
+func (c *recordServiceClient) ListPositiveDataLogs(ctx context.Context, in *ListPositiveDataLogsRequest, opts ...grpc.CallOption) (*ListPositiveDataLogsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListPositiveDataLogsResponse)
+	err := c.cc.Invoke(ctx, RecordService_ListPositiveDataLogs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) CreatePositiveDataLog(ctx context.Context, in *CreatePositiveDataLogRequest, opts ...grpc.CallOption) (*PositiveDataLog, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PositiveDataLog)
+	err := c.cc.Invoke(ctx, RecordService_CreatePositiveDataLog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) GetPositiveDataLog(ctx context.Context, in *GetPositiveDataLogRequest, opts ...grpc.CallOption) (*PositiveDataLog, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PositiveDataLog)
+	err := c.cc.Invoke(ctx, RecordService_GetPositiveDataLog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) UpdatePositiveDataLog(ctx context.Context, in *UpdatePositiveDataLogRequest, opts ...grpc.CallOption) (*PositiveDataLog, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PositiveDataLog)
+	err := c.cc.Invoke(ctx, RecordService_UpdatePositiveDataLog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) DeletePositiveDataLog(ctx context.Context, in *DeletePositiveDataLogRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, RecordService_DeletePositiveDataLog_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) AddDataLogEvidence(ctx context.Context, in *AddDataLogEvidenceRequest, opts ...grpc.CallOption) (*PositiveDataLog, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PositiveDataLog)
+	err := c.cc.Invoke(ctx, RecordService_AddDataLogEvidence_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) DeleteDataLogEvidence(ctx context.Context, in *DeleteDataLogEvidenceRequest, opts ...grpc.CallOption) (*PositiveDataLog, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PositiveDataLog)
+	err := c.cc.Invoke(ctx, RecordService_DeleteDataLogEvidence_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) RateBeliefs(ctx context.Context, in *RateBeliefsRequest, opts ...grpc.CallOption) (*PositiveDataLog, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(PositiveDataLog)
+	err := c.cc.Invoke(ctx, RecordService_RateBeliefs_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *recordServiceClient) ListBiases(ctx context.Context, in *ListBiasesRequest, opts ...grpc.CallOption) (*ListBiasesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListBiasesResponse)
@@ -555,6 +662,25 @@ type RecordServiceServer interface {
 	DeleteBehaviouralExperiment(context.Context, *DeleteBehaviouralExperimentRequest) (*emptypb.Empty, error)
 	// AddExperimentFeeling attaches a predicted feeling to an experiment.
 	AddExperimentFeeling(context.Context, *AddExperimentFeelingRequest) (*BehaviouralExperiment, error)
+	// ListPositiveDataLogs returns the user's positive data logs, the most
+	// recently added to first.
+	ListPositiveDataLogs(context.Context, *ListPositiveDataLogsRequest) (*ListPositiveDataLogsResponse, error)
+	// CreatePositiveDataLog creates a log. Only the belief is required.
+	CreatePositiveDataLog(context.Context, *CreatePositiveDataLogRequest) (*PositiveDataLog, error)
+	// GetPositiveDataLog returns a single log by identifier.
+	GetPositiveDataLog(context.Context, *GetPositiveDataLogRequest) (*PositiveDataLog, error)
+	// UpdatePositiveDataLog rewords the beliefs of a log. Ratings are not
+	// changed here; RateBeliefs appends one.
+	UpdatePositiveDataLog(context.Context, *UpdatePositiveDataLogRequest) (*PositiveDataLog, error)
+	// DeletePositiveDataLog removes a log along with its evidence and ratings.
+	DeletePositiveDataLog(context.Context, *DeletePositiveDataLogRequest) (*emptypb.Empty, error)
+	// AddDataLogEvidence appends a row of evidence to a log.
+	AddDataLogEvidence(context.Context, *AddDataLogEvidenceRequest) (*PositiveDataLog, error)
+	// DeleteDataLogEvidence removes a row of evidence and returns its log.
+	DeleteDataLogEvidence(context.Context, *DeleteDataLogEvidenceRequest) (*PositiveDataLog, error)
+	// RateBeliefs appends a rating of both beliefs to a log, keeping the
+	// earlier ones.
+	RateBeliefs(context.Context, *RateBeliefsRequest) (*PositiveDataLog, error)
 	// ListBiases returns the user's cognitive bias vocabulary, ordered by name.
 	ListBiases(context.Context, *ListBiasesRequest) (*ListBiasesResponse, error)
 	// CreateBias adds a user defined bias alongside the seeded ones.
@@ -653,6 +779,30 @@ func (UnimplementedRecordServiceServer) DeleteBehaviouralExperiment(context.Cont
 }
 func (UnimplementedRecordServiceServer) AddExperimentFeeling(context.Context, *AddExperimentFeelingRequest) (*BehaviouralExperiment, error) {
 	return nil, status.Error(codes.Unimplemented, "method AddExperimentFeeling not implemented")
+}
+func (UnimplementedRecordServiceServer) ListPositiveDataLogs(context.Context, *ListPositiveDataLogsRequest) (*ListPositiveDataLogsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListPositiveDataLogs not implemented")
+}
+func (UnimplementedRecordServiceServer) CreatePositiveDataLog(context.Context, *CreatePositiveDataLogRequest) (*PositiveDataLog, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreatePositiveDataLog not implemented")
+}
+func (UnimplementedRecordServiceServer) GetPositiveDataLog(context.Context, *GetPositiveDataLogRequest) (*PositiveDataLog, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetPositiveDataLog not implemented")
+}
+func (UnimplementedRecordServiceServer) UpdatePositiveDataLog(context.Context, *UpdatePositiveDataLogRequest) (*PositiveDataLog, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdatePositiveDataLog not implemented")
+}
+func (UnimplementedRecordServiceServer) DeletePositiveDataLog(context.Context, *DeletePositiveDataLogRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeletePositiveDataLog not implemented")
+}
+func (UnimplementedRecordServiceServer) AddDataLogEvidence(context.Context, *AddDataLogEvidenceRequest) (*PositiveDataLog, error) {
+	return nil, status.Error(codes.Unimplemented, "method AddDataLogEvidence not implemented")
+}
+func (UnimplementedRecordServiceServer) DeleteDataLogEvidence(context.Context, *DeleteDataLogEvidenceRequest) (*PositiveDataLog, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteDataLogEvidence not implemented")
+}
+func (UnimplementedRecordServiceServer) RateBeliefs(context.Context, *RateBeliefsRequest) (*PositiveDataLog, error) {
+	return nil, status.Error(codes.Unimplemented, "method RateBeliefs not implemented")
 }
 func (UnimplementedRecordServiceServer) ListBiases(context.Context, *ListBiasesRequest) (*ListBiasesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListBiases not implemented")
@@ -1173,6 +1323,150 @@ func _RecordService_AddExperimentFeeling_Handler(srv interface{}, ctx context.Co
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RecordService_ListPositiveDataLogs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListPositiveDataLogsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).ListPositiveDataLogs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_ListPositiveDataLogs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).ListPositiveDataLogs(ctx, req.(*ListPositiveDataLogsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_CreatePositiveDataLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreatePositiveDataLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).CreatePositiveDataLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_CreatePositiveDataLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).CreatePositiveDataLog(ctx, req.(*CreatePositiveDataLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_GetPositiveDataLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPositiveDataLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).GetPositiveDataLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_GetPositiveDataLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).GetPositiveDataLog(ctx, req.(*GetPositiveDataLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_UpdatePositiveDataLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdatePositiveDataLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).UpdatePositiveDataLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_UpdatePositiveDataLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).UpdatePositiveDataLog(ctx, req.(*UpdatePositiveDataLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_DeletePositiveDataLog_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeletePositiveDataLogRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).DeletePositiveDataLog(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_DeletePositiveDataLog_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).DeletePositiveDataLog(ctx, req.(*DeletePositiveDataLogRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_AddDataLogEvidence_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(AddDataLogEvidenceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).AddDataLogEvidence(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_AddDataLogEvidence_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).AddDataLogEvidence(ctx, req.(*AddDataLogEvidenceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_DeleteDataLogEvidence_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteDataLogEvidenceRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).DeleteDataLogEvidence(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_DeleteDataLogEvidence_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).DeleteDataLogEvidence(ctx, req.(*DeleteDataLogEvidenceRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_RateBeliefs_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(RateBeliefsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).RateBeliefs(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_RateBeliefs_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).RateBeliefs(ctx, req.(*RateBeliefsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RecordService_ListBiases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListBiasesRequest)
 	if err := dec(in); err != nil {
@@ -1359,6 +1653,38 @@ var RecordService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "AddExperimentFeeling",
 			Handler:    _RecordService_AddExperimentFeeling_Handler,
+		},
+		{
+			MethodName: "ListPositiveDataLogs",
+			Handler:    _RecordService_ListPositiveDataLogs_Handler,
+		},
+		{
+			MethodName: "CreatePositiveDataLog",
+			Handler:    _RecordService_CreatePositiveDataLog_Handler,
+		},
+		{
+			MethodName: "GetPositiveDataLog",
+			Handler:    _RecordService_GetPositiveDataLog_Handler,
+		},
+		{
+			MethodName: "UpdatePositiveDataLog",
+			Handler:    _RecordService_UpdatePositiveDataLog_Handler,
+		},
+		{
+			MethodName: "DeletePositiveDataLog",
+			Handler:    _RecordService_DeletePositiveDataLog_Handler,
+		},
+		{
+			MethodName: "AddDataLogEvidence",
+			Handler:    _RecordService_AddDataLogEvidence_Handler,
+		},
+		{
+			MethodName: "DeleteDataLogEvidence",
+			Handler:    _RecordService_DeleteDataLogEvidence_Handler,
+		},
+		{
+			MethodName: "RateBeliefs",
+			Handler:    _RecordService_RateBeliefs_Handler,
 		},
 		{
 			MethodName: "ListBiases",
