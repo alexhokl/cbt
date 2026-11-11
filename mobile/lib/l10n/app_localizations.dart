@@ -130,6 +130,12 @@ abstract class AppLocalizations {
   /// **'Data logs'**
   String get tabDataLogs;
 
+  /// Tab holding formulations of early life experiences to thoughts and behaviours.
+  ///
+  /// In en, this message translates to:
+  /// **'Formulations'**
+  String get tabFormulations;
+
   /// Overflow menu entry opening the bias list.
   ///
   /// In en, this message translates to:
@@ -645,6 +651,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count, plural, =0{No evidence yet} =1{1 piece of evidence} other{{count} pieces of evidence}}'**
   String evidenceCount(int count);
+
+  /// Shown when there are no formulations.
+  ///
+  /// In en, this message translates to:
+  /// **'No formulations yet.'**
+  String get emptyFormulations;
+
+  /// Title of the page creating a formulation.
+  ///
+  /// In en, this message translates to:
+  /// **'New formulation'**
+  String get newFormulation;
+
+  /// Title of the page editing a formulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit formulation'**
+  String get editFormulation;
+
+  /// Introduction above the fields of a formulation.
+  ///
+  /// In en, this message translates to:
+  /// **'How early life experiences lead to thoughts and behaviours. Start from whichever column you can.'**
+  String get formulationIntro;
+
+  /// Label for the early life experiences column of a formulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Early life experiences'**
+  String get fieldEarlyExperiences;
+
+  /// Label for the beliefs column of a formulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Beliefs'**
+  String get fieldBeliefs;
+
+  /// Label for the assumptions column of a formulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Assumptions'**
+  String get fieldAssumptions;
+
+  /// Label for the rules for living column of a formulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Rules for living'**
+  String get fieldRulesForLiving;
+
+  /// Label for the events column of a formulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Events'**
+  String get fieldFormulationEvents;
+
+  /// Label for the thoughts column of a formulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Negative thoughts maintaining the problem'**
+  String get fieldMaintainingThoughts;
+
+  /// Label for the behaviours column of a formulation.
+  ///
+  /// In en, this message translates to:
+  /// **'Behaviours maintaining the problem'**
+  String get fieldMaintainingBehaviours;
+
+  /// Validation message when every column of a formulation is blank.
+  ///
+  /// In en, this message translates to:
+  /// **'Write down at least one column before saving.'**
+  String get formulationRequired;
 
   /// Header above a derived map of worry.
   ///

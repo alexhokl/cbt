@@ -291,6 +291,23 @@ func writeBeliefRating(out io.Writer, rating *proto.BeliefRating) error {
 	return nil
 }
 
+// writeFormulationDetail renders a formulation as a vertical label and
+// paragraph layout, in the order the exercise is written. Empty columns are
+// omitted, so a formulation in progress reads as what has been written.
+func writeFormulationDetail(out io.Writer, formulation *proto.Formulation) error {
+	if _, err := fmt.Fprintf(out, "Formulation %d\n", formulation.GetId()); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	for _, column := range formulationColumns {
+		if err := writeField(out, column.label, column.value(formulation)); err != nil {
+			return err
+		}
+	}
+
+	return nil
+}
+
 // writeField renders one labelled paragraph, wrapped and indented. An empty
 // value produces no output at all, so a record in progress reads as what has
 // been written rather than as a form with blanks.

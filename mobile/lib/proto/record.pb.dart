@@ -1254,6 +1254,181 @@ class BeliefRating extends $pb.GeneratedMessage {
   void clearAlternativePercent() => $_clearField(4);
 }
 
+/// Formulation traces how early life experiences lead to thoughts and
+/// behaviours: early life experiences, beliefs, assumptions, rules for living,
+/// the events that trigger them, and the negative thoughts and behaviours
+/// maintaining the problem.
+class Formulation extends $pb.GeneratedMessage {
+  factory Formulation({
+    $core.int? id,
+    $core.String? earlyExperiences,
+    $core.String? beliefs,
+    $core.String? assumptions,
+    $core.String? rulesForLiving,
+    $core.String? events,
+    $core.String? thoughts,
+    $core.String? behaviours,
+    $2.Timestamp? createdAt,
+    $2.Timestamp? updatedAt,
+  }) {
+    final result = Formulation._();
+    if (id != null) result.id = id;
+    if (earlyExperiences != null) result.earlyExperiences = earlyExperiences;
+    if (beliefs != null) result.beliefs = beliefs;
+    if (assumptions != null) result.assumptions = assumptions;
+    if (rulesForLiving != null) result.rulesForLiving = rulesForLiving;
+    if (events != null) result.events = events;
+    if (thoughts != null) result.thoughts = thoughts;
+    if (behaviours != null) result.behaviours = behaviours;
+    if (createdAt != null) result.createdAt = createdAt;
+    if (updatedAt != null) result.updatedAt = updatedAt;
+    return result;
+  }
+
+  Formulation._();
+
+  factory Formulation.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      Formulation()..mergeFromBuffer(data, registry);
+  factory Formulation.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      Formulation()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'Formulation',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: Formulation.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'earlyExperiences')
+    ..aOS(3, _omitFieldNames ? '' : 'beliefs')
+    ..aOS(4, _omitFieldNames ? '' : 'assumptions')
+    ..aOS(5, _omitFieldNames ? '' : 'rulesForLiving')
+    ..aOS(6, _omitFieldNames ? '' : 'events')
+    ..aOS(7, _omitFieldNames ? '' : 'thoughts')
+    ..aOS(8, _omitFieldNames ? '' : 'behaviours')
+    ..aOM<$2.Timestamp>(9, _omitFieldNames ? '' : 'createdAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..aOM<$2.Timestamp>(10, _omitFieldNames ? '' : 'updatedAt',
+        subBuilder: $2.Timestamp.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Formulation clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  Formulation copyWith(void Function(Formulation) updates) =>
+      super.copyWith((message) => updates(message as Formulation))
+          as Formulation;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated('Use Formulation() / Formulation.new instead')
+  static Formulation create() => Formulation._();
+  static $pb.GeneratedMessage $_createMessage() => Formulation._();
+  @$core.override
+  Formulation createEmptyInstance() => Formulation._();
+  @$core.pragma('dart2js:noInline')
+  static Formulation getDefault() =>
+      _defaultInstance ??= $pb.GeneratedMessage.$_defaultFor<Formulation>(
+          Formulation.$_createMessage);
+  static Formulation? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get earlyExperiences => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set earlyExperiences($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEarlyExperiences() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEarlyExperiences() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get beliefs => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set beliefs($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasBeliefs() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBeliefs() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get assumptions => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set assumptions($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAssumptions() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAssumptions() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get rulesForLiving => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set rulesForLiving($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasRulesForLiving() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearRulesForLiving() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get events => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set events($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasEvents() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearEvents() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get thoughts => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set thoughts($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasThoughts() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearThoughts() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get behaviours => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set behaviours($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasBehaviours() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearBehaviours() => $_clearField(8);
+
+  @$pb.TagNumber(9)
+  $2.Timestamp get createdAt => $_getN(8);
+  @$pb.TagNumber(9)
+  set createdAt($2.Timestamp value) => $_setField(9, value);
+  @$pb.TagNumber(9)
+  $core.bool hasCreatedAt() => $_has(8);
+  @$pb.TagNumber(9)
+  void clearCreatedAt() => $_clearField(9);
+  @$pb.TagNumber(9)
+  $2.Timestamp ensureCreatedAt() => $_ensure(8);
+
+  @$pb.TagNumber(10)
+  $2.Timestamp get updatedAt => $_getN(9);
+  @$pb.TagNumber(10)
+  set updatedAt($2.Timestamp value) => $_setField(10, value);
+  @$pb.TagNumber(10)
+  $core.bool hasUpdatedAt() => $_has(9);
+  @$pb.TagNumber(10)
+  void clearUpdatedAt() => $_clearField(10);
+  @$pb.TagNumber(10)
+  $2.Timestamp ensureUpdatedAt() => $_ensure(9);
+}
+
 /// DataLogEvidenceInput is a row of evidence as supplied by the client.
 class DataLogEvidenceInput extends $pb.GeneratedMessage {
   factory DataLogEvidenceInput({
@@ -5018,6 +5193,516 @@ class RateBeliefsRequest extends $pb.GeneratedMessage {
   $core.bool hasAlternativePercent() => $_has(2);
   @$pb.TagNumber(3)
   void clearAlternativePercent() => $_clearField(3);
+}
+
+class ListFormulationsRequest extends $pb.GeneratedMessage {
+  factory ListFormulationsRequest({
+    $core.String? search,
+  }) {
+    final result = ListFormulationsRequest._();
+    if (search != null) result.search = search;
+    return result;
+  }
+
+  ListFormulationsRequest._();
+
+  factory ListFormulationsRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListFormulationsRequest()..mergeFromBuffer(data, registry);
+  factory ListFormulationsRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListFormulationsRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListFormulationsRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: ListFormulationsRequest.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'search')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListFormulationsRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListFormulationsRequest copyWith(
+          void Function(ListFormulationsRequest) updates) =>
+      super.copyWith((message) => updates(message as ListFormulationsRequest))
+          as ListFormulationsRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ListFormulationsRequest() / ListFormulationsRequest.new instead')
+  static ListFormulationsRequest create() => ListFormulationsRequest._();
+  static $pb.GeneratedMessage $_createMessage() => ListFormulationsRequest._();
+  @$core.override
+  ListFormulationsRequest createEmptyInstance() => ListFormulationsRequest._();
+  @$core.pragma('dart2js:noInline')
+  static ListFormulationsRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListFormulationsRequest>(
+          ListFormulationsRequest.$_createMessage);
+  static ListFormulationsRequest? _defaultInstance;
+
+  /// search matches every column of the formulation.
+  @$pb.TagNumber(1)
+  $core.String get search => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set search($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasSearch() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearSearch() => $_clearField(1);
+}
+
+class ListFormulationsResponse extends $pb.GeneratedMessage {
+  factory ListFormulationsResponse({
+    $core.Iterable<Formulation>? formulations,
+  }) {
+    final result = ListFormulationsResponse._();
+    if (formulations != null) result.formulations.addAll(formulations);
+    return result;
+  }
+
+  ListFormulationsResponse._();
+
+  factory ListFormulationsResponse.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListFormulationsResponse()..mergeFromBuffer(data, registry);
+  factory ListFormulationsResponse.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      ListFormulationsResponse()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'ListFormulationsResponse',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: ListFormulationsResponse.$_createMessage)
+    ..pPM<Formulation>(1, _omitFieldNames ? '' : 'formulations',
+        subBuilder: Formulation.$_createMessage)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListFormulationsResponse clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  ListFormulationsResponse copyWith(
+          void Function(ListFormulationsResponse) updates) =>
+      super.copyWith((message) => updates(message as ListFormulationsResponse))
+          as ListFormulationsResponse;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use ListFormulationsResponse() / ListFormulationsResponse.new instead')
+  static ListFormulationsResponse create() => ListFormulationsResponse._();
+  static $pb.GeneratedMessage $_createMessage() => ListFormulationsResponse._();
+  @$core.override
+  ListFormulationsResponse createEmptyInstance() =>
+      ListFormulationsResponse._();
+  @$core.pragma('dart2js:noInline')
+  static ListFormulationsResponse getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<ListFormulationsResponse>(
+          ListFormulationsResponse.$_createMessage);
+  static ListFormulationsResponse? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $pb.PbList<Formulation> get formulations => $_getList(0);
+}
+
+class CreateFormulationRequest extends $pb.GeneratedMessage {
+  factory CreateFormulationRequest({
+    $core.String? earlyExperiences,
+    $core.String? beliefs,
+    $core.String? assumptions,
+    $core.String? rulesForLiving,
+    $core.String? events,
+    $core.String? thoughts,
+    $core.String? behaviours,
+  }) {
+    final result = CreateFormulationRequest._();
+    if (earlyExperiences != null) result.earlyExperiences = earlyExperiences;
+    if (beliefs != null) result.beliefs = beliefs;
+    if (assumptions != null) result.assumptions = assumptions;
+    if (rulesForLiving != null) result.rulesForLiving = rulesForLiving;
+    if (events != null) result.events = events;
+    if (thoughts != null) result.thoughts = thoughts;
+    if (behaviours != null) result.behaviours = behaviours;
+    return result;
+  }
+
+  CreateFormulationRequest._();
+
+  factory CreateFormulationRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      CreateFormulationRequest()..mergeFromBuffer(data, registry);
+  factory CreateFormulationRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      CreateFormulationRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'CreateFormulationRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: CreateFormulationRequest.$_createMessage)
+    ..aOS(1, _omitFieldNames ? '' : 'earlyExperiences')
+    ..aOS(2, _omitFieldNames ? '' : 'beliefs')
+    ..aOS(3, _omitFieldNames ? '' : 'assumptions')
+    ..aOS(4, _omitFieldNames ? '' : 'rulesForLiving')
+    ..aOS(5, _omitFieldNames ? '' : 'events')
+    ..aOS(6, _omitFieldNames ? '' : 'thoughts')
+    ..aOS(7, _omitFieldNames ? '' : 'behaviours')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateFormulationRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  CreateFormulationRequest copyWith(
+          void Function(CreateFormulationRequest) updates) =>
+      super.copyWith((message) => updates(message as CreateFormulationRequest))
+          as CreateFormulationRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use CreateFormulationRequest() / CreateFormulationRequest.new instead')
+  static CreateFormulationRequest create() => CreateFormulationRequest._();
+  static $pb.GeneratedMessage $_createMessage() => CreateFormulationRequest._();
+  @$core.override
+  CreateFormulationRequest createEmptyInstance() =>
+      CreateFormulationRequest._();
+  @$core.pragma('dart2js:noInline')
+  static CreateFormulationRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<CreateFormulationRequest>(
+          CreateFormulationRequest.$_createMessage);
+  static CreateFormulationRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.String get earlyExperiences => $_getSZ(0);
+  @$pb.TagNumber(1)
+  set earlyExperiences($core.String value) => $_setString(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasEarlyExperiences() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearEarlyExperiences() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get beliefs => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set beliefs($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasBeliefs() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearBeliefs() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get assumptions => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set assumptions($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasAssumptions() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearAssumptions() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get rulesForLiving => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set rulesForLiving($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasRulesForLiving() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearRulesForLiving() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get events => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set events($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasEvents() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearEvents() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get thoughts => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set thoughts($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasThoughts() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearThoughts() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get behaviours => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set behaviours($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasBehaviours() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearBehaviours() => $_clearField(7);
+}
+
+class GetFormulationRequest extends $pb.GeneratedMessage {
+  factory GetFormulationRequest({
+    $core.int? id,
+  }) {
+    final result = GetFormulationRequest._();
+    if (id != null) result.id = id;
+    return result;
+  }
+
+  GetFormulationRequest._();
+
+  factory GetFormulationRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GetFormulationRequest()..mergeFromBuffer(data, registry);
+  factory GetFormulationRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      GetFormulationRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'GetFormulationRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: GetFormulationRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetFormulationRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  GetFormulationRequest copyWith(
+          void Function(GetFormulationRequest) updates) =>
+      super.copyWith((message) => updates(message as GetFormulationRequest))
+          as GetFormulationRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use GetFormulationRequest() / GetFormulationRequest.new instead')
+  static GetFormulationRequest create() => GetFormulationRequest._();
+  static $pb.GeneratedMessage $_createMessage() => GetFormulationRequest._();
+  @$core.override
+  GetFormulationRequest createEmptyInstance() => GetFormulationRequest._();
+  @$core.pragma('dart2js:noInline')
+  static GetFormulationRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<GetFormulationRequest>(
+          GetFormulationRequest.$_createMessage);
+  static GetFormulationRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+}
+
+class UpdateFormulationRequest extends $pb.GeneratedMessage {
+  factory UpdateFormulationRequest({
+    $core.int? id,
+    $core.String? earlyExperiences,
+    $core.String? beliefs,
+    $core.String? assumptions,
+    $core.String? rulesForLiving,
+    $core.String? events,
+    $core.String? thoughts,
+    $core.String? behaviours,
+  }) {
+    final result = UpdateFormulationRequest._();
+    if (id != null) result.id = id;
+    if (earlyExperiences != null) result.earlyExperiences = earlyExperiences;
+    if (beliefs != null) result.beliefs = beliefs;
+    if (assumptions != null) result.assumptions = assumptions;
+    if (rulesForLiving != null) result.rulesForLiving = rulesForLiving;
+    if (events != null) result.events = events;
+    if (thoughts != null) result.thoughts = thoughts;
+    if (behaviours != null) result.behaviours = behaviours;
+    return result;
+  }
+
+  UpdateFormulationRequest._();
+
+  factory UpdateFormulationRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      UpdateFormulationRequest()..mergeFromBuffer(data, registry);
+  factory UpdateFormulationRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      UpdateFormulationRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'UpdateFormulationRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: UpdateFormulationRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..aOS(2, _omitFieldNames ? '' : 'earlyExperiences')
+    ..aOS(3, _omitFieldNames ? '' : 'beliefs')
+    ..aOS(4, _omitFieldNames ? '' : 'assumptions')
+    ..aOS(5, _omitFieldNames ? '' : 'rulesForLiving')
+    ..aOS(6, _omitFieldNames ? '' : 'events')
+    ..aOS(7, _omitFieldNames ? '' : 'thoughts')
+    ..aOS(8, _omitFieldNames ? '' : 'behaviours')
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateFormulationRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  UpdateFormulationRequest copyWith(
+          void Function(UpdateFormulationRequest) updates) =>
+      super.copyWith((message) => updates(message as UpdateFormulationRequest))
+          as UpdateFormulationRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use UpdateFormulationRequest() / UpdateFormulationRequest.new instead')
+  static UpdateFormulationRequest create() => UpdateFormulationRequest._();
+  static $pb.GeneratedMessage $_createMessage() => UpdateFormulationRequest._();
+  @$core.override
+  UpdateFormulationRequest createEmptyInstance() =>
+      UpdateFormulationRequest._();
+  @$core.pragma('dart2js:noInline')
+  static UpdateFormulationRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<UpdateFormulationRequest>(
+          UpdateFormulationRequest.$_createMessage);
+  static UpdateFormulationRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
+
+  @$pb.TagNumber(2)
+  $core.String get earlyExperiences => $_getSZ(1);
+  @$pb.TagNumber(2)
+  set earlyExperiences($core.String value) => $_setString(1, value);
+  @$pb.TagNumber(2)
+  $core.bool hasEarlyExperiences() => $_has(1);
+  @$pb.TagNumber(2)
+  void clearEarlyExperiences() => $_clearField(2);
+
+  @$pb.TagNumber(3)
+  $core.String get beliefs => $_getSZ(2);
+  @$pb.TagNumber(3)
+  set beliefs($core.String value) => $_setString(2, value);
+  @$pb.TagNumber(3)
+  $core.bool hasBeliefs() => $_has(2);
+  @$pb.TagNumber(3)
+  void clearBeliefs() => $_clearField(3);
+
+  @$pb.TagNumber(4)
+  $core.String get assumptions => $_getSZ(3);
+  @$pb.TagNumber(4)
+  set assumptions($core.String value) => $_setString(3, value);
+  @$pb.TagNumber(4)
+  $core.bool hasAssumptions() => $_has(3);
+  @$pb.TagNumber(4)
+  void clearAssumptions() => $_clearField(4);
+
+  @$pb.TagNumber(5)
+  $core.String get rulesForLiving => $_getSZ(4);
+  @$pb.TagNumber(5)
+  set rulesForLiving($core.String value) => $_setString(4, value);
+  @$pb.TagNumber(5)
+  $core.bool hasRulesForLiving() => $_has(4);
+  @$pb.TagNumber(5)
+  void clearRulesForLiving() => $_clearField(5);
+
+  @$pb.TagNumber(6)
+  $core.String get events => $_getSZ(5);
+  @$pb.TagNumber(6)
+  set events($core.String value) => $_setString(5, value);
+  @$pb.TagNumber(6)
+  $core.bool hasEvents() => $_has(5);
+  @$pb.TagNumber(6)
+  void clearEvents() => $_clearField(6);
+
+  @$pb.TagNumber(7)
+  $core.String get thoughts => $_getSZ(6);
+  @$pb.TagNumber(7)
+  set thoughts($core.String value) => $_setString(6, value);
+  @$pb.TagNumber(7)
+  $core.bool hasThoughts() => $_has(6);
+  @$pb.TagNumber(7)
+  void clearThoughts() => $_clearField(7);
+
+  @$pb.TagNumber(8)
+  $core.String get behaviours => $_getSZ(7);
+  @$pb.TagNumber(8)
+  set behaviours($core.String value) => $_setString(7, value);
+  @$pb.TagNumber(8)
+  $core.bool hasBehaviours() => $_has(7);
+  @$pb.TagNumber(8)
+  void clearBehaviours() => $_clearField(8);
+}
+
+class DeleteFormulationRequest extends $pb.GeneratedMessage {
+  factory DeleteFormulationRequest({
+    $core.int? id,
+  }) {
+    final result = DeleteFormulationRequest._();
+    if (id != null) result.id = id;
+    return result;
+  }
+
+  DeleteFormulationRequest._();
+
+  factory DeleteFormulationRequest.fromBuffer($core.List<$core.int> data,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DeleteFormulationRequest()..mergeFromBuffer(data, registry);
+  factory DeleteFormulationRequest.fromJson($core.String json,
+          [$pb.ExtensionRegistry registry = $pb.ExtensionRegistry.EMPTY]) =>
+      DeleteFormulationRequest()..mergeFromJson(json, registry);
+
+  static final $pb.BuilderInfo _i = $pb.BuilderInfo(
+      _omitMessageNames ? '' : 'DeleteFormulationRequest',
+      package: const $pb.PackageName(_omitMessageNames ? '' : 'record'),
+      createEmptyInstance: DeleteFormulationRequest.$_createMessage)
+    ..aI(1, _omitFieldNames ? '' : 'id', fieldType: $pb.PbFieldType.OU3)
+    ..hasRequiredFields = false;
+
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteFormulationRequest clone() => deepCopy();
+  @$core.Deprecated('See https://github.com/google/protobuf.dart/issues/998.')
+  DeleteFormulationRequest copyWith(
+          void Function(DeleteFormulationRequest) updates) =>
+      super.copyWith((message) => updates(message as DeleteFormulationRequest))
+          as DeleteFormulationRequest;
+
+  @$core.override
+  $pb.BuilderInfo get info_ => _i;
+
+  @$core.pragma('dart2js:noInline')
+  @$core.Deprecated(
+      'Use DeleteFormulationRequest() / DeleteFormulationRequest.new instead')
+  static DeleteFormulationRequest create() => DeleteFormulationRequest._();
+  static $pb.GeneratedMessage $_createMessage() => DeleteFormulationRequest._();
+  @$core.override
+  DeleteFormulationRequest createEmptyInstance() =>
+      DeleteFormulationRequest._();
+  @$core.pragma('dart2js:noInline')
+  static DeleteFormulationRequest getDefault() => _defaultInstance ??=
+      $pb.GeneratedMessage.$_defaultFor<DeleteFormulationRequest>(
+          DeleteFormulationRequest.$_createMessage);
+  static DeleteFormulationRequest? _defaultInstance;
+
+  @$pb.TagNumber(1)
+  $core.int get id => $_getIZ(0);
+  @$pb.TagNumber(1)
+  set id($core.int value) => $_setUnsignedInt32(0, value);
+  @$pb.TagNumber(1)
+  $core.bool hasId() => $_has(0);
+  @$pb.TagNumber(1)
+  void clearId() => $_clearField(1);
 }
 
 class ListBiasesRequest extends $pb.GeneratedMessage {

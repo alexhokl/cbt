@@ -114,6 +114,14 @@ func TestHandlersRejectAnUnauthenticatedContext(t *testing.T) {
 			_, err := server.RateBeliefs(ctx, &proto.RateBeliefsRequest{LogId: 1})
 			return err
 		}},
+		{"ListFormulations", func() error {
+			_, err := server.ListFormulations(ctx, &proto.ListFormulationsRequest{})
+			return err
+		}},
+		{"CreateFormulation", func() error {
+			_, err := server.CreateFormulation(ctx, &proto.CreateFormulationRequest{Beliefs: "a belief"})
+			return err
+		}},
 		{"ListBiases", func() error {
 			_, err := server.ListBiases(ctx, &proto.ListBiasesRequest{})
 			return err
@@ -903,5 +911,60 @@ func TestPositiveDataLogErrorsAreMapped(t *testing.T) {
 				t.Errorf("expected %v but got %v", test.expected, got)
 			}
 		})
+	}
+}
+
+func TestFormulationRoundTrips(t *testing.T) {
+	server := newTestServer(t)
+	ctx := authenticatedContext()
+
+	created, err := server.CreateFormulation(ctx, &proto.CreateFormulationRequest{
+		Thoughts: "there is no point getting to know them",
+	})
+	if err != nil {
+		t.Fatalf("failed to create the formulation: %v", err)
+	}
+
+	beliefs := "people move on"
+	if _, err := server.UpdateFormulation(ctx, &proto.UpdateFormulationRequest{
+		Id:      created.GetId(),
+		Beliefs: &beliefs,
+	}); err != nil {
+		t.Fatalf("failed to update the formulation: %v", err)
+	}
+
+	got, err := server.GetFormulation(ctx, &proto.GetFormulationRequest{Id: created.GetId()})
+	if err != nil {
+		t.Fatalf("failed to get the formulation: %v", err)
+	}
+	if got.GetBeliefs() != "people move on" || got.GetThoughts() != "there is no point getting to know them" {
+		t.Errorf("unexpected columns %q and %q", got.GetBeliefs(), got.GetThoughts())
+	}
+
+	listed, err := server.ListFormulations(ctx, &proto.ListFormulationsRequest{Search: "move on"})
+	if err != nil {
+		t.Fatalf("failed to list the formulations: %v", err)
+	}
+	if len(listed.GetFormulations()) != 1 {
+		t.Errorf("expected the search to find the formulation but got %d", len(listed.GetFormulations()))
+	}
+
+	if _, err := server.DeleteFormulation(ctx, &proto.DeleteFormulationRequest{Id: created.GetId()}); err != nil {
+		t.Fatalf("failed to delete the formulation: %v", err)
+	}
+	if _, err := server.GetFormulation(ctx, &proto.GetFormulationRequest{Id: created.GetId()}); statusCode(err) != codes.NotFound {
+		t.Errorf("expected NotFound after deletion but got %v", statusCode(err))
+	}
+}
+
+func TestFormulationErrorsAreMapped(t *testing.T) {
+	server := newTestServer(t)
+	ctx := authenticatedContext()
+
+	if _, err := server.CreateFormulation(ctx, &proto.CreateFormulationRequest{Beliefs: " "}); statusCode(err) != codes.InvalidArgument {
+		t.Errorf("expected InvalidArgument for an empty formulation but got %v", statusCode(err))
+	}
+	if _, err := server.GetFormulation(ctx, &proto.GetFormulationRequest{Id: 99}); statusCode(err) != codes.NotFound {
+		t.Errorf("expected NotFound for a missing formulation but got %v", statusCode(err))
 	}
 }

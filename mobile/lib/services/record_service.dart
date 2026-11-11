@@ -251,6 +251,28 @@ class RecordService {
   Future<PositiveDataLog> rateBeliefs(RateBeliefsRequest request) =>
       _call((client) => client.rateBeliefs(request));
 
+  Future<List<Formulation>> listFormulations({String search = ''}) => _call(
+        (client) async => (await client.listFormulations(
+          ListFormulationsRequest()..search = search,
+        ))
+            .formulations,
+      );
+
+  Future<Formulation> getFormulation(int id) => _call(
+        (client) => client.getFormulation(GetFormulationRequest()..id = id),
+      );
+
+  Future<Formulation> createFormulation(CreateFormulationRequest request) =>
+      _call((client) => client.createFormulation(request));
+
+  Future<Formulation> updateFormulation(UpdateFormulationRequest request) =>
+      _call((client) => client.updateFormulation(request));
+
+  Future<void> deleteFormulation(int id) => _call(
+        (client) =>
+            client.deleteFormulation(DeleteFormulationRequest()..id = id),
+      );
+
   Future<List<CognitiveBias>> listBiases() => _call(
         (client) async =>
             (await client.listBiases(ListBiasesRequest())).biases,

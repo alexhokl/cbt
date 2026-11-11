@@ -211,6 +211,35 @@ void main() {
     expect(find.textContaining('1 piece of evidence'), findsOneWidget);
   });
 
+  testWidgets('switches to formulations', (tester) async {
+    when(
+      () => service.listThoughtRecords(
+        challenged: any(named: 'challenged'),
+        search: any(named: 'search'),
+      ),
+    ).thenAnswer((_) async => <ThoughtRecord>[]);
+    when(
+      () => service.listFormulations(search: any(named: 'search')),
+    ).thenAnswer(
+      (_) async => [
+        Formulation()
+          ..id = 2
+          ..thoughts = 'there is no point getting to know them'
+          ..updatedAt = Timestamp.fromDateTime(DateTime.utc(2026, 9, 25)),
+      ],
+    );
+
+    await tester.pumpWidget(wrap(RecordList(service: service)));
+    await tester.pumpAndSettle();
+
+    await tester.ensureVisible(find.text('Formulations'));
+    await tester.tap(find.text('Formulations'));
+    await tester.pumpAndSettle();
+
+    // Without beliefs, the first written column stands for the formulation.
+    expect(find.text('there is no point getting to know them'), findsOneWidget);
+  });
+
   group('strongestFeeling', () {
     test('prefers a rated feeling over an unrated one', () {
       // A rating is a judgement the user made; an absent one is not a zero.

@@ -817,3 +817,56 @@ func TestBuildUpdatePositiveDataLogRequestSendsOnlyChangedFlags(t *testing.T) {
 		t.Errorf("unexpected alternative %v", req.AlternativeBelief)
 	}
 }
+
+func TestBuildCreateFormulationRequest(t *testing.T) {
+	req, err := buildCreateFormulationRequest(formulationOptions{
+		Thoughts:   "there is no point getting to know them",
+		Behaviours: "eats at the desk",
+	})
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+	if req.GetThoughts() != "there is no point getting to know them" || req.GetBehaviours() != "eats at the desk" {
+		t.Errorf("unexpected columns %q and %q", req.GetThoughts(), req.GetBehaviours())
+	}
+	if req.GetEarlyExperiences() != "" || req.GetBeliefs() != "" {
+		t.Error("expected the unmentioned columns to be blank")
+	}
+
+	if _, err := buildCreateFormulationRequest(formulationOptions{Beliefs: "  "}); err == nil {
+		t.Error("expected an empty formulation to be rejected")
+	}
+}
+
+func TestBuildUpdateFormulationRequestSendsOnlyChangedFlags(t *testing.T) {
+	opts := formulationOptions{Beliefs: "people move on", Thoughts: ""}
+	req, err := buildUpdateFormulationRequest([]string{"2"}, opts, stubFlags{changed: map[string]bool{
+		"beliefs":  true,
+		"thoughts": true,
+	}})
+	if err != nil {
+		t.Fatalf("failed to build the request: %v", err)
+	}
+
+	if req.GetId() != 2 {
+		t.Errorf("expected formulation 2 but got %d", req.GetId())
+	}
+	if req.Beliefs == nil || req.GetBeliefs() != "people move on" {
+		t.Errorf("unexpected beliefs %v", req.Beliefs)
+	}
+	// An empty value that was typed clears the column.
+	if req.Thoughts == nil || req.GetThoughts() != "" {
+		t.Errorf("expected the thoughts to be sent empty but got %v", req.Thoughts)
+	}
+	for name, value := range map[string]*string{
+		"early experiences": req.EarlyExperiences,
+		"assumptions":       req.Assumptions,
+		"rules for living":  req.RulesForLiving,
+		"events":            req.Events,
+		"behaviours":        req.Behaviours,
+	} {
+		if value != nil {
+			t.Errorf("expected %s not to be sent but got %q", name, *value)
+		}
+	}
+}

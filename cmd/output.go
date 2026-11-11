@@ -213,6 +213,59 @@ func ratingSpan(ratings []*proto.BeliefRating, value func(*proto.BeliefRating) i
 	}
 }
 
+// writeFormulationTable renders formulations as a narrow aligned table. A
+// formulation can be started from any column, so the summary is its beliefs
+// where written and otherwise its first written column.
+func writeFormulationTable(out io.Writer, formulations []*proto.Formulation) error {
+	if len(formulations) == 0 {
+		if _, err := fmt.Fprintln(out, "  (none)"); err != nil {
+			return fmt.Errorf("failed to write output: %w", err)
+		}
+		return nil
+	}
+
+	writer := tabwriter.NewWriter(out, 0, 0, 2, ' ', 0)
+	if _, err := fmt.Fprintln(writer, "ID\tUPDATED\tSUMMARY"); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	for _, formulation := range formulations {
+		if _, err := fmt.Fprintf(
+			writer,
+			"%d\t%s\t%s\n",
+			formulation.GetId(),
+			formulation.GetUpdatedAt().AsTime().Local().Format(time.DateOnly),
+			truncate(formulationSummary(formulation), formulationSummaryWidth),
+		); err != nil {
+			return fmt.Errorf("failed to write output: %w", err)
+		}
+	}
+
+	if err := writer.Flush(); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	return nil
+}
+
+// formulationSummaryWidth leaves room for the id and date columns inside
+// eighty columns: 4 for the id, 12 for the date, and their padding.
+const formulationSummaryWidth = 60
+
+// formulationSummary is the column that stands for a formulation in a
+// listing: its beliefs where written, otherwise its first written column.
+func formulationSummary(formulation *proto.Formulation) string {
+	if beliefs := strings.TrimSpace(formulation.GetBeliefs()); beliefs != "" {
+		return beliefs
+	}
+	for _, column := range formulationColumns {
+		if value := strings.TrimSpace(column.value(formulation)); value != "" {
+			return value
+		}
+	}
+	return "-"
+}
+
 // writeBiasTable renders the cognitive bias vocabulary.
 func writeBiasTable(out io.Writer, biases []*proto.CognitiveBias) error {
 	if len(biases) == 0 {
@@ -310,6 +363,23 @@ func writePositiveDataLogLine(out io.Writer, log *proto.PositiveDataLog) error {
 	}
 
 	if _, err := fmt.Fprintf(out, "%s (%s)\n", truncate(log.GetBelief(), eventColumnWidth), strings.Join(details, ", ")); err != nil {
+		return fmt.Errorf("failed to write output: %w", err)
+	}
+
+	return nil
+}
+
+// writeFormulationLine renders a single formulation as a one line
+// confirmation.
+func writeFormulationLine(out io.Writer, formulation *proto.Formulation) error {
+	written := 0
+	for _, column := range formulationColumns {
+		if strings.TrimSpace(column.value(formulation)) != "" {
+			written++
+		}
+	}
+
+	if _, err := fmt.Fprintf(out, "%s (id %d, columns %d of %d)\n", truncate(formulationSummary(formulation), eventColumnWidth), formulation.GetId(), written, len(formulationColumns)); err != nil {
 		return fmt.Errorf("failed to write output: %w", err)
 	}
 

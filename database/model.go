@@ -9,8 +9,8 @@ import (
 // User is an authenticated Tailscale user. It is created on first sight by
 // the Tailscale authentication interceptor and referenced by TailscaleAddress
 // and every per-user record (CognitiveBias, ThoughtRecord, MapOfWorry,
-// BehaviouralExperiment, PositiveDataLog, NegativeThought, Feeling and the
-// rows hanging off a positive data log).
+// BehaviouralExperiment, PositiveDataLog, Formulation, NegativeThought,
+// Feeling and the rows hanging off a positive data log).
 //
 // User creation also seeds the builtin cognitive biases for that user; see
 // SeedBuiltinBiases.
@@ -336,4 +336,40 @@ type BeliefRating struct {
 	PositiveDataLogID  uint `gorm:"not null;index"`
 	UserID             uint `gorm:"not null;index"`
 	User               User `gorm:"foreignKey:UserID"`
+}
+
+// Formulation traces how early life experiences lead to thoughts and
+// behaviours: early life experiences, the beliefs they left behind, the
+// assumptions and rules for living those beliefs drive, the events that
+// trigger them, and the negative thoughts and behaviours that maintain the
+// problem.
+//
+// Like a MapOfWorry it is a single narrative chain, so every column is prose
+// on one row. No column is required on its own: a formulation can be worked
+// out forwards from the early experiences or backwards from the thoughts and
+// behaviours, by asking "what does this say about me?". A formulation with
+// every column blank records nothing, and is rejected with
+// ErrFormulationEmpty and the formulations_not_empty triggers.
+//
+// The application stores what the user wrote; it never interprets it.
+type Formulation struct {
+	gorm.Model
+	// EarlyExperiences are the early life experiences, or events of great
+	// impact, the beliefs developed from.
+	EarlyExperiences string `gorm:""`
+	// Beliefs are the beliefs those experiences left behind. They do not need
+	// a specific event to be triggered and are often mistaken for facts.
+	Beliefs string `gorm:""`
+	// Assumptions link beliefs to automatic thoughts, often as if-then.
+	Assumptions string `gorm:""`
+	// RulesForLiving are the rules the assumptions are lived by.
+	RulesForLiving string `gorm:""`
+	// Events are the situations that trigger the beliefs.
+	Events string `gorm:""`
+	// Thoughts are the negative thoughts maintaining the problem.
+	Thoughts string `gorm:""`
+	// Behaviours are the behaviours maintaining the problem.
+	Behaviours string `gorm:""`
+	UserID     uint   `gorm:"not null;index"`
+	User       User   `gorm:"foreignKey:UserID"`
 }

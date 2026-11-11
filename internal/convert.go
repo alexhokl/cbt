@@ -383,6 +383,45 @@ func toProtoPositiveDataLogs(logs []database.PositiveDataLog) ([]*proto.Positive
 	return converted, nil
 }
 
+// toProtoFormulation converts a formulation.
+func toProtoFormulation(formulation *database.Formulation) (*proto.Formulation, error) {
+	if formulation == nil {
+		return nil, status.Error(codes.Internal, "formulation is missing")
+	}
+
+	id, err := toProtoID(formulation.ID)
+	if err != nil {
+		return nil, err
+	}
+
+	return &proto.Formulation{
+		Id:               id,
+		EarlyExperiences: formulation.EarlyExperiences,
+		Beliefs:          formulation.Beliefs,
+		Assumptions:      formulation.Assumptions,
+		RulesForLiving:   formulation.RulesForLiving,
+		Events:           formulation.Events,
+		Thoughts:         formulation.Thoughts,
+		Behaviours:       formulation.Behaviours,
+		CreatedAt:        timestamppb.New(formulation.CreatedAt),
+		UpdatedAt:        timestamppb.New(formulation.UpdatedAt),
+	}, nil
+}
+
+// toProtoFormulations converts a list of formulations.
+func toProtoFormulations(formulations []database.Formulation) ([]*proto.Formulation, error) {
+	converted := make([]*proto.Formulation, 0, len(formulations))
+	for index := range formulations {
+		protoFormulation, err := toProtoFormulation(&formulations[index])
+		if err != nil {
+			return nil, err
+		}
+		converted = append(converted, protoFormulation)
+	}
+
+	return converted, nil
+}
+
 // toDataLogEvidenceInput converts a wire row of evidence to the operation
 // input type.
 func toDataLogEvidenceInput(input *proto.DataLogEvidenceInput) database.DataLogEvidenceInput {

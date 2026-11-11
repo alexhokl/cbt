@@ -27,6 +27,7 @@ func AutoMigrate(db *gorm.DB) error {
 		&PositiveDataLog{},
 		&PositiveDataLogEvidence{},
 		&BeliefRating{},
+		&Formulation{},
 	); err != nil {
 		return err
 	}
@@ -145,6 +146,14 @@ func schemaTriggers() []schemaTrigger {
 			table:     "belief_ratings",
 			condition: "NEW.belief_percent IS NULL AND NEW.alternative_percent IS NULL",
 			message:   "a belief rating must rate at least one of the beliefs",
+		},
+		{
+			// A formulation may be started from any column, but one with
+			// every column blank records nothing.
+			name:      "formulations_not_empty",
+			table:     "formulations",
+			condition: "TRIM(COALESCE(NEW.early_experiences, '')) = '' AND TRIM(COALESCE(NEW.beliefs, '')) = '' AND TRIM(COALESCE(NEW.assumptions, '')) = '' AND TRIM(COALESCE(NEW.rules_for_living, '')) = '' AND TRIM(COALESCE(NEW.events, '')) = '' AND TRIM(COALESCE(NEW.thoughts, '')) = '' AND TRIM(COALESCE(NEW.behaviours, '')) = ''",
+			message:   "a formulation must not be empty",
 		},
 	}
 

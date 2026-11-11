@@ -352,6 +352,48 @@ class RecordServiceClient extends $grpc.Client {
     return $createUnaryCall(_$rateBeliefs, request, options: options);
   }
 
+  /// ListFormulations returns the user's formulations, the most recently
+  /// changed first.
+  $grpc.ResponseFuture<$0.ListFormulationsResponse> listFormulations(
+    $0.ListFormulationsRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$listFormulations, request, options: options);
+  }
+
+  /// CreateFormulation creates a formulation. Any column may be left blank,
+  /// but not all of them.
+  $grpc.ResponseFuture<$0.Formulation> createFormulation(
+    $0.CreateFormulationRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$createFormulation, request, options: options);
+  }
+
+  /// GetFormulation returns a single formulation by identifier.
+  $grpc.ResponseFuture<$0.Formulation> getFormulation(
+    $0.GetFormulationRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$getFormulation, request, options: options);
+  }
+
+  /// UpdateFormulation changes the columns of a formulation.
+  $grpc.ResponseFuture<$0.Formulation> updateFormulation(
+    $0.UpdateFormulationRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$updateFormulation, request, options: options);
+  }
+
+  /// DeleteFormulation removes a formulation.
+  $grpc.ResponseFuture<$1.Empty> deleteFormulation(
+    $0.DeleteFormulationRequest request, {
+    $grpc.CallOptions? options,
+  }) {
+    return $createUnaryCall(_$deleteFormulation, request, options: options);
+  }
+
   /// ListBiases returns the user's cognitive bias vocabulary, ordered by name.
   $grpc.ResponseFuture<$0.ListBiasesResponse> listBiases(
     $0.ListBiasesRequest request, {
@@ -563,6 +605,31 @@ class RecordServiceClient extends $grpc.Client {
           '/record.RecordService/RateBeliefs',
           ($0.RateBeliefsRequest value) => value.writeToBuffer(),
           $0.PositiveDataLog.fromBuffer);
+  static final _$listFormulations = $grpc.ClientMethod<
+          $0.ListFormulationsRequest, $0.ListFormulationsResponse>(
+      '/record.RecordService/ListFormulations',
+      ($0.ListFormulationsRequest value) => value.writeToBuffer(),
+      $0.ListFormulationsResponse.fromBuffer);
+  static final _$createFormulation =
+      $grpc.ClientMethod<$0.CreateFormulationRequest, $0.Formulation>(
+          '/record.RecordService/CreateFormulation',
+          ($0.CreateFormulationRequest value) => value.writeToBuffer(),
+          $0.Formulation.fromBuffer);
+  static final _$getFormulation =
+      $grpc.ClientMethod<$0.GetFormulationRequest, $0.Formulation>(
+          '/record.RecordService/GetFormulation',
+          ($0.GetFormulationRequest value) => value.writeToBuffer(),
+          $0.Formulation.fromBuffer);
+  static final _$updateFormulation =
+      $grpc.ClientMethod<$0.UpdateFormulationRequest, $0.Formulation>(
+          '/record.RecordService/UpdateFormulation',
+          ($0.UpdateFormulationRequest value) => value.writeToBuffer(),
+          $0.Formulation.fromBuffer);
+  static final _$deleteFormulation =
+      $grpc.ClientMethod<$0.DeleteFormulationRequest, $1.Empty>(
+          '/record.RecordService/DeleteFormulation',
+          ($0.DeleteFormulationRequest value) => value.writeToBuffer(),
+          $1.Empty.fromBuffer);
   static final _$listBiases =
       $grpc.ClientMethod<$0.ListBiasesRequest, $0.ListBiasesResponse>(
           '/record.RecordService/ListBiases',
@@ -891,6 +958,47 @@ abstract class RecordServiceBase extends $grpc.Service {
         ($core.List<$core.int> value) =>
             $0.RateBeliefsRequest.fromBuffer(value),
         ($0.PositiveDataLog value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.ListFormulationsRequest,
+            $0.ListFormulationsResponse>(
+        'ListFormulations',
+        listFormulations_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.ListFormulationsRequest.fromBuffer(value),
+        ($0.ListFormulationsResponse value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.CreateFormulationRequest, $0.Formulation>(
+        'CreateFormulation',
+        createFormulation_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.CreateFormulationRequest.fromBuffer(value),
+        ($0.Formulation value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.GetFormulationRequest, $0.Formulation>(
+        'GetFormulation',
+        getFormulation_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.GetFormulationRequest.fromBuffer(value),
+        ($0.Formulation value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.UpdateFormulationRequest, $0.Formulation>(
+        'UpdateFormulation',
+        updateFormulation_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.UpdateFormulationRequest.fromBuffer(value),
+        ($0.Formulation value) => value.writeToBuffer()));
+    $addMethod($grpc.ServiceMethod<$0.DeleteFormulationRequest, $1.Empty>(
+        'DeleteFormulation',
+        deleteFormulation_Pre,
+        false,
+        false,
+        ($core.List<$core.int> value) =>
+            $0.DeleteFormulationRequest.fromBuffer(value),
+        ($1.Empty value) => value.writeToBuffer()));
     $addMethod($grpc.ServiceMethod<$0.ListBiasesRequest, $0.ListBiasesResponse>(
         'ListBiases',
         listBiases_Pre,
@@ -1221,6 +1329,47 @@ abstract class RecordServiceBase extends $grpc.Service {
 
   $async.Future<$0.PositiveDataLog> rateBeliefs(
       $grpc.ServiceCall call, $0.RateBeliefsRequest request);
+
+  $async.Future<$0.ListFormulationsResponse> listFormulations_Pre(
+      $grpc.ServiceCall $call,
+      $async.Future<$0.ListFormulationsRequest> $request) async {
+    return listFormulations($call, await $request);
+  }
+
+  $async.Future<$0.ListFormulationsResponse> listFormulations(
+      $grpc.ServiceCall call, $0.ListFormulationsRequest request);
+
+  $async.Future<$0.Formulation> createFormulation_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.CreateFormulationRequest> $request) async {
+    return createFormulation($call, await $request);
+  }
+
+  $async.Future<$0.Formulation> createFormulation(
+      $grpc.ServiceCall call, $0.CreateFormulationRequest request);
+
+  $async.Future<$0.Formulation> getFormulation_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.GetFormulationRequest> $request) async {
+    return getFormulation($call, await $request);
+  }
+
+  $async.Future<$0.Formulation> getFormulation(
+      $grpc.ServiceCall call, $0.GetFormulationRequest request);
+
+  $async.Future<$0.Formulation> updateFormulation_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.UpdateFormulationRequest> $request) async {
+    return updateFormulation($call, await $request);
+  }
+
+  $async.Future<$0.Formulation> updateFormulation(
+      $grpc.ServiceCall call, $0.UpdateFormulationRequest request);
+
+  $async.Future<$1.Empty> deleteFormulation_Pre($grpc.ServiceCall $call,
+      $async.Future<$0.DeleteFormulationRequest> $request) async {
+    return deleteFormulation($call, await $request);
+  }
+
+  $async.Future<$1.Empty> deleteFormulation(
+      $grpc.ServiceCall call, $0.DeleteFormulationRequest request);
 
   $async.Future<$0.ListBiasesResponse> listBiases_Pre($grpc.ServiceCall $call,
       $async.Future<$0.ListBiasesRequest> $request) async {

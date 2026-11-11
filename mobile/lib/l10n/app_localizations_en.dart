@@ -27,6 +27,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get tabDataLogs => 'Data logs';
 
   @override
+  String get tabFormulations => 'Formulations';
+
+  @override
   String get menuBiases => 'Cognitive biases';
 
   @override
@@ -323,6 +326,45 @@ class AppLocalizationsEn extends AppLocalizations {
     );
     return '$_temp0';
   }
+
+  @override
+  String get emptyFormulations => 'No formulations yet.';
+
+  @override
+  String get newFormulation => 'New formulation';
+
+  @override
+  String get editFormulation => 'Edit formulation';
+
+  @override
+  String get formulationIntro =>
+      'How early life experiences lead to thoughts and behaviours. Start from whichever column you can.';
+
+  @override
+  String get fieldEarlyExperiences => 'Early life experiences';
+
+  @override
+  String get fieldBeliefs => 'Beliefs';
+
+  @override
+  String get fieldAssumptions => 'Assumptions';
+
+  @override
+  String get fieldRulesForLiving => 'Rules for living';
+
+  @override
+  String get fieldFormulationEvents => 'Events';
+
+  @override
+  String get fieldMaintainingThoughts =>
+      'Negative thoughts maintaining the problem';
+
+  @override
+  String get fieldMaintainingBehaviours => 'Behaviours maintaining the problem';
+
+  @override
+  String get formulationRequired =>
+      'Write down at least one column before saving.';
 
   @override
   String get alternativeReading => 'An alternative reading of the same event';

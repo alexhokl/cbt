@@ -78,6 +78,20 @@ var deleteEvidenceCmd = &cobra.Command{
 	RunE:        runDeleteEvidence,
 }
 
+// deleteFormulationCmd removes a formulation.
+var deleteFormulationCmd = &cobra.Command{
+	Use:     "formulation [id]",
+	Aliases: []string{"fm"},
+	Short:   "Delete a formulation",
+	Long: `Delete a formulation.
+
+There is no undo.`,
+	Example:     `  cbt delete formulation 2`,
+	Args:        cobra.ExactArgs(1),
+	Annotations: map[string]string{annotationRequiresService: "true"},
+	RunE:        runDeleteFormulation,
+}
+
 // deleteBiasCmd removes a user defined cognitive bias.
 var deleteBiasCmd = &cobra.Command{
 	Use:   "bias [id]",
@@ -97,6 +111,7 @@ func init() {
 	deleteCmd.AddCommand(deleteBehaviouralExperimentCmd)
 	deleteCmd.AddCommand(deletePositiveDataLogCmd)
 	deleteCmd.AddCommand(deleteEvidenceCmd)
+	deleteCmd.AddCommand(deleteFormulationCmd)
 	deleteCmd.AddCommand(deleteBiasCmd)
 }
 
@@ -193,6 +208,25 @@ func runDeleteEvidence(cmd *cobra.Command, args []string) error {
 	}
 
 	return writeDeleted(cmd.OutOrStdout(), "evidence", id)
+}
+
+func runDeleteFormulation(cmd *cobra.Command, args []string) error {
+	id, err := parseRecordID(args[0])
+	if err != nil {
+		return err
+	}
+
+	conn, err := dial()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = conn.Close() }()
+
+	if _, err := proto.NewRecordServiceClient(conn).DeleteFormulation(cmd.Context(), &proto.DeleteFormulationRequest{Id: id}); err != nil {
+		return fmt.Errorf("failed to delete the formulation: %w", err)
+	}
+
+	return writeDeleted(cmd.OutOrStdout(), "formulation", id)
 }
 
 func runDeleteBias(cmd *cobra.Command, args []string) error {

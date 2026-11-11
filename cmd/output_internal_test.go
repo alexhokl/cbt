@@ -640,3 +640,71 @@ func TestWritePositiveDataLogDetailShowsTheHistory(t *testing.T) {
 		}
 	}
 }
+
+func TestWriteFormulationTableStaysNarrow(t *testing.T) {
+	var out bytes.Buffer
+
+	formulations := []*proto.Formulation{
+		{
+			Id:        123,
+			Beliefs:   "people move on, sooner or later, from every place and every group I have been part of",
+			UpdatedAt: timestamppb.New(referenceNow),
+		},
+		{Id: 9, Thoughts: "there is no point getting to know them", UpdatedAt: timestamppb.New(referenceNow)},
+	}
+
+	if err := writeFormulationTable(&out, formulations); err != nil {
+		t.Fatalf("failed to write the table: %v", err)
+	}
+
+	rendered := out.String()
+	// Without beliefs, the first written column stands for the formulation.
+	if !strings.Contains(rendered, "there is no point getting to know them") {
+		t.Errorf("expected the fallback summary in:\n%s", rendered)
+	}
+	for _, line := range strings.Split(strings.TrimRight(rendered, "\n"), "\n") {
+		if width := len([]rune(line)); width > 80 {
+			t.Errorf("expected every line to fit in 80 columns but got %d: %q", width, line)
+		}
+	}
+}
+
+func TestWriteFormulationDetailFollowsTheExercise(t *testing.T) {
+	var out bytes.Buffer
+
+	formulation := &proto.Formulation{
+		Id:               2,
+		EarlyExperiences: "moved school three times as a child",
+		Beliefs:          "people move on",
+		Events:           "invited to a team lunch",
+		Behaviours:       "eats at the desk",
+	}
+
+	if err := writeFormulationDetail(&out, formulation); err != nil {
+		t.Fatalf("failed to write the detail: %v", err)
+	}
+
+	rendered := out.String()
+	labels := []string{
+		"early life experiences:",
+		"beliefs:",
+		"events:",
+		"behaviours maintaining the problem:",
+	}
+	previous := -1
+	for _, label := range labels {
+		index := strings.Index(rendered, label)
+		if index < 0 {
+			t.Fatalf("expected %q in:\n%s", label, rendered)
+		}
+		if index < previous {
+			t.Errorf("expected %q to follow the previous column in:\n%s", label, rendered)
+		}
+		previous = index
+	}
+	for _, label := range []string{"assumptions:", "rules for living:", "negative thoughts"} {
+		if strings.Contains(rendered, label) {
+			t.Errorf("expected the empty column %q to be omitted but got:\n%s", label, rendered)
+		}
+	}
+}

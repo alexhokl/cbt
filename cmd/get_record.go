@@ -58,11 +58,23 @@ var getPositiveDataLogCmd = &cobra.Command{
 	RunE:        runGetPositiveDataLog,
 }
 
+// getFormulationCmd shows a single formulation in full.
+var getFormulationCmd = &cobra.Command{
+	Use:         "formulation [id]",
+	Aliases:     []string{"fm"},
+	Short:       "Show a formulation in full",
+	Example:     `  cbt get formulation 2`,
+	Args:        cobra.ExactArgs(1),
+	Annotations: map[string]string{annotationRequiresService: "true"},
+	RunE:        runGetFormulation,
+}
+
 func init() {
 	getCmd.AddCommand(getThoughtRecordCmd)
 	getCmd.AddCommand(getMapOfWorryCmd)
 	getCmd.AddCommand(getBehaviouralExperimentCmd)
 	getCmd.AddCommand(getPositiveDataLogCmd)
+	getCmd.AddCommand(getFormulationCmd)
 }
 
 func runGetThoughtRecord(cmd *cobra.Command, args []string) error {
@@ -143,6 +155,26 @@ func runGetPositiveDataLog(cmd *cobra.Command, args []string) error {
 	}
 
 	return writePositiveDataLogDetail(cmd.OutOrStdout(), log)
+}
+
+func runGetFormulation(cmd *cobra.Command, args []string) error {
+	id, err := parseRecordID(args[0])
+	if err != nil {
+		return err
+	}
+
+	conn, err := dial()
+	if err != nil {
+		return err
+	}
+	defer func() { _ = conn.Close() }()
+
+	formulation, err := proto.NewRecordServiceClient(conn).GetFormulation(cmd.Context(), &proto.GetFormulationRequest{Id: id})
+	if err != nil {
+		return fmt.Errorf("failed to get the formulation: %w", err)
+	}
+
+	return writeFormulationDetail(cmd.OutOrStdout(), formulation)
 }
 
 // parseRecordID converts a positional identifier argument. Identifiers are

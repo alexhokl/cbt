@@ -55,6 +55,11 @@ const (
 	RecordService_AddDataLogEvidence_FullMethodName            = "/record.RecordService/AddDataLogEvidence"
 	RecordService_DeleteDataLogEvidence_FullMethodName         = "/record.RecordService/DeleteDataLogEvidence"
 	RecordService_RateBeliefs_FullMethodName                   = "/record.RecordService/RateBeliefs"
+	RecordService_ListFormulations_FullMethodName              = "/record.RecordService/ListFormulations"
+	RecordService_CreateFormulation_FullMethodName             = "/record.RecordService/CreateFormulation"
+	RecordService_GetFormulation_FullMethodName                = "/record.RecordService/GetFormulation"
+	RecordService_UpdateFormulation_FullMethodName             = "/record.RecordService/UpdateFormulation"
+	RecordService_DeleteFormulation_FullMethodName             = "/record.RecordService/DeleteFormulation"
 	RecordService_ListBiases_FullMethodName                    = "/record.RecordService/ListBiases"
 	RecordService_CreateBias_FullMethodName                    = "/record.RecordService/CreateBias"
 	RecordService_RenameBias_FullMethodName                    = "/record.RecordService/RenameBias"
@@ -167,6 +172,18 @@ type RecordServiceClient interface {
 	// RateBeliefs appends a rating of both beliefs to a log, keeping the
 	// earlier ones.
 	RateBeliefs(ctx context.Context, in *RateBeliefsRequest, opts ...grpc.CallOption) (*PositiveDataLog, error)
+	// ListFormulations returns the user's formulations, the most recently
+	// changed first.
+	ListFormulations(ctx context.Context, in *ListFormulationsRequest, opts ...grpc.CallOption) (*ListFormulationsResponse, error)
+	// CreateFormulation creates a formulation. Any column may be left blank,
+	// but not all of them.
+	CreateFormulation(ctx context.Context, in *CreateFormulationRequest, opts ...grpc.CallOption) (*Formulation, error)
+	// GetFormulation returns a single formulation by identifier.
+	GetFormulation(ctx context.Context, in *GetFormulationRequest, opts ...grpc.CallOption) (*Formulation, error)
+	// UpdateFormulation changes the columns of a formulation.
+	UpdateFormulation(ctx context.Context, in *UpdateFormulationRequest, opts ...grpc.CallOption) (*Formulation, error)
+	// DeleteFormulation removes a formulation.
+	DeleteFormulation(ctx context.Context, in *DeleteFormulationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// ListBiases returns the user's cognitive bias vocabulary, ordered by name.
 	ListBiases(ctx context.Context, in *ListBiasesRequest, opts ...grpc.CallOption) (*ListBiasesResponse, error)
 	// CreateBias adds a user defined bias alongside the seeded ones.
@@ -535,6 +552,56 @@ func (c *recordServiceClient) RateBeliefs(ctx context.Context, in *RateBeliefsRe
 	return out, nil
 }
 
+func (c *recordServiceClient) ListFormulations(ctx context.Context, in *ListFormulationsRequest, opts ...grpc.CallOption) (*ListFormulationsResponse, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(ListFormulationsResponse)
+	err := c.cc.Invoke(ctx, RecordService_ListFormulations_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) CreateFormulation(ctx context.Context, in *CreateFormulationRequest, opts ...grpc.CallOption) (*Formulation, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Formulation)
+	err := c.cc.Invoke(ctx, RecordService_CreateFormulation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) GetFormulation(ctx context.Context, in *GetFormulationRequest, opts ...grpc.CallOption) (*Formulation, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Formulation)
+	err := c.cc.Invoke(ctx, RecordService_GetFormulation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) UpdateFormulation(ctx context.Context, in *UpdateFormulationRequest, opts ...grpc.CallOption) (*Formulation, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(Formulation)
+	err := c.cc.Invoke(ctx, RecordService_UpdateFormulation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *recordServiceClient) DeleteFormulation(ctx context.Context, in *DeleteFormulationRequest, opts ...grpc.CallOption) (*emptypb.Empty, error) {
+	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
+	out := new(emptypb.Empty)
+	err := c.cc.Invoke(ctx, RecordService_DeleteFormulation_FullMethodName, in, out, cOpts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *recordServiceClient) ListBiases(ctx context.Context, in *ListBiasesRequest, opts ...grpc.CallOption) (*ListBiasesResponse, error) {
 	cOpts := append([]grpc.CallOption{grpc.StaticMethod()}, opts...)
 	out := new(ListBiasesResponse)
@@ -681,6 +748,18 @@ type RecordServiceServer interface {
 	// RateBeliefs appends a rating of both beliefs to a log, keeping the
 	// earlier ones.
 	RateBeliefs(context.Context, *RateBeliefsRequest) (*PositiveDataLog, error)
+	// ListFormulations returns the user's formulations, the most recently
+	// changed first.
+	ListFormulations(context.Context, *ListFormulationsRequest) (*ListFormulationsResponse, error)
+	// CreateFormulation creates a formulation. Any column may be left blank,
+	// but not all of them.
+	CreateFormulation(context.Context, *CreateFormulationRequest) (*Formulation, error)
+	// GetFormulation returns a single formulation by identifier.
+	GetFormulation(context.Context, *GetFormulationRequest) (*Formulation, error)
+	// UpdateFormulation changes the columns of a formulation.
+	UpdateFormulation(context.Context, *UpdateFormulationRequest) (*Formulation, error)
+	// DeleteFormulation removes a formulation.
+	DeleteFormulation(context.Context, *DeleteFormulationRequest) (*emptypb.Empty, error)
 	// ListBiases returns the user's cognitive bias vocabulary, ordered by name.
 	ListBiases(context.Context, *ListBiasesRequest) (*ListBiasesResponse, error)
 	// CreateBias adds a user defined bias alongside the seeded ones.
@@ -803,6 +882,21 @@ func (UnimplementedRecordServiceServer) DeleteDataLogEvidence(context.Context, *
 }
 func (UnimplementedRecordServiceServer) RateBeliefs(context.Context, *RateBeliefsRequest) (*PositiveDataLog, error) {
 	return nil, status.Error(codes.Unimplemented, "method RateBeliefs not implemented")
+}
+func (UnimplementedRecordServiceServer) ListFormulations(context.Context, *ListFormulationsRequest) (*ListFormulationsResponse, error) {
+	return nil, status.Error(codes.Unimplemented, "method ListFormulations not implemented")
+}
+func (UnimplementedRecordServiceServer) CreateFormulation(context.Context, *CreateFormulationRequest) (*Formulation, error) {
+	return nil, status.Error(codes.Unimplemented, "method CreateFormulation not implemented")
+}
+func (UnimplementedRecordServiceServer) GetFormulation(context.Context, *GetFormulationRequest) (*Formulation, error) {
+	return nil, status.Error(codes.Unimplemented, "method GetFormulation not implemented")
+}
+func (UnimplementedRecordServiceServer) UpdateFormulation(context.Context, *UpdateFormulationRequest) (*Formulation, error) {
+	return nil, status.Error(codes.Unimplemented, "method UpdateFormulation not implemented")
+}
+func (UnimplementedRecordServiceServer) DeleteFormulation(context.Context, *DeleteFormulationRequest) (*emptypb.Empty, error) {
+	return nil, status.Error(codes.Unimplemented, "method DeleteFormulation not implemented")
 }
 func (UnimplementedRecordServiceServer) ListBiases(context.Context, *ListBiasesRequest) (*ListBiasesResponse, error) {
 	return nil, status.Error(codes.Unimplemented, "method ListBiases not implemented")
@@ -1467,6 +1561,96 @@ func _RecordService_RateBeliefs_Handler(srv interface{}, ctx context.Context, de
 	return interceptor(ctx, in, info, handler)
 }
 
+func _RecordService_ListFormulations_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(ListFormulationsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).ListFormulations(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_ListFormulations_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).ListFormulations(ctx, req.(*ListFormulationsRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_CreateFormulation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(CreateFormulationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).CreateFormulation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_CreateFormulation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).CreateFormulation(ctx, req.(*CreateFormulationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_GetFormulation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetFormulationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).GetFormulation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_GetFormulation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).GetFormulation(ctx, req.(*GetFormulationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_UpdateFormulation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateFormulationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).UpdateFormulation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_UpdateFormulation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).UpdateFormulation(ctx, req.(*UpdateFormulationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _RecordService_DeleteFormulation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteFormulationRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(RecordServiceServer).DeleteFormulation(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: RecordService_DeleteFormulation_FullMethodName,
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(RecordServiceServer).DeleteFormulation(ctx, req.(*DeleteFormulationRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _RecordService_ListBiases_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(ListBiasesRequest)
 	if err := dec(in); err != nil {
@@ -1685,6 +1869,26 @@ var RecordService_ServiceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "RateBeliefs",
 			Handler:    _RecordService_RateBeliefs_Handler,
+		},
+		{
+			MethodName: "ListFormulations",
+			Handler:    _RecordService_ListFormulations_Handler,
+		},
+		{
+			MethodName: "CreateFormulation",
+			Handler:    _RecordService_CreateFormulation_Handler,
+		},
+		{
+			MethodName: "GetFormulation",
+			Handler:    _RecordService_GetFormulation_Handler,
+		},
+		{
+			MethodName: "UpdateFormulation",
+			Handler:    _RecordService_UpdateFormulation_Handler,
+		},
+		{
+			MethodName: "DeleteFormulation",
+			Handler:    _RecordService_DeleteFormulation_Handler,
 		},
 		{
 			MethodName: "ListBiases",

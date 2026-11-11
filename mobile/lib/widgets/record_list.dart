@@ -8,16 +8,25 @@ import 'challenge_page.dart';
 import 'data_log_detail_page.dart';
 import 'edit_data_log_page.dart';
 import 'edit_experiment_page.dart';
+import 'edit_formulation_page.dart';
 import 'edit_map_page.dart';
 import 'edit_record_page.dart';
 import 'experiment_detail_page.dart';
+import 'formulation_detail_page.dart';
 import 'map_detail_page.dart';
 import 'record_detail_page.dart';
 import 'settings_page.dart';
 
 /// Which listing is showing. The unchallenged tab is the day's work queue,
 /// which is the reason the list is tabbed at all rather than one flat feed.
-enum RecordView { toChallenge, challenged, maps, experiments, dataLogs }
+enum RecordView {
+  toChallenge,
+  challenged,
+  maps,
+  experiments,
+  dataLogs,
+  formulations,
+}
 
 class RecordList extends StatefulWidget {
   const RecordList({super.key, this.service});
@@ -36,6 +45,7 @@ class RecordListState extends State<RecordList> {
   List<MapOfWorry> _maps = <MapOfWorry>[];
   List<BehaviouralExperiment> _experiments = <BehaviouralExperiment>[];
   List<PositiveDataLog> _dataLogs = <PositiveDataLog>[];
+  List<Formulation> _formulations = <Formulation>[];
   bool _loading = true;
   String? _error;
 
@@ -88,6 +98,15 @@ class RecordListState extends State<RecordList> {
         });
         return;
       }
+      if (_view == RecordView.formulations) {
+        final formulations = await service.listFormulations();
+        if (!mounted) return;
+        setState(() {
+          _formulations = formulations;
+          _loading = false;
+        });
+        return;
+      }
 
       final records = await service.listThoughtRecords(
         challenged: _view == RecordView.challenged,
@@ -111,6 +130,7 @@ class RecordListState extends State<RecordList> {
       RecordView.maps => EditMapPage(service: widget.service),
       RecordView.experiments => EditExperimentPage(service: widget.service),
       RecordView.dataLogs => EditDataLogPage(service: widget.service),
+      RecordView.formulations => EditFormulationPage(service: widget.service),
       _ => EditRecordPage(service: widget.service),
     };
     await Navigator.of(
@@ -147,7 +167,7 @@ class RecordListState extends State<RecordList> {
       ),
       body: Column(
         children: [
-          // Five segments do not fit every phone width, so the row scrolls
+          // Six segments do not fit every phone width, so the row scrolls
           // rather than squeezing the labels.
           SingleChildScrollView(
             scrollDirection: Axis.horizontal,
@@ -173,6 +193,10 @@ class RecordListState extends State<RecordList> {
                 ButtonSegment(
                   value: RecordView.dataLogs,
                   label: Text(l10n.tabDataLogs),
+                ),
+                ButtonSegment(
+                  value: RecordView.formulations,
+                  label: Text(l10n.tabFormulations),
                 ),
               ],
               selected: <RecordView>{_view},
@@ -245,6 +269,20 @@ class RecordListState extends State<RecordList> {
         child: ListView.builder(
           itemCount: _dataLogs.length,
           itemBuilder: (context, index) => _dataLogTile(_dataLogs[index], l10n),
+        ),
+      );
+    }
+
+    if (_view == RecordView.formulations) {
+      if (_formulations.isEmpty) {
+        return _emptyState(l10n.emptyFormulations);
+      }
+      return RefreshIndicator(
+        onRefresh: load,
+        child: ListView.builder(
+          itemCount: _formulations.length,
+          itemBuilder: (context, index) =>
+              _formulationTile(_formulations[index], l10n),
         ),
       );
     }
@@ -371,6 +409,29 @@ class RecordListState extends State<RecordList> {
           MaterialPageRoute(
             builder: (_) => ExperimentDetailPage(
               experimentId: experiment.id,
+              service: widget.service,
+            ),
+          ),
+        );
+        await load();
+      },
+    );
+  }
+
+  Widget _formulationTile(Formulation formulation, AppLocalizations l10n) {
+    return ListTile(
+      title: Text(
+        formulationSummary(formulation, l10n),
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: Text(formatDate(formulation.updatedAt.toDateTime().toLocal())),
+      leading: const Icon(Icons.timeline),
+      onTap: () async {
+        await Navigator.of(context).push<void>(
+          MaterialPageRoute(
+            builder: (_) => FormulationDetailPage(
+              formulationId: formulation.id,
               service: widget.service,
             ),
           ),

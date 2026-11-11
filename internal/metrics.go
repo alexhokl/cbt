@@ -61,6 +61,7 @@ const (
 
 	recordTypeBehaviouralExperiment = "behavioural_experiment"
 	recordTypePositiveDataLog       = "positive_data_log"
+	recordTypeFormulation           = "formulation"
 )
 
 // challengeLatencyBuckets are hours. The SDK default boundaries are tuned for

@@ -5,7 +5,7 @@ A journal for cognitive behavioural therapy thought records.
 It records what you write and shows it back to you. It does not interpret an
 entry, score it, or tell you what it means.
 
-## The four exercises
+## The five exercises
 
 **Thought record**:
 
@@ -48,6 +48,16 @@ A log is meant to be returned to. Evidence is added a row at a time as you
 notice it, with `cbt create evidence`, and both beliefs are rated again
 whenever you come back to it, with `cbt rerate`. Earlier ratings are kept with
 their dates rather than overwritten, so `cbt get data-log` shows each one.
+
+**Formulation** — how early life experiences lead to thoughts and behaviours:
+
+| Early life experiences | Beliefs | Assumptions | Rules for living | Events | Negative thoughts maintaining the problem | Behaviours maintaining the problem |
+|---|---|---|---|---|---|---|
+
+Start from whichever column you can. Working backwards from the thoughts and
+behaviours, asking "what does this say about me?", is as valid as starting
+from the early experiences; `cbt update formulation` fills in the rest a
+column at a time.
 
 ## Using it
 
@@ -102,6 +112,17 @@ cbt create evidence 1 "caught the first train on Monday" --at yesterday
 cbt rerate 1 --believe 55 --believe-alternative 45
 cbt get data-log 1
 cbt list data-logs
+
+# work out a formulation, starting from any column
+cbt create formulation --thoughts "there is no point getting to know them"
+cbt update formulation 1 \
+  --early-experiences "moved school three times as a child" \
+  --beliefs "people move on" \
+  --assumptions "if I get attached, it will end" \
+  --rules-for-living "keep new colleagues at arm's length" \
+  --events "invited to a team lunch" \
+  --behaviours "eats at the desk"
+cbt get formulation 1
 ```
 
 Feelings are rated 0-100 and re-rated during the challenge, because seeing

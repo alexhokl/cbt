@@ -115,6 +115,19 @@ service RecordService {
   // earlier ones.
   rpc RateBeliefs(RateBeliefsRequest) returns (PositiveDataLog);
 
+  // ListFormulations returns the user's formulations, the most recently
+  // changed first.
+  rpc ListFormulations(ListFormulationsRequest) returns (ListFormulationsResponse);
+  // CreateFormulation creates a formulation. Any column may be left blank,
+  // but not all of them.
+  rpc CreateFormulation(CreateFormulationRequest) returns (Formulation);
+  // GetFormulation returns a single formulation by identifier.
+  rpc GetFormulation(GetFormulationRequest) returns (Formulation);
+  // UpdateFormulation changes the columns of a formulation.
+  rpc UpdateFormulation(UpdateFormulationRequest) returns (Formulation);
+  // DeleteFormulation removes a formulation.
+  rpc DeleteFormulation(DeleteFormulationRequest) returns (google.protobuf.Empty);
+
   // ListBiases returns the user's cognitive bias vocabulary, ordered by name.
   rpc ListBiases(ListBiasesRequest) returns (ListBiasesResponse);
   // CreateBias adds a user defined bias alongside the seeded ones.
@@ -271,6 +284,23 @@ message BeliefRating {
   google.protobuf.Timestamp rated_at = 2;
   optional int32 belief_percent = 3;
   optional int32 alternative_percent = 4;
+}
+
+// Formulation traces how early life experiences lead to thoughts and
+// behaviours: early life experiences, beliefs, assumptions, rules for living,
+// the events that trigger them, and the negative thoughts and behaviours
+// maintaining the problem.
+message Formulation {
+  uint32 id = 1;
+  string early_experiences = 2;
+  string beliefs = 3;
+  string assumptions = 4;
+  string rules_for_living = 5;
+  string events = 6;
+  string thoughts = 7;
+  string behaviours = 8;
+  google.protobuf.Timestamp created_at = 9;
+  google.protobuf.Timestamp updated_at = 10;
 }
 
 // DataLogEvidenceInput is a row of evidence as supplied by the client.
@@ -585,6 +615,44 @@ message RateBeliefsRequest {
   uint32 log_id = 1;
   optional int32 belief_percent = 2;
   optional int32 alternative_percent = 3;
+}
+
+message ListFormulationsRequest {
+  // search matches every column of the formulation.
+  string search = 1;
+}
+
+message ListFormulationsResponse {
+  repeated Formulation formulations = 1;
+}
+
+message CreateFormulationRequest {
+  string early_experiences = 1;
+  string beliefs = 2;
+  string assumptions = 3;
+  string rules_for_living = 4;
+  string events = 5;
+  string thoughts = 6;
+  string behaviours = 7;
+}
+
+message GetFormulationRequest {
+  uint32 id = 1;
+}
+
+message UpdateFormulationRequest {
+  uint32 id = 1;
+  optional string early_experiences = 2;
+  optional string beliefs = 3;
+  optional string assumptions = 4;
+  optional string rules_for_living = 5;
+  optional string events = 6;
+  optional string thoughts = 7;
+  optional string behaviours = 8;
+}
+
+message DeleteFormulationRequest {
+  uint32 id = 1;
 }
 
 message ListBiasesRequest {}

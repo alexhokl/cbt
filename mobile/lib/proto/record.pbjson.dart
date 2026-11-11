@@ -512,6 +512,53 @@ final $typed_data.Uint8List beliefRatingDescriptor = $convert.base64Decode(
     'JuYXRpdmVQZXJjZW50iAEBQhEKD19iZWxpZWZfcGVyY2VudEIWChRfYWx0ZXJuYXRpdmVfcGVy'
     'Y2VudA==');
 
+@$core.Deprecated('Use formulationDescriptor instead')
+const Formulation$json = {
+  '1': 'Formulation',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {
+      '1': 'early_experiences',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '10': 'earlyExperiences'
+    },
+    {'1': 'beliefs', '3': 3, '4': 1, '5': 9, '10': 'beliefs'},
+    {'1': 'assumptions', '3': 4, '4': 1, '5': 9, '10': 'assumptions'},
+    {'1': 'rules_for_living', '3': 5, '4': 1, '5': 9, '10': 'rulesForLiving'},
+    {'1': 'events', '3': 6, '4': 1, '5': 9, '10': 'events'},
+    {'1': 'thoughts', '3': 7, '4': 1, '5': 9, '10': 'thoughts'},
+    {'1': 'behaviours', '3': 8, '4': 1, '5': 9, '10': 'behaviours'},
+    {
+      '1': 'created_at',
+      '3': 9,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'createdAt'
+    },
+    {
+      '1': 'updated_at',
+      '3': 10,
+      '4': 1,
+      '5': 11,
+      '6': '.google.protobuf.Timestamp',
+      '10': 'updatedAt'
+    },
+  ],
+};
+
+/// Descriptor for `Formulation`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List formulationDescriptor = $convert.base64Decode(
+    'CgtGb3JtdWxhdGlvbhIOCgJpZBgBIAEoDVICaWQSKwoRZWFybHlfZXhwZXJpZW5jZXMYAiABKA'
+    'lSEGVhcmx5RXhwZXJpZW5jZXMSGAoHYmVsaWVmcxgDIAEoCVIHYmVsaWVmcxIgCgthc3N1bXB0'
+    'aW9ucxgEIAEoCVILYXNzdW1wdGlvbnMSKAoQcnVsZXNfZm9yX2xpdmluZxgFIAEoCVIOcnVsZX'
+    'NGb3JMaXZpbmcSFgoGZXZlbnRzGAYgASgJUgZldmVudHMSGgoIdGhvdWdodHMYByABKAlSCHRo'
+    'b3VnaHRzEh4KCmJlaGF2aW91cnMYCCABKAlSCmJlaGF2aW91cnMSOQoKY3JlYXRlZF9hdBgJIA'
+    'EoCzIaLmdvb2dsZS5wcm90b2J1Zi5UaW1lc3RhbXBSCWNyZWF0ZWRBdBI5Cgp1cGRhdGVkX2F0'
+    'GAogASgLMhouZ29vZ2xlLnByb3RvYnVmLlRpbWVzdGFtcFIJdXBkYXRlZEF0');
+
 @$core.Deprecated('Use dataLogEvidenceInputDescriptor instead')
 const DataLogEvidenceInput$json = {
   '1': 'DataLogEvidenceInput',
@@ -1793,6 +1840,175 @@ final $typed_data.Uint8List rateBeliefsRequestDescriptor = $convert.base64Decode
     'VyY2VudBgCIAEoBUgAUg1iZWxpZWZQZXJjZW50iAEBEjQKE2FsdGVybmF0aXZlX3BlcmNlbnQY'
     'AyABKAVIAVISYWx0ZXJuYXRpdmVQZXJjZW50iAEBQhEKD19iZWxpZWZfcGVyY2VudEIWChRfYW'
     'x0ZXJuYXRpdmVfcGVyY2VudA==');
+
+@$core.Deprecated('Use listFormulationsRequestDescriptor instead')
+const ListFormulationsRequest$json = {
+  '1': 'ListFormulationsRequest',
+  '2': [
+    {'1': 'search', '3': 1, '4': 1, '5': 9, '10': 'search'},
+  ],
+};
+
+/// Descriptor for `ListFormulationsRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listFormulationsRequestDescriptor =
+    $convert.base64Decode(
+        'ChdMaXN0Rm9ybXVsYXRpb25zUmVxdWVzdBIWCgZzZWFyY2gYASABKAlSBnNlYXJjaA==');
+
+@$core.Deprecated('Use listFormulationsResponseDescriptor instead')
+const ListFormulationsResponse$json = {
+  '1': 'ListFormulationsResponse',
+  '2': [
+    {
+      '1': 'formulations',
+      '3': 1,
+      '4': 3,
+      '5': 11,
+      '6': '.record.Formulation',
+      '10': 'formulations'
+    },
+  ],
+};
+
+/// Descriptor for `ListFormulationsResponse`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List listFormulationsResponseDescriptor =
+    $convert.base64Decode(
+        'ChhMaXN0Rm9ybXVsYXRpb25zUmVzcG9uc2USNwoMZm9ybXVsYXRpb25zGAEgAygLMhMucmVjb3'
+        'JkLkZvcm11bGF0aW9uUgxmb3JtdWxhdGlvbnM=');
+
+@$core.Deprecated('Use createFormulationRequestDescriptor instead')
+const CreateFormulationRequest$json = {
+  '1': 'CreateFormulationRequest',
+  '2': [
+    {
+      '1': 'early_experiences',
+      '3': 1,
+      '4': 1,
+      '5': 9,
+      '10': 'earlyExperiences'
+    },
+    {'1': 'beliefs', '3': 2, '4': 1, '5': 9, '10': 'beliefs'},
+    {'1': 'assumptions', '3': 3, '4': 1, '5': 9, '10': 'assumptions'},
+    {'1': 'rules_for_living', '3': 4, '4': 1, '5': 9, '10': 'rulesForLiving'},
+    {'1': 'events', '3': 5, '4': 1, '5': 9, '10': 'events'},
+    {'1': 'thoughts', '3': 6, '4': 1, '5': 9, '10': 'thoughts'},
+    {'1': 'behaviours', '3': 7, '4': 1, '5': 9, '10': 'behaviours'},
+  ],
+};
+
+/// Descriptor for `CreateFormulationRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List createFormulationRequestDescriptor = $convert.base64Decode(
+    'ChhDcmVhdGVGb3JtdWxhdGlvblJlcXVlc3QSKwoRZWFybHlfZXhwZXJpZW5jZXMYASABKAlSEG'
+    'Vhcmx5RXhwZXJpZW5jZXMSGAoHYmVsaWVmcxgCIAEoCVIHYmVsaWVmcxIgCgthc3N1bXB0aW9u'
+    'cxgDIAEoCVILYXNzdW1wdGlvbnMSKAoQcnVsZXNfZm9yX2xpdmluZxgEIAEoCVIOcnVsZXNGb3'
+    'JMaXZpbmcSFgoGZXZlbnRzGAUgASgJUgZldmVudHMSGgoIdGhvdWdodHMYBiABKAlSCHRob3Vn'
+    'aHRzEh4KCmJlaGF2aW91cnMYByABKAlSCmJlaGF2aW91cnM=');
+
+@$core.Deprecated('Use getFormulationRequestDescriptor instead')
+const GetFormulationRequest$json = {
+  '1': 'GetFormulationRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `GetFormulationRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List getFormulationRequestDescriptor = $convert
+    .base64Decode('ChVHZXRGb3JtdWxhdGlvblJlcXVlc3QSDgoCaWQYASABKA1SAmlk');
+
+@$core.Deprecated('Use updateFormulationRequestDescriptor instead')
+const UpdateFormulationRequest$json = {
+  '1': 'UpdateFormulationRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+    {
+      '1': 'early_experiences',
+      '3': 2,
+      '4': 1,
+      '5': 9,
+      '9': 0,
+      '10': 'earlyExperiences',
+      '17': true
+    },
+    {
+      '1': 'beliefs',
+      '3': 3,
+      '4': 1,
+      '5': 9,
+      '9': 1,
+      '10': 'beliefs',
+      '17': true
+    },
+    {
+      '1': 'assumptions',
+      '3': 4,
+      '4': 1,
+      '5': 9,
+      '9': 2,
+      '10': 'assumptions',
+      '17': true
+    },
+    {
+      '1': 'rules_for_living',
+      '3': 5,
+      '4': 1,
+      '5': 9,
+      '9': 3,
+      '10': 'rulesForLiving',
+      '17': true
+    },
+    {'1': 'events', '3': 6, '4': 1, '5': 9, '9': 4, '10': 'events', '17': true},
+    {
+      '1': 'thoughts',
+      '3': 7,
+      '4': 1,
+      '5': 9,
+      '9': 5,
+      '10': 'thoughts',
+      '17': true
+    },
+    {
+      '1': 'behaviours',
+      '3': 8,
+      '4': 1,
+      '5': 9,
+      '9': 6,
+      '10': 'behaviours',
+      '17': true
+    },
+  ],
+  '8': [
+    {'1': '_early_experiences'},
+    {'1': '_beliefs'},
+    {'1': '_assumptions'},
+    {'1': '_rules_for_living'},
+    {'1': '_events'},
+    {'1': '_thoughts'},
+    {'1': '_behaviours'},
+  ],
+};
+
+/// Descriptor for `UpdateFormulationRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List updateFormulationRequestDescriptor = $convert.base64Decode(
+    'ChhVcGRhdGVGb3JtdWxhdGlvblJlcXVlc3QSDgoCaWQYASABKA1SAmlkEjAKEWVhcmx5X2V4cG'
+    'VyaWVuY2VzGAIgASgJSABSEGVhcmx5RXhwZXJpZW5jZXOIAQESHQoHYmVsaWVmcxgDIAEoCUgB'
+    'UgdiZWxpZWZziAEBEiUKC2Fzc3VtcHRpb25zGAQgASgJSAJSC2Fzc3VtcHRpb25ziAEBEi0KEH'
+    'J1bGVzX2Zvcl9saXZpbmcYBSABKAlIA1IOcnVsZXNGb3JMaXZpbmeIAQESGwoGZXZlbnRzGAYg'
+    'ASgJSARSBmV2ZW50c4gBARIfCgh0aG91Z2h0cxgHIAEoCUgFUgh0aG91Z2h0c4gBARIjCgpiZW'
+    'hhdmlvdXJzGAggASgJSAZSCmJlaGF2aW91cnOIAQFCFAoSX2Vhcmx5X2V4cGVyaWVuY2VzQgoK'
+    'CF9iZWxpZWZzQg4KDF9hc3N1bXB0aW9uc0ITChFfcnVsZXNfZm9yX2xpdmluZ0IJCgdfZXZlbn'
+    'RzQgsKCV90aG91Z2h0c0INCgtfYmVoYXZpb3Vycw==');
+
+@$core.Deprecated('Use deleteFormulationRequestDescriptor instead')
+const DeleteFormulationRequest$json = {
+  '1': 'DeleteFormulationRequest',
+  '2': [
+    {'1': 'id', '3': 1, '4': 1, '5': 13, '10': 'id'},
+  ],
+};
+
+/// Descriptor for `DeleteFormulationRequest`. Decode as a `google.protobuf.DescriptorProto`.
+final $typed_data.Uint8List deleteFormulationRequestDescriptor = $convert
+    .base64Decode('ChhEZWxldGVGb3JtdWxhdGlvblJlcXVlc3QSDgoCaWQYASABKA1SAmlk');
 
 @$core.Deprecated('Use listBiasesRequestDescriptor instead')
 const ListBiasesRequest$json = {

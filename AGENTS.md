@@ -5,7 +5,7 @@ records. Read this before changing anything.
 
 ## What this application is
 
-`cbt` records four standard cognitive behavioural therapy exercises:
+`cbt` records five standard cognitive behavioural therapy exercises:
 
 - the **thought record** — event, negative thought(s), negative feeling(s),
   cognitive bias, "is there any other way I can look at this?", "what
@@ -23,8 +23,13 @@ records. Read this before changing anything.
   evidence is added a row at a time, and each return adds a dated
   `BeliefRating` of both beliefs beside the earlier ones, never in place of
   them
+- the **formulation** — how early life experiences lead to thoughts and
+  behaviours: early life experiences, beliefs, assumptions, rules for living,
+  events, and the negative thoughts and behaviours maintaining the problem.
+  Any column may come first (it is often worked out backwards from the
+  thoughts and behaviours), but not every column may be blank
 
-Those four shapes are the domain. When a question arises about what a column
+Those five shapes are the domain. When a question arises about what a column
 means, what the biases are called, or how an exercise is used, the answer is
 whatever keeps the exercise faithful to those columns — not an invented
 improvement.
@@ -43,8 +48,9 @@ improvement.
    identifiers, counts and outcomes only. Never attach an event, a thought, a
    feeling name, an intensity, a belief rating, a bias name, the evidence for
    a thought, an alternative view, the evidence for it, or an experiment's
-   plan, prediction, outcome, learning or how to build on it, or a data log's
-   beliefs, belief ratings or evidence to a span attribute,
+   plan, prediction, outcome, learning or how to build on it, a data log's
+   beliefs, belief ratings or evidence, or any column of a formulation to a
+   span attribute,
    a metric label, or a log field. The natural instinct when adding a span is to attach `record.id`
    *and* `record.event`; attach only the first.
    Existing call sites in `internal/` show the pattern.
